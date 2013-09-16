@@ -29,6 +29,10 @@ var config = {
     port: 3000,
     db: 'mongodb://localhost/bridgesapi-production'
   }
+
+
+
 };
+
 
 module.exports = config[env];

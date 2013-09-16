@@ -1,26 +1,45 @@
-var express = require('express'),
-    mongoose = require('mongoose'),
-    twitterConfig = require("./config/twitterKeys.json"),
-    fs = require('fs'),
-    passport = require('passport'),
-    TwitterStrategy = require('passport-twitter').Strategy,
-    config = require('./config/config');
 
-mongoose.connect(config.db);
-var db = mongoose.connection;
+
+//Modules used.
+var express = require('express')
+    , fs = require('fs')
+    , passport = require('passport')
+    , config = require('./config/config')
+
+//Set up database
+var mongoose = require('mongoose')
+mongoose.connect(config.db)
+var db = mongoose.connection
 db.on('error', function () {
-  throw new Error('unable to connect to database at ' + config.db);
-});
+  throw new Error('unable to connect to database at ' + config.db)
+})
 
-var modelsPath = __dirname + '/app/models';
+//Bootstrap models.
+var modelsPath = __dirname + '/app/models'
 fs.readdirSync(modelsPath).forEach(function (file) {
   if (file.indexOf('.js') >= 0) {
-    require(modelsPath + '/' + file);
+    require(modelsPath + '/' + file)
   }
-});
+})
 
-var app = express();
-    
+//Bootstrap passport
+require('./config/passport')(passport, config)
+
+//Bootstrap express
+var app = express()
+require('./config/express')(app, config, passport)
+
+//Bootstrap routes.
+require('./config/routes')(app, passport)
+
+app.listen(config.port)
+
+exports = module.exports = app
+
+
+
+
+/*
 var TWITTER_CONSUMER_KEY = twitterConfig.consumer_key;
 var TWITTER_CONSUMER_SECRET = twitterConfig.consumer_secret;
 
@@ -36,8 +55,4 @@ function(token, tokenSecret, profile, done) {
     }
 ));
 console.log("DONE");
-
-require('./config/routes')(app, passport);
-require('./config/express')(app, config);
-app.listen(config.port);
-
+*/
