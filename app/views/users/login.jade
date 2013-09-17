@@ -1,0 +1,12 @@
+extends layout
+
+block content
+  #page
+    .infoSection
+      p You're not logged in!
+      p Username
+      form(action='/login', method='post')
+        input(type='text',name='username')
+        input(type='submit')
+      #error
+        msg= msg

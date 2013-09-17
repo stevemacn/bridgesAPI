@@ -3,6 +3,8 @@ module.exports = function(app,passport){
 	//home route
 	var home = require('../app/controllers/home');
 	app.get('/', home.index);
+    
+    var users = require('../app/controllers/users')
 
 
     app.get('/auth/twitter',
@@ -15,6 +17,9 @@ module.exports = function(app,passport){
               res.redirect('/');
         }
     );
+  
+    app.get('/signup', users.signup)
+    app.get('/register', users.register)
 
 
     //app.get /assignment#/username;

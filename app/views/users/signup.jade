@@ -1,0 +1,39 @@
+extends ../layout
+
+block content
+    .page-header
+    .container
+        .row
+          .col-lg-6
+              h1 Welcome to Bridges!
+              p Creating a bridge between your assignments and the world 
+          .col-lg-6
+              .well
+                form(action='/register', method='post').form-horizontal.bs-example
+                  .fieldset
+                    legend Create an account!   
+                    .form-group
+                       label.col-lg-2.control-label  Username
+                       div.col-lg-10
+                           input.form-control(
+                                type='text', 
+                                name='username', 
+                                placeholder='User Name')
+                    .form-group
+                       label.col-lg-2.control-label  Password
+                       div.col-lg-10
+                           input.form-control(
+                                type='password', 
+                                name='password'
+                                placeholder='Password')
+                    .form-group
+                       label.col-lg-2.control-label  Email
+                       div.col-lg-10
+                           input.form-control(
+                                type='email', 
+                                name='email'
+                                placeholder='Your Email')
+                    .form-group
+                        div.col-lg-10
+                            input(type='submit', value='Register').btn.btn-primary
+                    msg= msg
