@@ -1,5 +1,8 @@
 .jumbotron {
   background-color:#FD8402 ;
+}
+
+.jumbotron h1, .jumbotron h3, .jumbotron h4 {
   color:#FFFFFF;
 }
 img {
@@ -8,8 +11,4 @@ img {
   background-color:#FD8402 ;
   padding:5%;
 }
-a {
- 
-  background-color:#FD8402 ;
- 
-}
+
