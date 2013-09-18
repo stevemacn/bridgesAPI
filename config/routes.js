@@ -9,7 +9,7 @@ module.exports = function(app,passport){
     app.get('/signup', users.signup)
     app.post('/users', users.create)
    
-    //app.get('/login', users.login)
+    app.get('/login', users.login)
     //app.get('/logout', users.logout)
 
     //authentication

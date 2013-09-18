@@ -1,11 +1,10 @@
-extends userLayout 
-
+extends layout 
 
 block form
     .well
         form(action='/users/session', method='post').form-horizontal
           .fieldset
-            legend Sign in!
+            legend Log in!
             .form-group
                 label.col-lg-2.control-label Username
                 div.col-lg-10
@@ -24,16 +23,15 @@ block form
                 div.col-lg-10
                     input(type='submit', value='Log In').btn.btn-primary
 block validate 
-    - if (typeof(locals.errors.username) !== 'undefined'){
-        .alert.alert-danger 
-          strong Username:    
-          .err #{errors.username.type}    
+    - if (typeof locals.errors !== 'undefined') {
+         - if (typeof(locals.errors.username) !== 'undefined'){
+             .alert.alert-danger 
+               strong Username:    
+               .err #{errors.username.type}    
+         - }
+         - if (typeof(locals.errors.hashed_password) !== 'undefined'){
+             .alert.alert-danger 
+               strong Password:  
+               .err  #{errors.hashed_password.type}    
+         - }
     - }
-    - if (typeof(locals.errors.hashed_password) !== 'undefined'){
-        .alert.alert-danger 
-          strong Password:  
-          .err  #{errors.hashed_password.type}    
-    - }
-
-      //#error
-        //msg= msg
