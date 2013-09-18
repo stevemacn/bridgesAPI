@@ -5,8 +5,6 @@ block content
     .container
         .row
           .col-lg-6
-              - if( locals.errors )
-                  .error-notification #{errors.email.type}
               h1 Welcome to Bridges!
               p Creating a bridge between your assignments and the world 
           .col-lg-6
@@ -38,4 +36,23 @@ block content
                     .form-group
                         div.col-lg-10
                             input(type='submit', value='Register').btn.btn-primary
-                    msg= msg
+          .col-lg-6
+          .col-lg-6           
+              - if (typeof(locals.errors.username) !== 'undefined'){
+                  .alert.alert-danger 
+                    strong Username:    
+                    .err #{errors.username.type}    
+              - }
+              - if (typeof(locals.errors.hashed_password) !== 'undefined'){
+                  .alert.alert-danger 
+                    strong Password:  
+                    .err  #{errors.hashed_password.type}    
+              - }
+              - if (typeof(locals.errors.email) !== 'undefined'){
+                  .alert.alert-danger 
+                      strong Email: 
+                      .err #{errors.email.type}    
+              - }
+              
+
+          msg= msg
