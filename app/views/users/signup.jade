@@ -1,59 +1,51 @@
-extends ../layout
+extends layout
 
-block content
-    .page-header
-    .container
-        .row
-          .col-lg-6
-              h1 Welcome to Bridges!
-              p Creating a bridge between your assignments and the world 
-          .col-lg-6
-              .well
-                form(action='/users', method='post').form-horizontal.bs-example
-                  .fieldset
-                    legend Create an account!   
-                    .form-group
-                       label.col-lg-2.control-label  Username
-                       div.col-lg-10
-                           input.form-control(type='text', 
-                                name='username', 
-                                placeholder='User Name')
-                    .form-group
-                       label.col-lg-2.control-label  Password
-                       div.col-lg-10
-                           input.form-control(
-                                type='password', 
-                                name='password',
-                                placeholder='Password')
-                    .form-group
-                       label.col-lg-2.control-label  Email
-                       div.col-lg-10
-                           input.form-control(
-                                type='email', 
-                                name='email',
-                                placeholder='Your Email')
-                    .form-group
-                        div.col-lg-10
-                            input(type='submit', value='Register').btn.btn-primary
-          .col-lg-6
-          .col-lg-6 
-            -if (typeof locals.errors !== 'undefined') {
-              - if (typeof locals.errors.username != 'undefined'){
-                  .alert.alert-danger 
-                    strong Username:    
-                    .err #{errors.username.type}    
-              - }
-              - if (typeof locals.errors.hashed_password != 'undefined'){
-                  .alert.alert-danger 
-                    strong Password:  
-                    .err  #{errors.hashed_password.type}    
-              - }
-              - if (typeof locals.errors.email != 'undefined'){
-                  .alert.alert-danger 
-                      strong Email: 
-                      .err #{errors.email.type}    
-              - }
-            - }
+block form
+     .well
+       form(action='/users', method='post').form-horizontal.bs-example
+         .fieldset
+           legend Create an account!   
+           .form-group
+              label.col-lg-2.control-label  Username
+              div.col-lg-10
+                  input.form-control(type='text', 
+                       name='username', 
+                       placeholder='User Name')
+           .form-group
+              label.col-lg-2.control-label  Password
+              div.col-lg-10
+                  input.form-control(
+                       type='password', 
+                       name='password',
+                       placeholder='Password')
+           .form-group
+              label.col-lg-2.control-label  Email
+              div.col-lg-10
+                  input.form-control(
+                       type='email', 
+                       name='email',
+                       placeholder='Your Email')
+           .form-group
+               div.col-lg-10
+                   input(type='submit', value='Register').btn.btn-primary
+
+block validate
+    -if (typeof locals.errors !== 'undefined') {
+      - if (typeof locals.errors.username != 'undefined'){
+          .alert.alert-danger 
+            strong Username:    
+            .err #{errors.username.type}    
+      - }
+      - if (typeof locals.errors.hashed_password != 'undefined'){
+          .alert.alert-danger 
+            strong Password:  
+            .err  #{errors.hashed_password.type}    
+      - }
+      - if (typeof locals.errors.email != 'undefined'){
+          .alert.alert-danger 
+              strong Email: 
+              .err #{errors.email.type}    
+      - }
+    - }
               
 
-          msg= msg

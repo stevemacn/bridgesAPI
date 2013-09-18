@@ -12,11 +12,12 @@ exports.index = function(req, res){
   })
 }
 
-exports.register = function (req, res) {
-    console.log("HERE");
-    res.send('id: ' +req.query)
-}
 
+exports.login = function (req, res) {
+    res.render("users/login", {
+        title: 'Login'   
+   })
+}
 
 
 
