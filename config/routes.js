@@ -20,6 +20,7 @@ module.exports = function(app,passport){
   
     app.get('/signup', users.signup)
     app.get('/register', users.register)
+    app.post('/users', users.create)
 
 
     //app.get /assignment#/username;

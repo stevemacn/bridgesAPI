@@ -2,6 +2,8 @@ var mongoose = require('mongoose')
     , LocalStrategy = require('passport-local').Strategy
     , TwitterStrategy = require('passport-twitter').Strategy
     , twitterKeys = require('./twitterKeys')
+    , User = mongoose.model('User')
+
 
 module.exports = function (passport, config) {
 
