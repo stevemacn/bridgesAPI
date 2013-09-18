@@ -9,8 +9,9 @@
     "express": "~3.3.4",
     "jade": "~0.34.0",
     "mongoose": "~3.6.14",
-    "ntwitter": "*",
-    "passport":"*",
+    "passport":"latest",
+    "crypto":"latest",
+    "underscore":"latest",
     "connect-mongo":"*",
     "connect-flash":"*",
     "view-helpers":"*"

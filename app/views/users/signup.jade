@@ -5,11 +5,13 @@ block content
     .container
         .row
           .col-lg-6
+              - if( locals.errors )
+                  .error-notification #{errors.email.type}
               h1 Welcome to Bridges!
               p Creating a bridge between your assignments and the world 
           .col-lg-6
               .well
-                form(action='/register', method='post').form-horizontal.bs-example
+                form(action='/users', method='post').form-horizontal.bs-example
                   .fieldset
                     legend Create an account!   
                     .form-group
