@@ -1,12 +1,39 @@
-extends layout
+extends userLayout 
 
-block content
-  #page
-    .infoSection
-      p You're not logged in!
-      p Username
-      form(action='/login', method='post')
-        input(type='text',name='username')
-        input(type='submit')
-      #error
-        msg= msg
+
+block form
+    .well
+        form(action='/users/session', method='post').form-horizontal
+          .fieldset
+            legend Sign in!
+            .form-group
+                label.col-lg-2.control-label Username
+                div.col-lg-10
+                    input.form-control(
+                        type='text',
+                        name='username',
+                        placeholder='User Name')
+            .form-group 
+                label.col-lg-2.control-label Password
+                div.col-lg-10
+                    input.form-control(
+                        type='password',
+                        name='password',
+                        placeholder='Password')
+            .form-group
+                div.col-lg-10
+                    input(type='submit', value='Log In').btn.btn-primary
+block validate 
+    - if (typeof(locals.errors.username) !== 'undefined'){
+        .alert.alert-danger 
+          strong Username:    
+          .err #{errors.username.type}    
+    - }
+    - if (typeof(locals.errors.hashed_password) !== 'undefined'){
+        .alert.alert-danger 
+          strong Password:  
+          .err  #{errors.hashed_password.type}    
+    - }
+
+      //#error
+        //msg= msg

@@ -17,6 +17,9 @@ exports.register = function (req, res) {
     res.send('id: ' +req.query)
 }
 
+
+
+
 exports.signup = function (req, res) {
   res.render('users/signup', {
       title: 'Sign up',
@@ -30,7 +33,6 @@ exports.create = function (req, res) {
   user.provider = 'local'
   user.save(function (err) {
       if (err) {
-            console.log(err.errors);
             return res.render('users/signup', {
                     errors: (err.errors),
                     user: user,
@@ -45,8 +47,6 @@ exports.create = function (req, res) {
       })
   })
 }
-
-
 
 exports.user = function (req, res, next, id) {
   User
