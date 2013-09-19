@@ -1,9 +1,12 @@
+//Configure passport
+//Each authentication type has a different strategy
+//Users are managed by the database collection 'User'
+
 var mongoose = require('mongoose')
     , LocalStrategy = require('passport-local').Strategy
     , TwitterStrategy = require('passport-twitter').Strategy
     , twitterKeys = require('./twitterKeys')
     , User = mongoose.model('User')
-
 
 module.exports = function (passport, config) {
 
@@ -17,28 +20,30 @@ module.exports = function (passport, config) {
         })
     })
 
-     passport.use(new LocalStrategy({
-           usernameField: 'email',
+    passport.use(new LocalStrategy({
+           usernameField: 'username',
            passwordField: 'password'
     },
-    function(email, password, done) {
-        User.findOne({ email: email }, function (err, user) {
-        if (err) { return done(err) }
-        if (!user) {
-            return done(null, false, { message: 'Unknown user' })
+        
+        function(email, password, done) {
+            console.log (email+","+ password);
+            User.findOne({ email: email }, function (err, user) {
+                if (err) { return done(err) }
+            if (!user) {
+                return done(null, false, { message: 'Unknown user' })
+            }
+            if (!user.authenticate(password)) {
+                return done(null, false, { message: 'Invalid password' })
+            }
+                return done(null, user)
+            })    
         }
-        if (!user.authenticate(password)) {
-            return done(null, false, { message: 'Invalid password' })
-        }
-            return done(null, user)
-        })    
-    }
     ))
     
     passport.use(new TwitterStrategy({
-      consumerKey: twitterKeys.consumer_key,
-      consumerSecret: twitterKeys.consumer_secret,
-      callbackURL: twitterKeys.callbackURL
+        consumerKey:    twitterKeys.consumer_key,
+        consumerSecret: twitterKeys.consumer_secret,
+        callbackURL:    twitterKeys.callbackURL
     },
     function(token, tokenSecret, profile, done) {
       User.findOne({ 'twitter.id': profile.id }, function (err, user) {
