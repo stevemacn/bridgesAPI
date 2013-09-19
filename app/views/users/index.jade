@@ -1,0 +1,27 @@
+extends layout
+
+
+block info
+    legend Add additional datasources
+    a(href="/auth/twitter")
+            img(href="/img/twitter.png")
+
+block form
+  if (user) 
+    .panel.panel-info
+        .panel-heading 
+            h3.panel-title User information
+        .panel-body      
+            div  
+                strong.col-lg-4 User Name: 
+                | #{user.username}
+            div  
+                Strong.col-lg-4 Email: 
+                | #{user.email}
+  else 
+    strong.col-lg-6 You are not logged in! 
+    a(href="/login").btn.btn-primary Log me in
+
+block validate
+        div No datasources are authenticated
+
