@@ -24,6 +24,14 @@ exports.login = function (req, res) {
    })
 }
 
+
+exports.logout = function (req, res) {
+    req.logout()
+    user=""
+    res.redirect("login")
+}
+
+
 exports.display = function (req, res) {
     var user = req.user
 
