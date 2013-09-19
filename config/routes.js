@@ -12,6 +12,9 @@ module.exports = function(app,passport){
     app.post('/users', users.create)
    
     app.get('/login', users.login)
+    app.get('/home', users.display)
+    app.get('/home/:userId', users.display)
+
     //app.get('/logout', users.logout)
 
     //authentication

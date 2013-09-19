@@ -2,17 +2,6 @@ var mongoose = require('mongoose')
       , User = mongoose.model('User')
       , Article = mongoose.model('Article');
  
- /* 
-exports.index = function(req, res){
-  Article.find(function(err, articles){
-    if(err) throw new Error(err);
-    res.render('users/signup', {
-      title: 'Main Page',
-      articles: articles
-    })
-  })
-}
-*/
 
 //Set up the log in
 var login = function (req, res) {
@@ -35,7 +24,15 @@ exports.login = function (req, res) {
    })
 }
 
+exports.display = function (req, res) {
+    var user = req.user
 
+    console.log(req.user)
+  res.render('users/index', {
+      title: user,
+      user: user
+    })
+}
 
 
 //set up the signup
