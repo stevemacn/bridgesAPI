@@ -2,6 +2,7 @@
 var express = require('express')
   , mongoStore = require('connect-mongo')(express)
   , pkg = require('../package.json')
+  , flash = require('connect-flash')
 
 module.exports = function (app, config, passport) {
 
@@ -53,7 +54,7 @@ module.exports = function (app, config, passport) {
     // use passport session
     app.use(passport.initialize())
     app.use(passport.session())
-
+    app.use(flash())
     // routes should be at the last
     app.use(app.router)
 

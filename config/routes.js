@@ -1,3 +1,5 @@
+var users = require('../app/controllers/users')
+
 module.exports = function(app,passport){
 
 	//home route
@@ -13,12 +15,13 @@ module.exports = function(app,passport){
     //app.get('/logout', users.logout)
 
     //authentication
-    /*app.post('/users/session',
+    app.post('/users/session',
         passport.authenticate('local', {
+            successRedirect: '/',
             failureRedirect: '/login',
-            failureFlash: 'Invalid email or password.'
+            failureFlash: "User name or password incorrect"
         }), users.session)
-*/
+
     app.get('/auth/twitter',
          passport.authenticate('twitter'));
 
@@ -26,7 +29,7 @@ module.exports = function(app,passport){
         passport.authenticate('twitter', { failureRedirect: '/login' }),
         function(req, res) {
              //Successful authentication, redirect home.
-              res.redirect('/');
+              return res.redirect('/');
         }
     );
   
