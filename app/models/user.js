@@ -20,6 +20,7 @@ var UserSchema = new Schema({
   salt: { type: String, default: '' },
   authToken: { type: String, default: '' },
   twitter: {},
+  other : {}
 })
 
 /**

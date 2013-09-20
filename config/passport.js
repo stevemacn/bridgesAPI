@@ -26,7 +26,6 @@ module.exports = function (passport, config) {
     },
         
         function(email, password, done) {
-            console.log (email+","+ password);
             User.findOne({ email: email }, function (err, user) {
                 if (err) { return done(err) }
             if (!user) {
@@ -46,7 +45,10 @@ module.exports = function (passport, config) {
         callbackURL:    twitterKeys.callbackURL
     },
     function(token, tokenSecret, profile, done) {
+       console.log("HERE") 
+       console.log(profile) 
       User.findOne({ 'twitter.id': profile.id }, function (err, user) {
+        console.log(user)
         if (err) { return done(err) }
         if (!user) {
           user = new User({
