@@ -32,6 +32,19 @@ module.exports = function (grunt) {
     }
   });
 
+  grunt.registerTask('test', 'run mocha', function () {
+     var done = this.async();
+     require('child_process').exec(
+         './node_modules/.bin/mocha --timeout 5000 --reporter spec', function (err, stdout) {
+           grunt.log.write(stdout);
+           done(err);
+      })
+  })
+
+
+
+
+
   grunt.config.requires('watch.js.files');
   files = grunt.config('watch.js.files');
   files = grunt.file.expand(files);
