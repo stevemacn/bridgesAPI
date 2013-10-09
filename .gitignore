@@ -13,9 +13,9 @@ node_modules/
 
 # Don't steal my keys!! #
 ###################
-TwitterKeys.json
 twitterKeys.json
 config/twitterKeys.json
+
 # Logs and databases #
 ######################
 *.log
