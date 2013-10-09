@@ -1,11 +1,15 @@
 extends layout
 
+block css
+    link(rel="stylesheet", href="/css/webicons/webicons.css")
+
+block js
+    script(src="components/modernizr/modernizr.js")
 
 block info
    if (user) 
     legend Add additional datasources
-    a(href="/auth/twitter")
-            img(href="/img/twitter.png")
+    a(href="/connect/twitter").webicon.twitter.large
 
 block form
   if (user) 
@@ -24,7 +28,4 @@ block form
         h1 You are not logged in! 
         a(href="/login").btn.btn-primary Log me in
 
-block validate
-  if (user)
-    div No datasources are authenticated
 

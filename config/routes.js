@@ -40,7 +40,8 @@ module.exports = function(app,passport){
                 account.save(function(err) {
                     if (err) {  return (err); }
                     res.send('id: ' + account.email + 
-                             '<br/>token: '+ account.tokens);
+                                                          '<br/>token: '+ account.tokens);
+
                 });
             }
         );
