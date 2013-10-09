@@ -25,23 +25,25 @@ module.exports = function(app,passport){
             failureFlash: "User name or password incorrect"
         }), users.session)
 
-    app.get('/auth/twitter',
-         passport.authenticate('twitter'));
+        app.get('/connect/twitter',
+            passport.authorize('twitter-authz', { failureRedirect: '/login' })
+        );
 
-    app.get('/auth/twitter/callback', 
-        passport.authenticate('twitter', { 
-            failureRedirect: '/login', 
-            successRedirect: '/',
-            failureFlash: "Didn't work",
-            successFlash: "Did work"
-        }),
-        function(req, res) {
-             console.log("HERE");
-             //Successful authentication, redirect home.
-              return res.redirect('/');
-        }
-    );
-  
+        app.get('/auth/twitter/callback',
+            passport.authorize('twitter-authz', { failureRedirect: '/login' }),
+            function(req, res) {
+                var user = req.user;
+                var account = req.account;
+                // Associate the Twitter account with the logged-in user.
+                account.email = user.email;
+                console.log(account);
+                account.save(function(err) {
+                    if (err) {  return (err); }
+                    res.send('id: ' + account.email + 
+                             '<br/>token: '+ account.tokens);
+                });
+            }
+        );
 
 
 

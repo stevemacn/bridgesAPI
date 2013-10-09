@@ -1,6 +1,4 @@
-/**
- * Module dependencies.
- */
+ // Module dependencies.
 
 var mongoose = require('mongoose')
   , Schema = mongoose.Schema
@@ -8,9 +6,9 @@ var mongoose = require('mongoose')
   , _ = require('underscore')
   , authTypes = ['twitter']
 
-/**
- * User Schema
- */
+
+
+// User Schema
 
 var UserSchema = new Schema({
   email: { type: String, default: '' },
@@ -23,9 +21,7 @@ var UserSchema = new Schema({
   other : {}
 })
 
-/**
- * Virtuals
- */
+ // Virtuals
 
 UserSchema
   .virtual('password')
@@ -36,9 +32,8 @@ UserSchema
   })
   .get(function() { return this._password })
 
-/**
- * Validations
- */
+//  Validations
+ 
 
 var validatePresenceOf = function (value) {
   return value && value.length
@@ -93,9 +88,8 @@ UserSchema.path('hashed_password').validate(function (hashed_password) {
 }, 'Password cannot be blank')
 
 
-/**
- * Pre-save hook
- */
+//Pre-save hook
+ 
 
 UserSchema.pre('save', function(next) {
   if (!this.isNew) return next()

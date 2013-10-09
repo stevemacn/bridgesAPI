@@ -22,6 +22,10 @@ block form
             .form-group
                 div.col-lg-10
                     input(type='submit', value='Log In').btn.btn-primary
+            .form-group
+                div.col-lg-10
+                    p Don't have a an account? 
+                        a(href="/signup") Signup!
 block validate
     - if (message != ''){
         p.alert.alert-danger=message

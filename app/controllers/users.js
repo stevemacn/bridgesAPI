@@ -1,6 +1,5 @@
 var mongoose = require('mongoose')
       , User = mongoose.model('User')
-      , Article = mongoose.model('Article');
  
 
 //Set up the log in

@@ -7,7 +7,9 @@
              if (!user)
                 li 
                     a(href="/login") Log In 
-             if (user) 
+             if (user)
+                li
+                    a(href="/login")=user.username
                 li
                     a(href="/logout") Log Out   
 .container.clearfix
