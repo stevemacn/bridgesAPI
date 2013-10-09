@@ -10,6 +10,7 @@
 # Don't include packages  #
 ###################
 node_modules/
+public/components/
 
 # Don't steal my keys!! #
 ###################
