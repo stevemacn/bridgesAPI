@@ -14,6 +14,11 @@ Setup
 ---
 
     npm install 
+<<<<<<< HEAD
+    sudo npm install -g bower
+    sudo npm install -g grunt-cli
+=======
+>>>>>>> f43519ee51f23cbc003eb795ceaa9d02f6fd71d9
     bower install
     grunt
     
