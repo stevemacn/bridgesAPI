@@ -1,0 +1,6 @@
+{
+  "consumer_key"        : "get me from https://dev.twitter.com",
+  "consumer_secret"     : "me too!", 
+  "access_token_key"    : "me too!",
+  "access_token_secret" : "me too!" 
+}
