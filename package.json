@@ -11,6 +11,8 @@
     "jade": "~0.34.0",
     "mongoose": "~3.6.14",
     "passport":"latest",
+    "passport-twitter":"latest",
+    "passport-local": "latest",
     "crypto":"latest",
     "underscore":"latest",
     "connect-mongo":"*",
