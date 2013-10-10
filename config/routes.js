@@ -39,8 +39,7 @@ module.exports = function(app,passport){
                 console.log(account);
                 account.save(function(err) {
                     if (err) {  return (err); }
-                    res.send('id: ' + account.email + 
-                                                          '<br/>token: '+ account.tokens);
+                    res.redirect('/home');
 
                 });
             }

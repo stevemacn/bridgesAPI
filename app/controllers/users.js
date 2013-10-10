@@ -23,24 +23,20 @@ exports.login = function (req, res) {
    })
 }
 
-
 exports.logout = function (req, res) {
     req.logout()
     user=""
     res.redirect("login")
 }
 
-
 exports.display = function (req, res) {
     var user = req.user
-
-    console.log(req.user)
-  res.render('users/index', {
+    console.log(req);
+    res.render('users/index', {
       title: user.username + "'s Dashboard - Bridges",
       user: user
     })
 }
-
 
 //set up the signup
 exports.signup = function (req, res) {
