@@ -36,7 +36,7 @@ exports.display = function (req, res) {
 
     console.log(req.user)
   res.render('users/index', {
-      title: user,
+      title: user.username + "'s Dashboard - Bridges",
       user: user
     })
 }
