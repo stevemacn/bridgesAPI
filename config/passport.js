@@ -60,12 +60,10 @@ var mongoose = require('mongoose')
             var t = { 
                 kind: 'oauth',
                 token: token,
-                attributes: {
-                    tokenSecret: tokenSecret 
-                }
-            };
+                tokenSecret: tokenSecret 
+            }
             console.log(t);
-            account.tokens.push(t);
+            account.tokens = t;
             return done(null, account);
       });
   }
