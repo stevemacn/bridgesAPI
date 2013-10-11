@@ -71,39 +71,5 @@ var mongoose = require('mongoose')
   }
 ));
 
-
-
-
-
-   
-    passport.use(new TwitterStrategy({
-        consumerKey:    twitterKeys.consumer_key,
-        consumerSecret: twitterKeys.consumer_secret,
-        callbackURL:    twitterKeys.callbackURL
-    },
-    function(token, tokenSecret, profile, done) {
-        console.log("HERE") 
-        console.log(profile) 
-        User.findOne({ 'twitter.id': profile.id }, function (err, user) {
-            console.log(user)
-            if (err) { return done(err) }
-            if (!user) {
-                user = new User({
-                    name: profile.displayName,
-                    username: profile.username,
-                    provider: 'twitter',
-                    twitter: profile._json
-            })
-            user.save(function (err) {
-                if (err) console.log(err)
-                    return done(err, user)
-                })
-            }
-        else {
-          return done(err, user)
-        }
-      })
-    }
-  ))
 }
 

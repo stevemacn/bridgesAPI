@@ -31,7 +31,6 @@ exports.logout = function (req, res) {
 
 exports.display = function (req, res) {
     var user = req.user
-    console.log(req);
     res.render('users/index', {
       title: user.username + "'s Dashboard - Bridges",
       user: user
