@@ -2,9 +2,9 @@ var users = require('../app/controllers/users')
 
 module.exports = function(app,passport){
 
-	//home route
-	var home = require('../app/controllers/home');
-	app.get('/', home.index);
+    //home route
+    var home = require('../app/controllers/home');
+    app.get('/', home.index);
 
     //user routes
     var users = require('../app/controllers/users')
@@ -25,26 +25,26 @@ module.exports = function(app,passport){
             failureFlash: "User name or password incorrect"
         }), users.session)
 
-        app.get('/connect/twitter',
-            passport.authorize('twitter-authz', { failureRedirect: '/login' })
-        );
+    app.get('/connect/twitter',
+        passport.authorize('twitter-authz', { failureRedirect: '/login' })
+    );
 
-        app.get('/auth/twitter/callback',
-            passport.authorize('twitter-authz', { failureRedirect: '/login' }),
-            function(req, res) {
-                var user = req.user;
-                var account = req.account;
-                // Associate the Twitter account with the logged-in user.
-                account.email = user.email;
-                console.log(account);
-                account.save(function(err) {
-                    if (err) {  return (err); }
-                    res.redirect('/home');
+    app.get('/auth/twitter/callback',
+        passport.authorize('twitter-authz', { failureRedirect: '/login' }),
+        function(req, res) {
+            var user = req.user;
+            var account = req.account;
+            // Associate the Twitter account with the logged-in user.
+            account.email = user.email;
+            console.log(account);
+            account.save(function(err) {
+                if (err) {  return (err); }
+                res.redirect('/home');
 
-                });
-            }
-        );
-
+            });
+        }
+    );
+    
 
 
     //Gallery Routes (D3 pages, gallery)
