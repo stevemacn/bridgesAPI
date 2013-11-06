@@ -1,6 +1,3 @@
-var users = require('../app/controllers/users')
-var streams = require('../app/controllers/streams')
-
 module.exports = function(app,passport){
 
     //home route
@@ -18,6 +15,7 @@ module.exports = function(app,passport){
 
     app.get('/logout', users.logout)
     
+    var streams = require('../app/controllers/streams')
     app.get('/stream/:account_domain/:stream_name', streams.read)
 
     //authentication
