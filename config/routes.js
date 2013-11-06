@@ -1,4 +1,5 @@
 var users = require('../app/controllers/users')
+var streams = require('../app/controllers/streams')
 
 module.exports = function(app,passport){
 
@@ -16,6 +17,8 @@ module.exports = function(app,passport){
     app.get('/home/:userId', users.display)
 
     app.get('/logout', users.logout)
+    
+    app.get('/stream/:account_domain/:stream_name', streams.read)
 
     //authentication
     app.post('/users/session',
