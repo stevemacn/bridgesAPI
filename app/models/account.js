@@ -6,9 +6,9 @@ var mongoose = require('mongoose'),
 // Authenticate Schema
 var Account = new Schema ({
     domain: { type: String, default: ''},
-    // Deprecated: use user
     uid:    { type: String, default: ''},
-    user:   { type: Schema.Types.ObjectId, ref: 'User' },
+    // Could this be better?
+    //user:   { type: Schema.Types.ObjectId, ref: 'User' },
     email:  { type: String, default: ''},
     streams: [{
         name: { type: String, default: ''},
