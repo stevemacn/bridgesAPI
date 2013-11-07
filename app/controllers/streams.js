@@ -34,9 +34,7 @@ exports.read = function(req, res, next) {
             if (stream.last_updated < 15*60*1000) {
                 // It was updated at least 15 minutes ago. Launch an async refresh.
                 process.nextTick(function() {
-                    stream_loaders[account_domain](req.params.stream_name, function(err) {
-                        if (err) next(err);
-                    }); 
+                    stream_loaders[account_domain](req.params.stream_name, function(err) {}); 
                 });
             }
             // Even if it is out of date, prefer the response we can give now
