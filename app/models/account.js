@@ -9,6 +9,7 @@ var Account = new Schema ({
     uid:    { type: String, default: ''},
     // Could this be better?
     //user:   { type: Schema.Types.ObjectId, ref: 'User' },
+    // Is email duplicated with User? 
     email:  { type: String, default: ''},
     streams: [{
         name: { type: String, default: ''},
