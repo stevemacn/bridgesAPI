@@ -21,7 +21,7 @@ var Account = new Schema ({
         token :     {type: String, default: ''},
         tokenSecret:{type: String, default: ''}
     }
-})
+});
 
 
 mongoose.model('Account', Account);
