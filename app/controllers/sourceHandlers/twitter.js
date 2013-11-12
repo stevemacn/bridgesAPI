@@ -64,6 +64,8 @@ exports.init = function (account, args, resp) {
                 count: 200,
                 include_rts:true
             }
+            res.writeHead(200, {'Content-Type':'application/json'})
+            res.write("[")
             getTweets(null, "") 
         } else {
             res.send("streaming is not yet supported")
@@ -93,19 +95,31 @@ function getTweets(maxid, tweets) {
             data.forEach(function(tweet) {
                 if (tweet.retweeted_status) {
                     retweet = tweet.retweeted_status
-                    tweets = tweets.concat(retweet.created_at+
-                                           retweet.text);
+                    tweets = tweets.concat(
+                        JSON.stringify({
+                            date : retweet.created_at,
+                            tweet: retweet.text
+                        })+","
+                    )
                     countRT++
                 } else {
-                    tweets = tweets.concat(tweet.created_at+
-                                           tweet.text);
+                    tweets = tweets.concat(
+                        JSON.stringify({
+                            date : tweet.created_at,
+                            tweet: tweet.text
+                        })+","
+                    )
                     countT++
                 }
                 tweetID = tweet.id
             });
             foundTweets = countRT + countT + foundTweets
             console.log(countRT+" retweets and "+countT+" tweets")
-            res.write(tweets)
+            var comma=""
+            if (foundTweets>200)
+                comma=","
+            res.write(comma+"["+tweets.substring(0, tweets.length-1)+"]")
+
             corpus = corpus.concat(tweets)
             getTweets(tweetID, "") 
         
@@ -130,6 +144,7 @@ function getTweets(maxid, tweets) {
                 return acct
             }
             acct = replaceCache(acct, params.screen_name, updateDate)
+            res.write("]")
             res.end()
 
             acct.save(function (err) {
