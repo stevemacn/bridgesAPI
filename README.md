@@ -15,6 +15,8 @@ Setup
 
     npm install
     bower install
+    git submodule init
+    git submodule update
     grunt
     
 Usage
