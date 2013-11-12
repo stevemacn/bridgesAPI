@@ -5,7 +5,8 @@ var mongoose = require('mongoose'),
 
 // Authenticate Schema
 var Account = new Schema ({
-    domainProvider: { type: String, default: ''},//conflict with node so changed from domain
+    //conflict with node so changed from domain
+    domainProvider: { type: String, default: ''},
     uid:    { type: String, default: ''},
     email:  { type: String, default: ''},
     tokens: {  
