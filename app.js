@@ -3,7 +3,6 @@ var express = require('express')
     , fs = require('fs')
     , passport = require('passport')
     , config = require('./config/config')
-
 //Set up database
 var mongoose = require('mongoose')
 mongoose.connect(config.db)
@@ -27,10 +26,13 @@ require('./config/express')(app, config, passport)
 //Bootstrap passport
 require('./config/passport')(passport, config)
 
-//Bootstrap routes.
-require('./config/routes')(app, passport)
+var server = app.listen(config.port)
+var io = require('socket.io').listen(server);
+var streamable = require('streamable').streamable(io);
 
-app.listen(config.port)
+
+//Bootstrap routes.
+require('./config/routes')(app, passport, streamable)
 
 exports = module.exports = app
 
