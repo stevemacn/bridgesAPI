@@ -5,14 +5,22 @@ var mongoose = require('mongoose'),
 
 // Authenticate Schema
 var Account = new Schema ({
-    domain: { type: String, default: ''},
+    domainProvider: { type: String, default: ''},//conflict with node so changed from domain
     uid:    { type: String, default: ''},
     email:  { type: String, default: ''},
     tokens: {  
         kind :      {type: String, default: ''},
         token :     {type: String, default: ''},
         tokenSecret:{type: String, default: ''}
-    }
+    },
+    streams: [{
+        screen_name: { type: String, default: ''},
+        maxid: { type: String, default: ''},
+        count: { type: String, default: ''},
+        content: { type: String, default: ''},
+        dateRequested: { type: Date, default: Date.now() },
+    }]
+        
 })
 
 
