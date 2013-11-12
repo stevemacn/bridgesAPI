@@ -48,15 +48,14 @@ var mongoose = require('mongoose')
     
     function(token, tokenSecret, profile, done) {
  
-        Account.findOne({ domain: 'twitter.com', uid: profile.id }, function(err, account) {
+        Account.findOne({ domainProvider: 'twitter.com', uid: profile.id }, function(err, account) {
             if (err) { return done(err); }
             if (account) { return done(null, account); }                                                   
+            
             var account = new Account();                  
-            account.domain = 'twitter.com';
+            account.domainProvider = 'twitter.com';
             account.email = profile.email;
             account.uid = profile.id;
-            console.log(token);
-            console.log(tokenSecret);
             var t = { 
                 kind: 'oauth',
                 token: token,

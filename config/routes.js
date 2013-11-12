@@ -1,10 +1,4 @@
-var users = require('../app/controllers/users')
-
-module.exports = function(app,passport){
-
-	//home route
-	var home = require('../app/controllers/home');
-	app.get('/', home.index);
+module.exports = function(app,passport, streamable){
 
     //user routes
     var users = require('../app/controllers/users')
@@ -16,6 +10,14 @@ module.exports = function(app,passport){
     app.get('/home/:userId', users.display)
 
     app.get('/logout', users.logout)
+
+    //general routes
+	app.get('/', users.index);
+
+    //stream routes
+    
+    var streams = require('../app/controllers/streams.js')
+    app.get('/streams/:domain/*', streamable, streams.getSource)
 
     //authentication
     app.post('/users/session',
@@ -32,11 +34,12 @@ module.exports = function(app,passport){
         app.get('/auth/twitter/callback',
             passport.authorize('twitter-authz', { failureRedirect: '/login' }),
             function(req, res) {
-                var user = req.user;
-                var account = req.account;
+                console.log("enter")
+                var user = req.user
+                var account = req.account
                 // Associate the Twitter account with the logged-in user.
-                account.email = user.email;
-                console.log(account);
+                account.email = user.email
+                console.log(account)
                 account.save(function(err) {
                     if (err) {  return (err); }
                     res.redirect('/home');
@@ -44,9 +47,6 @@ module.exports = function(app,passport){
                 });
             }
         );
-
-
-
     //Gallery Routes (D3 pages, gallery)
 
     //app.get /assignment#/username;
