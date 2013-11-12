@@ -39,7 +39,7 @@ exports.getSource = function (req, res, next) {
                 } else {
                     console.log("Cache Hit")
                     console.log(cachedStream)
-                    res.json(cachedStream.content)
+                    res.send(cachedStream.content)
                 }
             }
         })

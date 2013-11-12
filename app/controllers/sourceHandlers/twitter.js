@@ -9,6 +9,7 @@ var mongoose = require('mongoose')
     , twit
     , acct
     , res
+    , publicSources = ['earthquake, usgs, ieeevis']
 
 
 /* Checks cache for screenname, count and date.
@@ -43,17 +44,30 @@ exports.init = function (account, args, resp) {
     
     acct    = account
     res     = resp
-    corpus  = ""
+    corpus  = "["
     foundTweets=0
 
-    if (acct.tokens) {
-        var key = keys
-        key.access_token_key = acct.tokens.token
-        key.access_token_secret = acct.tokens.tokenSecret
-        console.log(key)
+    var key = keys
+    var isPublic = true
+    //use public feeds...
+
+    if (acct) {
+        if (acct.tokens) {
+            key.access_token_key = acct.tokens.token
+            key.access_token_secret = acct.tokens.tokenSecret
+            isPublic = false
+        }
     }
+
+    if (isPublic) {
+        if (args[1] in publicSources) {
+            //set params and call getTweets...
+        }
+        //screen name must be one of public sources... 
+    }
+
     //use account keys rather than global keys...
-    twit = new ntwitter(keys)
+    twit = new ntwitter(key)
 
     if (args) {
         if (args[1]) maxTweets=args[1]
@@ -116,18 +130,19 @@ function getTweets(maxid, tweets) {
             foundTweets = countRT + countT + foundTweets
             console.log(countRT+" retweets and "+countT+" tweets")
             var comma=""
+            var str = "["+tweets.substring(0, tweets.length-1)+"]"
             if (foundTweets>200)
                 comma=","
-            res.write(comma+"["+tweets.substring(0, tweets.length-1)+"]")
+            res.write(comma+str)
 
-            corpus = corpus.concat(tweets)
+            corpus = corpus.concat(comma+str)
             getTweets(tweetID, "") 
         
         } else {
             var updateDate = {
                 'screen_name':params.screen_name,
                 'count':maxTweets,
-                'content':corpus,
+                'content':corpus+"]",
                 'dateRequested':Date.now(),
                 'maxid':0 
             }
