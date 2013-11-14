@@ -1,6 +1,12 @@
 var mongoose = require('mongoose')
       , User = mongoose.model('User')
- 
+
+
+exports.index = function (req, res) {
+    user = req.user
+    res.render('home/index', {
+    })
+}
 
 //Set up the log in
 var login = function (req, res) {

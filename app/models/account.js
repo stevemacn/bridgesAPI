@@ -5,24 +5,26 @@ var mongoose = require('mongoose'),
 
 // Authenticate Schema
 var Account = new Schema ({
-    domain: { type: String, default: ''},
+    //conflict with node so changed from domain
+    domainProvider: { type: String, default: ''},
     uid:    { type: String, default: ''},
     // Could this be better?
     //user:   { type: Schema.Types.ObjectId, ref: 'User' },
     // Is email duplicated with User? 
     email:  { type: String, default: ''},
-    streams: [{
-        name: { type: String, default: ''},
-        // Content is unformatted it is probably JSON
-        content: { type: String, default: ''},
-        last_updated: { type: Date, default: Date.now() },
-    }],
     tokens: {  
         kind :      {type: String, default: ''},
         token :     {type: String, default: ''},
         tokenSecret:{type: String, default: ''}
-    }
-});
+    },
+    streams: [{
+        screen_name: { type: String, default: ''},
+        maxid: { type: String, default: ''},
+        count: { type: String, default: ''},
+        content: { type: String, default: ''},
+        dateRequested: { type: Date, default: Date.now() },
+    }]      
+})
 
 
 mongoose.model('Account', Account);

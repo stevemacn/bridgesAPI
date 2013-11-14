@@ -1,54 +1,46 @@
 var mongoose = require('mongoose')
-      , User = mongoose.model('User')
-      , Account = mongoose.model('Account');
+    , User = mongoose.model('User')
+    , Account = mongoose.model('Account')
+    , sourceHandlers = {
+            'twitter.com':'twitter.js'
+    }
 
-var stream_loaders = {
-    //TODO: write parsers
-};
+//Example Request: /streams/twitter.com/usgs/200
 
-exports.read = function(req, res, next) {
-    Account.findOne({
-        uid: req.user._id,
-        domain: req.params.account_domain
-    }, function(err, account) {
-        if (err) // Query Failed
-            return next(err);
-        if (!account) // Account doesn't exist
-            return next(new Error(
-                "Could not find an account with " + req.params.account_domain));
+exports.getSource = function (req, res, next) {
+    
+    console.log("User: "+req.user.email+" requests "+req.params.domain)
+    console.log("Params: "+req.params)
+
+    if (!req.params.domain)
+        return next(new Error('No datasource was specified'))
+    if (!(req.params.domain in sourceHandlers))
+        return next(new Error(
+            'Requested datasource not yet available: '+req.params.domain))
+     
+    Account
+        .findOne({
+            email : req.user.email,
+            domainProvider: req.params.domain 
+        })
+        .exec(function (err, acct) {
+            if (err) return next(err)
+            
+            var src = './sourceHandlers/'+sourceHandlers[req.params.domain]
+            var srcHandler = require(src)
+            
+            if (!acct) { //should access public feeds... 
+                    srcHandler.init(null, req.params[0].split('/'), res)
         
-        // Can we load this stream? Is it implemented?
-        if (account.domain in stream_loaders) {
-            // There is no loader for this domain (yet)
-            return next(new Error(
-                "Stream loading for " + account.domain + " not supported"));
-        } else {
-            var loader = stream_loaders[account.domain];
-        }
-        
-        // Does this stream have any data yet?
-        var stream = account.streams.filter(function(s) {
-            return s.name == req.params.stream_name
-        })[0];
-        if (stream) {
-            if (stream.last_updated < 15*60*1000) {
-                // It was updated at least 15 minutes ago. Launch an async refresh.
-                process.nextTick(function() {
-                    stream_loaders[account_domain](req.params.stream_name, function(err) {}); 
-                });
+            } else {
+                cachedStream = srcHandler.checkCache(acct, req.params[0].split('/'))
+                if (cachedStream==null) { //if acct date is valid give the cache...
+                    srcHandler.init(acct, req.params[0].split('/'), res)
+                } else {
+                    console.log("Cache Hit")
+                    console.log(cachedStream)
+                    res.send(cachedStream.content)
+                }
             }
-            // Even if it is out of date, prefer the response we can give now
-            res.send(stream.content);
-        } else {
-            // This is the first time it has been loaded. Load it.
-            // This process is slow and will only give a response after
-            //   the stream has loaded.
-            stream_loaders[account_domain](req.params.stream_name, function(err) {
-                if (err) next(err);
-                res.send(stream.content);
-                //TODO: will this return correctly for the first load?
-            });
-        }
-        
-    });
+        })
 }

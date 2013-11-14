@@ -2,7 +2,7 @@ extends layout
 
 block css
     link(rel="stylesheet", href="/css/webicons/webicons.css")
-
+    link(rel="stylesheet", href="/css/inactive.css")
 block js
     script(src="components/modernizr/modernizr.js")
 
@@ -10,7 +10,13 @@ block info
    if (user)
     legend Add additional datasources
     a(href="/connect/twitter").webicon.twitter.large
-
+    div.webicon.facebook.large.inactive
+    div.webicon.foursquare.large.inactive    
+    div.webicon.yelp.large.inactive    
+    div.webicon.linkedin.large.inactive
+    div.webicon.flickr.large.inactive 
+    div.webicon.google.large.inactive
+        
 block form
   if (user) 
     .panel.panel-info
