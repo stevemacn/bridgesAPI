@@ -1,5 +1,4 @@
 // Example model
-
 var mongoose = require('mongoose'),
   Schema = mongoose.Schema;
 
@@ -19,8 +18,8 @@ var Account = new Schema ({
     },
     streams: [{
         screen_name: { type: String, default: ''},
-        maxid: { type: String, default: ''},
-        count: { type: String, default: ''},
+        maxid: { type: Integer, default: 0}, // Used by twitter
+        count: { type: Integer, default: 200}, // Entry Limit 
         content: { type: String, default: ''},
         dateRequested: { type: Date, default: Date.now() },
     }]      
