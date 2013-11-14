@@ -11,9 +11,6 @@ module.exports = function(app,passport, streamable){
     app.get('/home/:userId', users.display)
 
     app.get('/logout', users.logout)
-    
-    var streams = require('../app/controllers/streams')
-    app.get('/stream/:account_domain/:stream_name', streams.read)
 
     //general routes
 	app.get('/', users.index);
