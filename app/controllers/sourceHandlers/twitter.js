@@ -9,7 +9,7 @@ var mongoose = require('mongoose')
     , twit
     , acct
     , res
-    , publicSources = ['earthquake, usgs, ieeevis']
+    , publicSources = {'earthquake':1, 'usgs':1, 'ieeevis':1}
 
 
 /* Checks cache for screenname, count and date.
@@ -58,10 +58,15 @@ exports.init = function (account, args, resp) {
             isPublic = false
         }
     }
-
     if (isPublic) {
-        if (args[1] in publicSources) {
+        if (args[0] in publicSources) {
             //set params and call getTweets...
+        } else {
+            var srcs = ""
+            for (i in publicSources) {
+                srcs+=i+" "
+            }
+            return res.send("Please select a public source: " + srcs)
         }
         //screen name must be one of public sources... 
     }
@@ -96,7 +101,10 @@ exports.init = function (account, args, resp) {
 function getTweets(maxid, tweets) {
      
     if (maxid) params.max_id = maxid
-    
+   
+        //getFriendsId
+        //getFollowersIds
+
     twit.getUserTimeline(params, function (err,data) {
         if (err) {
             res.json(err) 
