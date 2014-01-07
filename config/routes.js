@@ -7,7 +7,7 @@ module.exports = function(app,passport, streamable){
    
     app.get('/login', users.login)
     app.get('/home', users.display)
-    app.get('/home/:userId', users.display)
+    app.get('/home/:username', users.display)
 
     app.get('/logout', users.logout)
 

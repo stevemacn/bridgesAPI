@@ -1,6 +1,6 @@
 var mongoose = require('mongoose')
-      , User = mongoose.model('User')
-
+    , User = mongoose.model('User')
+    , Account = mongoose.model('Account')
 
 exports.index = function (req, res) {
     user = req.user
@@ -36,7 +36,21 @@ exports.logout = function (req, res) {
 }
 
 exports.display = function (req, res) {
-    var user = req.user
+    
+    var accounts
+        , user = req.user
+    
+    Account
+        .find({ email : user.email })
+        .exec(function (err, accts) {
+            if (err) return next(err)
+            if (!accts) return next(new Error('Failed to load User ' + id))
+            console.log(accts)
+            accounts=accts        
+        })
+    console.log(accounts)
+
+    
     res.render('users/index', {
       title: user.username + "'s Dashboard - Bridges",
       user: user
