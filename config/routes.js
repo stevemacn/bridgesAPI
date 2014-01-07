@@ -1,3 +1,4 @@
+
 module.exports = function(app,passport, streamable){
 
     //user routes
@@ -33,7 +34,7 @@ module.exports = function(app,passport, streamable){
     //authentication
     app.post('/users/session',
         passport.authenticate('local', {
-            successRedirect: '/',
+            successRedirect: '/home',
             failureRedirect: '/login',
             failureFlash: "User name or password incorrect"
         }), users.session)
@@ -58,5 +59,4 @@ module.exports = function(app,passport, streamable){
                 });
             }
         );
-
 };
