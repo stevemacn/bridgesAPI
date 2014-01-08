@@ -45,7 +45,7 @@ exports.init = function (account, args, resp) {
     
     acct    = account
     res     = resp
-    corpus  = "["
+    corpus  = "{"
     mode    = args[0]
     foundTweets=0
 
@@ -76,8 +76,8 @@ exports.init = function (account, args, resp) {
 
     //set up parameters for timeline or followers
     if (args) {
+        if (args[2]) maxTweets=args[2]
         if (mode=='timeline') {
-            if (args[2]) maxTweets=args[2]
             params = {
                 screen_name: args[1],
                 count: 200,
@@ -85,9 +85,10 @@ exports.init = function (account, args, resp) {
             }
             startGettingTweets(getTweets)
         } else if (mode=='followers') {
-    
+            
             params = {
-                screen_name: args[1]
+                screen_name: args[1],
+                count: (args[2]) ? args[2] : 5 
             }
             startGettingTweets(getFollowersById)
         } else { 
@@ -98,30 +99,41 @@ exports.init = function (account, args, resp) {
 
 function startGettingTweets (cb) {
     res.writeHead(200, {'Content-Type':'application/json'})
-    res.write("[")
+    res.write("{")
     cb(null, "") 
 }
 
 
 function getFollowersById(blank, tweets) { 
-    twit.getFollowersIds(params, function (err, data) {
-       console.log(data) 
+    console.log(params)
+    twit.getFollowersIds(params.screen_name, function (err, data) {
+        data = data.slice(0, params.count)
+        twit.showUser(data, function (err, data) {
+            corpus = corpus.concat(data[0].screen_name)
+            res.write(data[0].screen_name)
+            for (var i=1; i<data.length; i++){
+                corpus = corpus.concat(", "+data[i].screen_name)
+                res.write(", " + data[i].screen_name)
+            }
+            updateTweets(corpus)
+        })
     })
-}
-
-function getFollowersByUser( ) {
-
 }
 
 
 
 function getTweets(maxid, tweets) {
+    if (maxid) params.max_id = maxid
+    
+    if ((maxTweets-foundTweets)<params.count) params.count = maxTweets-foundTweets
     
     twit.getUserTimeline(params, function (err, data) {
         if (err) {
-            res.json(err) 
+            res.json({"error":err}) 
             return err
         }
+        console.log(foundTweets)
+        console.log(maxTweets)
         if ( data.length > 1 && maxTweets > foundTweets ) {
             //foundTweets=foundTweets+200; //200 tweets per request, less accurate, but faster
             var tweetID = countRT = countT = 0
@@ -153,7 +165,7 @@ function getTweets(maxid, tweets) {
             if (foundTweets>200)
                 comma=","
             res.write(comma+str)
-
+            
             corpus = corpus.concat(comma+str)
             getTweets(tweetID, "") 
         
@@ -169,7 +181,7 @@ function updateTweets (corpus) {
     var updateDate = {
         'screen_name':params.screen_name,
         'count':maxTweets,
-        'content':corpus+"]",
+        'content':corpus+"}",
         'dateRequested':Date.now(),
         'maxid':0,
         'mode':mode
@@ -180,19 +192,17 @@ function updateTweets (corpus) {
             if (acct.streams[a].screen_name==sn) {
                 acct.streams.splice(a)
                 acct.streams.push(data)
-                return acct;
+                return acct
             }
         }
         acct.streams.push(data)
         return acct
     }
     acct = replaceCache(acct, params.screen_name, updateDate)
-    res.write("]")
+    res.write("}")
     res.end()
     
     acct.save(function (err) {
         if (err) console.log(err)
     })
-    console.log(foundTweets)
-
 }
