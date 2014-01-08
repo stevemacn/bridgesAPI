@@ -14,10 +14,11 @@ exports.getSource = function (req, res, next) {
     console.log("Params: "+req.params)
 
     if (!req.params.domain)
-        return next(new Error('No datasource was specified'))
+        return res.json ({"error": "No datasource was specified"})
     if (!(req.params.domain in sourceHandlers))
-        return next(new Error(
-            'Requested datasource not yet available: '+req.params.domain))
+        return res.json (
+            {"error": "Requested datasource not yet supported: " + req.params.domain,
+            "tip":"Currently supported datasources: twitter.com"}) 
      
     Account
         .findOne({
@@ -38,7 +39,7 @@ exports.getSource = function (req, res, next) {
                     srcHandler.init(acct, req.params[0].split('/'), res)
                 } else {
                     console.log("Cache Hit")
-                    console.log(cachedStream)
+                    console.log(cachedStream.screen_name + " " + cachedStream.count)
                     res.send(cachedStream.content)
                 }
             }
