@@ -5,7 +5,8 @@ var mongoose = require('mongoose')
             'twitter.com':'twitter.js'
     }
 
-//Example Request: /streams/twitter.com/usgs/200
+//Example Request:  /streams/twitter.com/timeline/usgs/200
+                //  /streams/twitter.com/followers/usgs/200
 
 exports.getSource = function (req, res, next) {
     
@@ -25,12 +26,11 @@ exports.getSource = function (req, res, next) {
         })
         .exec(function (err, acct) {
             if (err) return next(err)
-            
             var src = './sourceHandlers/'+sourceHandlers[req.params.domain]
             var srcHandler = require(src)
             
             if (!acct) { //should access public feeds... 
-                    srcHandler.init(null, req.params[0].split('/'), res)
+                srcHandler.init(null, req.params[0].split('/'), res)
         
             } else {
                 cachedStream = srcHandler.checkCache(acct, req.params[0].split('/'))

@@ -22,6 +22,7 @@ var Account = new Schema ({
         count: { type: Number, default: 200}, // Entry Limit 
         content: { type: String, default: ''},
         dateRequested: { type: Date, default: Date.now() },
+        mode: {type: String, default:'timeline'}
     }]      
 })
 

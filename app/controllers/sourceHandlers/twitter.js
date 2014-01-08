@@ -9,6 +9,7 @@ var mongoose = require('mongoose')
     , twit
     , acct
     , res
+    , mode = 'timeline'
     , publicSources = {'earthquake':1, 'usgs':1, 'ieeevis':1}
 
 
@@ -24,16 +25,16 @@ exports.checkCache = function (acct, args) {
     if (!acct.streams) return null
     if (!args) return null
    
-    var sn = ct = null 
-    if (args[0]) sn = args[0]
-    if (args[1]) ct = args[1]
-
+    var sn = ct = mode = null 
+    if (args[0]) mode = args[0]
+    if (args[1]) sn = args[1]
+    if (args[2]) ct = args[2]
     var dt = new Date();
     dt.setMinutes(dt.getMinutes() - 15); 
     
     for (var index in acct.streams) {
         var at = acct.streams[index]
-        if (at.screen_name==sn && at.count>=ct && at.dateRequested>=dt) {
+        if (at.screen_name==sn && at.mode == mode && at.count>=ct && at.dateRequested>=dt) {
             return at
         }
     }
@@ -45,12 +46,13 @@ exports.init = function (account, args, resp) {
     acct    = account
     res     = resp
     corpus  = "["
+    mode    = args[0]
     foundTweets=0
 
     var key = keys
-    var isPublic = true
-    //use public feeds...
+        , isPublic = true
 
+    //check to see whether the account is associated with twitter
     if (acct) {
         if (acct.tokens) {
             key.access_token_key = acct.tokens.token
@@ -58,61 +60,70 @@ exports.init = function (account, args, resp) {
             isPublic = false
         }
     }
+    
+    //if the account is not associated, ensure request is a "public" feed 
     if (isPublic) {
-        if (args[0] in publicSources) {
-            //set params and call getTweets...
-        } else {
+        if (!(args[1] in publicSources)) { 
             var srcs = ""
             for (i in publicSources) {
                 srcs+=i+" "
             }
-            return res.send("Please select a public source: " + srcs)
+            return res.json({"Error":"Please select a public source: " + srcs})
         }
-        //screen name must be one of public sources... 
     }
 
-    //use account keys rather than global keys...
     twit = new ntwitter(key)
 
+    //set up parameters for timeline or followers
     if (args) {
-        if (args[1]) maxTweets=args[1]
-        //is it streaming or user feed
-        if (args[0]) {
+        if (mode=='timeline') {
+            if (args[2]) maxTweets=args[2]
             params = {
-                screen_name: args[0],
+                screen_name: args[1],
                 count: 200,
                 include_rts:true
             }
-            res.writeHead(200, {'Content-Type':'application/json'})
-            res.write("[")
-            getTweets(null, "") 
-        } else {
-            res.send("streaming is not yet supported")
-        }
+            startGettingTweets(getTweets)
+        } else if (mode=='followers') {
     
-        //getTweets(null, "")
-        //instead of null pass maxid from cache, 
-        //then concat with cache
-        //in this case... subtract cache count from maxTweet count?
+            params = {
+                screen_name: args[1]
+            }
+            startGettingTweets(getFollowersById)
+        } else { 
+            return res.json({"error":"Must query for either timeline or followers"})
+        }
     }
 }
 
+function startGettingTweets (cb) {
+    res.writeHead(200, {'Content-Type':'application/json'})
+    res.write("[")
+    cb(null, "") 
+}
+
+
+function getFollowersById(blank, tweets) { 
+    twit.getFollowersIds(params, function (err, data) {
+       console.log(data) 
+    })
+}
+
+function getFollowersByUser( ) {
+
+}
+
+
 
 function getTweets(maxid, tweets) {
-     
-    if (maxid) params.max_id = maxid
-   
-        //getFriendsId
-        //getFollowersIds
-
-    twit.getUserTimeline(params, function (err,data) {
+    
+    twit.getUserTimeline(params, function (err, data) {
         if (err) {
             res.json(err) 
             return err
         }
         if ( data.length > 1 && maxTweets > foundTweets ) {
             //foundTweets=foundTweets+200; //200 tweets per request, less accurate, but faster
-            
             var tweetID = countRT = countT = 0
             data.forEach(function(tweet) {
                 if (tweet.retweeted_status) {
@@ -147,56 +158,41 @@ function getTweets(maxid, tweets) {
             getTweets(tweetID, "") 
         
         } else {
-            var updateDate = {
-                'screen_name':params.screen_name,
-                'count':maxTweets,
-                'content':corpus+"]",
-                'dateRequested':Date.now(),
-                'maxid':0 
-            }
-            
-            replaceCache = function (acct, sn, data) {
-                for (a in acct.streams) {
-                    if (acct.streams[a].screen_name==sn) {
-                        acct.streams.splice(a)
-                        acct.streams.push(data)
-                        return acct;
-                    }
-                }
-                acct.streams.push(data)
-                return acct
-            }
-            acct = replaceCache(acct, params.screen_name, updateDate)
-            res.write("]")
-            res.end()
-
-            acct.save(function (err) {
-                if (err) console.log(err)
-            })
-            console.log(foundTweets)
-
+            updateTweets(corpus)
         }
     })
     return true
 }
 
+function updateTweets (corpus) {
 
+    var updateDate = {
+        'screen_name':params.screen_name,
+        'count':maxTweets,
+        'content':corpus+"]",
+        'dateRequested':Date.now(),
+        'maxid':0,
+        'mode':mode
+    }
+    
+    replaceCache = function (acct, sn, data) {
+        for (a in acct.streams) {
+            if (acct.streams[a].screen_name==sn) {
+                acct.streams.splice(a)
+                acct.streams.push(data)
+                return acct;
+            }
+        }
+        acct.streams.push(data)
+        return acct
+    }
+    acct = replaceCache(acct, params.screen_name, updateDate)
+    res.write("]")
+    res.end()
+    
+    acct.save(function (err) {
+        if (err) console.log(err)
+    })
+    console.log(foundTweets)
 
-    //var filterParams = {
-        //locations:'-10.371,48.812,2.192,60.892',
-        //track:"bridges"};
-
-    //var stream;
-    //twit.stream('statuses/filter', filterParams, function(_stream) {
-    //    stream = _stream;
-    //});
-    //stream.on('data', function(data){
-        //console.log(data.text);
-        /*io.sockets.volatile.emit('streams/twitter', {
-            user: data.user.screen_name,
-            text: data.text,
-            created_at: data.created_at
-        });*/
-    //   res.json(data.text);
-    //})
-//}
+}
