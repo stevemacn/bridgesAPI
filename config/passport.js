@@ -9,11 +9,47 @@ var mongoose = require('mongoose')
     , User = mongoose.model('User')
     , Account = mongoose.model('Account')
 
-    module.exports = function (passport, config) {
 
+exports.ensureAuthenticated = function ensureAuthenticated(req, res, next) {
+    if (req.isAuthenticated()) { return next() }
+    res.redirect('/login')
+}
+
+module.exports = function (passport, app, config) {
+
+    var users = require('../app/controllers/users')
+
+    app.post('/users/session',
+        passport.authenticate('local', {
+            successRedirect: '/home',
+            failureRedirect: '/login',
+            failureFlash: "User name or password incorrect"
+        }), 
+        users.session)
+
+    app.get('/connect/twitter',
+        passport.authorize('twitter-authz', { failureRedirect: '/login' })
+    );
+
+    app.get('/auth/twitter/callback',
+        passport.authorize('twitter-authz', { failureRedirect: '/login' }),
+        function(req, res) {
+            var user = req.user
+            var account = req.account
+            // Associate the Twitter account with the logged-in user.
+            account.email = user.email
+            console.log(account)
+            account.save(function(err) {
+                if (err) {  return (err); }
+                res.redirect('/home');
+
+            });
+        }
+    );
+    
     passport.serializeUser(function(user, done) {
         done(null, user.id)
-      })
+    })
 
     passport.deserializeUser(function(id, done) {
         User.findOne({ _id: id }, function (err, user) {

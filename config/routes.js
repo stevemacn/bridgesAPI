@@ -1,5 +1,5 @@
 
-module.exports = function(app,passport, streamable){
+module.exports = function(app, pass, streamable){
 
     //user routes
     var users = require('../app/controllers/users')
@@ -7,7 +7,7 @@ module.exports = function(app,passport, streamable){
     app.post('/users', users.create)
    
     app.get('/login', users.login)
-    app.get('/home', users.display)
+    app.get('/home' ,users.display)
     app.get('/home/:username', users.display)
 
     app.get('/logout', users.logout)
@@ -32,31 +32,4 @@ module.exports = function(app,passport, streamable){
 
 
     //authentication
-    app.post('/users/session',
-        passport.authenticate('local', {
-            successRedirect: '/home',
-            failureRedirect: '/login',
-            failureFlash: "User name or password incorrect"
-        }), users.session)
-
-        app.get('/connect/twitter',
-            passport.authorize('twitter-authz', { failureRedirect: '/login' })
-        );
-
-        app.get('/auth/twitter/callback',
-            passport.authorize('twitter-authz', { failureRedirect: '/login' }),
-            function(req, res) {
-                console.log("enter")
-                var user = req.user
-                var account = req.account
-                // Associate the Twitter account with the logged-in user.
-                account.email = user.email
-                console.log(account)
-                account.save(function(err) {
-                    if (err) {  return (err); }
-                    res.redirect('/home');
-
-                });
-            }
-        );
 };
