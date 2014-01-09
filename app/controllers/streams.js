@@ -1,6 +1,7 @@
 var mongoose = require('mongoose')
     , User = mongoose.model('User')
     , Account = mongoose.model('Account')
+    , account
     , sourceHandlers = {
             'twitter.com':'twitter.js'
     }
@@ -27,13 +28,11 @@ exports.getSource = function (req, res, next) {
         })
         .exec(function (err, acct) {
             if (err) return next(err)
-            var src = './sourceHandlers/'+sourceHandlers[req.params.domain]
-            var srcHandler = require(src)
+           
+            cb = function (acct) {
+                var src = './sourceHandlers/'+sourceHandlers[req.params.domain]
+                var srcHandler = require(src)
             
-            if (!acct) { //should access public feeds... 
-                srcHandler.init(null, req.params[0].split('/'), res)
-        
-            } else {
                 cachedStream = srcHandler.checkCache(acct, req.params[0].split('/'))
                 if (cachedStream==null) { //if acct date is valid give the cache...
                     srcHandler.init(acct, req.params[0].split('/'), res)
@@ -43,5 +42,34 @@ exports.getSource = function (req, res, next) {
                     res.send(cachedStream.content)
                 }
             }
+
+            if (!acct) 
+                acct = getPublicFeeds(req.params.domain, cb)
+            else 
+                cb(acct)
         })
 }
+
+
+//create public accounts for each datasource
+function getPublicFeeds (domain, cb) {
+    //twitter-public
+    Account
+        .findOne({
+            email : "public",
+            domainProvider: domain 
+        })
+        .exec(function (err, acct) {
+            if (acct) return cb(acct)    
+            
+            var config = require ("../../config/twitterKeys.json")  
+            , acct = new Account();
+            
+            acct.email="public" 
+            acct.domainProvider="twitter.com"
+            acct.tokens.token = config.access_token_key
+            acct.tokens.tokenSecret = config.access_token_secret 
+            
+            return cb(acct)
+        })
+} 

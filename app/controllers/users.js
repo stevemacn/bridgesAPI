@@ -4,8 +4,7 @@ var mongoose = require('mongoose')
 
 exports.index = function (req, res) {
     user = req.user
-    res.render('home/index', {
-    })
+    res.render('home/index', {})
 }
 
 //Set up the log in
@@ -15,7 +14,7 @@ var login = function (req, res) {
       delete req.session.returnTo
       return
     }
-  res.redirect('/')
+  return res.redirect('/home')  
 }
 
 exports.authCallback = login
@@ -37,24 +36,29 @@ exports.logout = function (req, res) {
 
 exports.display = function (req, res) {
     
+    if (!req.user) return res.redirect("login")
+        
     var accounts
         , user = req.user
-    
+     
     Account
         .find({ email : user.email })
         .exec(function (err, accts) {
             if (err) return next(err)
             if (!accts) return next(new Error('Failed to load User ' + id))
-            console.log(accts)
             accounts=accts        
         })
-    console.log(accounts)
 
     
     res.render('users/index', {
       title: user.username + "'s Dashboard - Bridges",
       user: user
     })
+}
+
+function ensureAuthenticated(req, res, next) {
+  if (req.isAuthenticated()) { return next(); }
+  res.redirect('/login')
 }
 
 //set up the signup

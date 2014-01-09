@@ -54,23 +54,12 @@ exports.init = function (account, args, resp) {
 
     //check to see whether the account is associated with twitter
     if (acct) {
+        if (!(acct.email=='public')) isPublic = false
         if (acct.tokens) {
             key.access_token_key = acct.tokens.token
             key.access_token_secret = acct.tokens.tokenSecret
-            isPublic = false
         }
-    }
-    
-    //if the account is not associated, ensure request is a "public" feed 
-    if (isPublic) {
-        if (!(args[1] in publicSources)) { 
-            var srcs = ""
-            for (i in publicSources) {
-                srcs+=i+" "
-            }
-            return res.json({"Error":"Please select a public source: " + srcs})
-        }
-    }
+    } else return res.json ({"error":"no account could be found or used"})
 
     twit = new ntwitter(key)
 
@@ -83,21 +72,32 @@ exports.init = function (account, args, resp) {
                 count: 200,
                 include_rts:true
             }
-            startGettingTweets(getTweets)
+            startGettingTweets(getTweets, isPublic, args[1])
         } else if (mode=='followers') {
             
             params = {
                 screen_name: args[1],
                 count: (args[2]) ? args[2] : 5 
             }
-            startGettingTweets(getFollowersById)
+            startGettingTweets(getFollowersById, isPublic, args[1])
         } else { 
             return res.json({"error":"Must query for either timeline or followers"})
         }
     }
 }
 
-function startGettingTweets (cb) {
+function startGettingTweets (cb, isPublic, source) {
+    //if the account is not associated, ensure request is a "public" feed 
+    if (isPublic) {
+        if (!(source in publicSources)) { 
+            var srcs = ""
+            for (i in publicSources) {
+                srcs+=i+" "
+            }
+            return res.json({"Error":source+" isn't supported without " +
+                            "authenticating via twitter; public sources include: " + srcs})
+        }
+    }
     res.writeHead(200, {'Content-Type':'application/json'})
     res.write("{")
     cb(null, "") 
@@ -132,8 +132,6 @@ function getTweets(maxid, tweets) {
             res.json({"error":err}) 
             return err
         }
-        console.log(foundTweets)
-        console.log(maxTweets)
         if ( data.length > 1 && maxTweets > foundTweets ) {
             //foundTweets=foundTweets+200; //200 tweets per request, less accurate, but faster
             var tweetID = countRT = countT = 0
@@ -186,7 +184,8 @@ function updateTweets (corpus) {
         'maxid':0,
         'mode':mode
     }
-    
+   
+    console.log(acct)
     replaceCache = function (acct, sn, data) {
         for (a in acct.streams) {
             if (acct.streams[a].screen_name==sn) {
