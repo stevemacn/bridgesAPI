@@ -18,14 +18,19 @@ exports.session = login
 
 
 exports.index = function (req, res) {
+    if (!user) var user
     user = req.user
     res.render('home/index', {})
 }
+
 exports.login = function (req, res) {
+    if (!user) var user
+    if (req.user)
+        user = req.user
     msg = req.flash('loginMessage')
     res.render("users/login", {
         title: 'Login',
-        //message: req.flash('error')
+        user: user,
         message: msg
    })
 }
@@ -40,14 +45,12 @@ exports.display = function (req, res) {
     
     if (!req.user) return res.redirect("login")
     
-    var accounts
-        , user = req.user
+    user = req.user
 
     Account
         .findOne({ email : user.email })
         .exec(function (err, accts) {
             if (err) return next(err)
-            //if (!accts) return next(new Error('Failed to load User ' + id))
             res.render('users/index', {
                 title: user.username + "'s Dashboard - Bridges",
                 user: user,
