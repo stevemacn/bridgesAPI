@@ -20,19 +20,20 @@ fs.readdirSync(modelsPath).forEach(function (file) {
   }
 })
 
+//Bootstrap passport
+require('./config/passport')(passport, config)
+
 //Bootstrap express
 var app = express()
 require('./config/express')(app, config, passport)
 
-//Bootstrap passport
-pass = require('./config/passport')(passport, app, config)
 
 var server = app.listen(config.port)
 var io = require('socket.io').listen(server);
 var streamable = require('streamable').streamable(io);
 
 //Bootstrap routes.
-require('./config/routes')(app, pass, streamable)
+require('./config/routes')(app, passport, streamable)
 
 exports = module.exports = app
 

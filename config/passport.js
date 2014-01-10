@@ -10,42 +10,11 @@ var mongoose = require('mongoose')
     , Account = mongoose.model('Account')
 
 
-exports.ensureAuthenticated = function ensureAuthenticated(req, res, next) {
-    if (req.isAuthenticated()) { return next() }
-    res.redirect('/login')
-}
+module.exports = function (passport, config) {
 
-module.exports = function (passport, app, config) {
-
-    var users = require('../app/controllers/users')
-
-    app.post('/users/session',
-        passport.authenticate('local', {
-            successRedirect: '/home',
-            failureRedirect: '/login',
-            failureFlash: "User name or password incorrect"
-        }), 
-        users.session)
-
-    app.get('/connect/twitter',
-        passport.authorize('twitter-authz', { failureRedirect: '/login' })
-    );
-
-    app.get('/auth/twitter/callback',
-        passport.authorize('twitter-authz', { failureRedirect: '/login' }),
-        function(req, res) {
-            var user = req.user
-            var account = req.account
-            // Associate the Twitter account with the logged-in user.
-            account.email = user.email
-            console.log(account)
-            account.save(function(err) {
-                if (err) {  return (err); }
-                res.redirect('/home');
-
-            });
-        }
-    );
+    //======================
+    //passport session setup
+    //======================
     
     passport.serializeUser(function(user, done) {
         done(null, user.id)
@@ -57,24 +26,56 @@ module.exports = function (passport, app, config) {
         })
     })
 
-    passport.use(new LocalStrategy({
+    //======================
+    //passport login setup
+    //======================
+    
+    //Won't be called unless both user and pwd are entered.
+
+    passport.use('local-log', new LocalStrategy({
            usernameField: 'username',
-           passwordField: 'password'
+           passwordField: 'password',
+           passReqToCallback: true 
     },
     
-    function(email, password, done) {
+    function(req, email, password, done) {
         User.findOne({ email: email }, function (err, user) {
             if (err) { return done(err) }
-        if (!user) {
-            return done(null, false, { message: 'Unknown user' })
-        }
-        if (!user.authenticate(password)) {
-            return done(null, false, { message: 'Invalid password' })
-        }
+            if (!user) 
+                return done(null, false, 
+                        req.flash('loginMessage', 'No user was found'))
+    
+            if (!user.authenticate(password)) 
+                return done(null, false, 
+                            req.flash('loginMessage', 'Invalid password'))//{ message: 'Invalid password' })
+            
             return done(null, user)
         })    
-    }
-    ))
+    }))
+
+    
+    //======================
+    //passport signup setup
+    //======================
+    
+    passport.use('local-signup', new LocalStrategy({
+        usernameField: 'email',
+        passwordField: 'password'
+    },
+    function (req, email, password, done) {
+        User.findOne({email: email}, function(err, user) {
+            if (err) return done(err)
+            if (!email)
+                return done(null, false,
+                        req.flash('signupMessage', 'User already associated to an email'))
+
+        })
+    }))
+
+    //======================
+    //passport twitter setup
+    //======================
+
    
     passport.use('twitter-authz', new TwitterStrategy({
         consumerKey:    twitterKeys.consumer_key,
