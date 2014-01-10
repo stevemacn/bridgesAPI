@@ -5,6 +5,7 @@ block form
        form(action='/users', method='post').form-horizontal.bs-example
          .fieldset
            legend Create an account!   
+            input(type="hidden", name="_csrf", value=csrftoken)
            .form-group
               label.col-lg-2.control-label  Username
               div.col-lg-10

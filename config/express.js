@@ -55,13 +55,16 @@ module.exports = function (app, config, passport) {
     app.use(passport.initialize())
     app.use(passport.session())
     app.use(flash())
+
+    //https://github.com/evilpacket/express-secure-skeleton/blob/master/app.js
+    app.use(express.csrf());
+    app.use(function (req, res, next) {
+        res.locals.csrftoken = req.csrfToken();
+        next();
+    });
     // routes should be at the last
     app.use(app.router)
 
-    // assume "not found" in the error msgs
-    // is a 404. this is somewhat silly, but
-    // valid, you can do whatever you like, set
-    // properties, use instanceof etc.
     app.use(function(err, req, res, next){
       // treat as 404
       if (err.message
@@ -69,11 +72,8 @@ module.exports = function (app, config, passport) {
         || (~err.message.indexOf('Cast to ObjectId failed')))) {
         return next()
       }
-
-      // log it
       // send emails if you want
       console.error(err.stack)
-
       // error page
       res.status(500).render('500', { error: err.stack })
     })
