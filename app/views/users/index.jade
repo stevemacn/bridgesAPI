@@ -29,6 +29,17 @@ block form
             div  
                 Strong.col-lg-4 Email: 
                 | #{user.email}
+            div
+                Strong.col-lg-4 API Sha1 Key:
+                | #{user.hashed_password}
+            hr
+            if (acct)
+                div 
+                    Strong.col-lg-4 Authenticated: 
+                    | #{acct.domainProvider}
+            else 
+                div 
+                    Strong.col-lg-6 Not authenticated
   else 
       .well
         h1 You are not logged in! 
