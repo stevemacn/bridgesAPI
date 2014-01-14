@@ -31,8 +31,6 @@ exports.login = function (req, res) {
     else
         var user = ""
 
-    console.log("HERE")
-    console.log(user)
     msg = req.flash('loginMessage')
     res.render("users/login", {
         title: 'Login',
@@ -65,6 +63,26 @@ exports.display = function (req, res) {
         })
     
 }
+
+exports.deletePerson = function (req, res) {
+
+    user = req.user
+
+    User
+        .findOne({email: user.email})
+        .exec(function (err, user) {
+            if (err) return next(err)
+                user.remove()
+        })
+    Account
+        .findOne({email: user.email})
+        .exec(function(err, acct) {
+            if (err) return next(err)
+                acct.remove()
+        })
+}
+
+
 
 //set up the signup
 exports.signup = function (req, res) {

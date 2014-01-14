@@ -8,14 +8,14 @@ block js
 
 block info
    if (user)
-    legend Add additional datasources
-    a(href="/connect/twitter").webicon.twitter.large
-    div.webicon.facebook.large.inactive
-    div.webicon.foursquare.large.inactive    
-    div.webicon.yelp.large.inactive    
-    div.webicon.linkedin.large.inactive
-    div.webicon.flickr.large.inactive 
-    div.webicon.google.large.inactive
+        legend Add additional datasources
+        a(href="/connect/twitter").webicon.twitter.large
+        div.webicon.facebook.large.inactive
+        div.webicon.foursquare.large.inactive    
+        div.webicon.yelp.large.inactive    
+        div.webicon.linkedin.large.inactive
+        div.webicon.flickr.large.inactive 
+        div.webicon.google.large.inactive
         
 block form
   if (user) 
@@ -43,6 +43,14 @@ block form
             else 
                 div 
                     Strong.col-lg-6 Not authenticated
+    .panel.panel-info
+        .panel-heading
+            h3.panel-title Profile Options
+        .panel-body
+            div
+                -var src = "/users/"+user.id
+                a(href=src).btn.btn-primary Delete Account
+
   else 
       .well
         h1 You are not logged in! 

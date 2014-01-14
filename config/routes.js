@@ -10,6 +10,8 @@ module.exports = function(app, passport, streamable){
     app.get('/home' , isLoggedIn, users.display)
     app.get('/home/:username', isLoggedIn, users.display)
 
+    app.delete('/users/:id')
+
     app.get('/logout', users.logout)
 
     //general routes
