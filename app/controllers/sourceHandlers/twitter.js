@@ -68,6 +68,7 @@ exports.init = function (account, args, resp) {
     if (args) {
         if (args[2]) maxTweets=args[2]
         if (mode=='timeline') {
+            corpus = {"tweets":[]}
             params = {
                 screen_name: args[1],
                 count: 200,
@@ -124,6 +125,7 @@ function getTweets(maxid, tweets) {
     
     if ((maxTweets-foundTweets)<params.count) params.count = maxTweets-foundTweets
     
+
     twit.getUserTimeline(params, function (err, data) {
         if (err) {
             res.json({"error":err}) 
@@ -135,33 +137,22 @@ function getTweets(maxid, tweets) {
             data.forEach(function(tweet) {
                 if (tweet.retweeted_status) {
                     retweet = tweet.retweeted_status
-                    tweets = tweets.concat(
-                        JSON.stringify({
-                            date : retweet.created_at,
-                            tweet: retweet.text
-                        })+","
-                    )
+                    corpus.tweets.push({
+                        "date":retweet.created_at,
+                        "tweet":retweet.text
+                    })
                     countRT++
                 } else {
-                    tweets = tweets.concat(
-                        JSON.stringify({
-                            date : tweet.created_at,
-                            tweet: tweet.text
-                        })+","
-                    )
+                    corpus.tweets.push({
+                        "date":tweet.created_at,
+                        "tweet":tweet.text
+                    })
                     countT++
                 }
                 tweetID = tweet.id
             });
             foundTweets = countRT + countT + foundTweets
             console.log(countRT+" retweets and "+countT+" tweets")
-            var comma=""
-            var str = "["+tweets.substring(0, tweets.length-1)+"]"
-            if (foundTweets>200)
-                comma=","
-            res.write(comma+str)
-            
-            corpus = corpus.concat(comma+str)
             getTweets(tweetID, "") 
         
         } else {
