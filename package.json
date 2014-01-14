@@ -30,6 +30,9 @@
     "request": "~2.22.0",
     "mocha":"latest",
     "should":"latest",
-    "supertest":"latest"
+    "supertest":"latest",
+    "superagent":"latest",
+    "jquerygo":"latest",
+    "async":"latest"
   }
 }
