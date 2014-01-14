@@ -9,25 +9,26 @@ block form
             .form-group
                 label.col-lg-2.control-label Email 
                 div.col-lg-10
-                    input.form-control(
+                    input#user.form-control(
                         type='text',
                         name='username',
                         placeholder='User Name')
             .form-group 
                 label.col-lg-2.control-label Password
                 div.col-lg-10
-                    input.form-control(
+                    input#pwd.form-control(
                         type='password',
                         name='password',
                         placeholder='Password')
             .form-group
                 div.col-lg-10
-                    input(type='submit', value='Log In').btn.btn-primary
+                    input#submit(type='submit', value='Log In').btn.btn-primary
             .form-group
                 div.col-lg-10
                     p Don't have a an account? 
                         a(href="/signup") Signup!
 block validate
+    #{user}
     - if (message != ''){
         p.alert.alert-danger=message
     - }

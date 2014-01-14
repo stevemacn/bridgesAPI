@@ -25,12 +25,15 @@ block form
         .panel-body      
             div  
                 strong.col-lg-4 User Name: 
-                | #{user.username}
+                div#user 
+                |   #{user.username}
             div  
                 Strong.col-lg-4 Email: 
+                div#email
                 | #{user.email}
             div
                 Strong.col-lg-4 API Sha1 Key:
+                div#api
                 | #{user.hashed_password}
             hr
             if (acct)
