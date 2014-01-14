@@ -5,18 +5,38 @@ block css
     link(rel="stylesheet", href="/css/inactive.css")
 block js
     script(src="components/modernizr/modernizr.js")
+        
+    script(type='text/javascript').    
+        name="#{user.username}"
+        
+        function checkUser(value) {
+            var btn = document.getElementById("submit")
+            if (value==name)
+                btn.classList.remove('disabled')
+            else {
+                if (!(btn.classList.contains("disabled")))
+                    btn.classList.add("disabled")
+            } 
+        }
 
 block info
-   if (user)
+    if (user)
+        
         legend Add additional datasources
-        a(href="/connect/twitter").webicon.twitter.large
+        -if (!(acct.domainProvider=="twitter.com"))
+            a(href="/connect/twitter").webicon.twitter.large
         div.webicon.facebook.large.inactive
         div.webicon.foursquare.large.inactive    
         div.webicon.yelp.large.inactive    
         div.webicon.linkedin.large.inactive
         div.webicon.flickr.large.inactive 
         div.webicon.google.large.inactive
-        
+
+        -if (acct.domainProvider)    
+            legend Remove authenticated datasources
+            -if (acct.domainProvider=="twitter.com")
+                a(href="/disconnect/twitter").webicon.twitter.large
+                    
 block form
   if (user) 
     .panel.panel-info
@@ -36,21 +56,42 @@ block form
                 div#api
                 | #{user.hashed_password}
             hr
-            if (acct)
+            if (acct.domainProvider)
                 div 
                     Strong.col-lg-4 Authenticated: 
                     | #{acct.domainProvider}
             else 
                 div 
                     Strong.col-lg-6 Not authenticated
+    
     .panel.panel-info
         .panel-heading
             h3.panel-title Profile Options
         .panel-body
-            div
-                -var src = "/users/"+user.id
-                a(href=src).btn.btn-primary Delete Account
-
+            
+            -var src = "/users/"+user.id
+            form(action=src, method='post')
+                
+                strong(style="color:firebrick") WARNING: this will 
+                   | PERMANENTLY delete your account
+                
+                div(style="margin-top:20px;") 
+                    input(type="hidden", name="_csrf", value=csrftoken)
+                    div.col-lg-8
+                        input#input.form-control(
+                            type="text", 
+                            placeholder="type your username, then", 
+                            onkeyup="checkUser(this.value)",
+                            style="float:left; margin-right:25px;" )
+                                
+                    input.form-control(
+                            type="hidden", 
+                            name="_method",
+                            value="DELETE")
+                
+                    input#submit.btn.btn-primary.disabled( 
+                            type='submit', 
+                            value="Delete Account")
   else 
       .well
         h1 You are not logged in! 

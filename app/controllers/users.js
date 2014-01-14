@@ -55,6 +55,7 @@ exports.display = function (req, res) {
         .findOne({ email : user.email })
         .exec(function (err, accts) {
             if (err) return next(err)
+            if (!accts) accts = new Account
             res.render('users/index', {
                 title: user.username + "'s Dashboard - Bridges",
                 user: user,
@@ -67,7 +68,8 @@ exports.display = function (req, res) {
 exports.deletePerson = function (req, res) {
 
     user = req.user
-
+    console.log(user)
+    /*
     User
         .findOne({email: user.email})
         .exec(function (err, user) {
@@ -79,7 +81,7 @@ exports.deletePerson = function (req, res) {
         .exec(function(err, acct) {
             if (err) return next(err)
                 acct.remove()
-        })
+        })*/
 }
 
 
