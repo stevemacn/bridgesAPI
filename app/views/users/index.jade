@@ -6,9 +6,8 @@ block css
 block js
     script(src="components/modernizr/modernizr.js")
         
-    script(type='text/javascript').    
-        name="#{user.username}"
-        
+    script.
+        name="#{user.username}";
         function checkUser(value) {
             var btn = document.getElementById("submit")
             if (value==name)

@@ -10,13 +10,8 @@ module.exports = function(app, passport, streamable){
     app.get('/home' , isLoggedIn, users.display)
     app.get('/home/:username', isLoggedIn, users.display)
 
-    app.post('/users/:id', function() {
-        console.log("posted")
-    })
-    app.delete('/users/:id', function() {
-        console.log("DELETED")
-    })
-
+    app.delete('/users/:id', isLoggedIn, users.deletePerson)
+    
     app.get('/logout', users.logout)
 
     //general routes
