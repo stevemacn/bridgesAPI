@@ -38,8 +38,10 @@ exports.getSource = function (req, res, next) {
                     srcHandler.init(acct, req.params[0].split('/'), res)
                 } else {
                     console.log("Cache Hit")
-                    console.log(cachedStream.screen_name + " " + cachedStream.count)
-                    res.send(cachedStream.content)
+                    console.log(cachedStream.content)
+                    //console.log(cachedStream.screen_name + " " + cachedStream.count)
+                    
+                    res.json(JSON.parse(cachedStream.content))
                 }
             }
 

@@ -35,6 +35,7 @@ exports.checkCache = function (acct, args) {
     for (var index in acct.streams) {
         var at = acct.streams[index]
         if (at.screen_name==sn && at.mode == mode && at.count>=ct && at.dateRequested>=dt) {
+            console.log(at)
             return at
         }
     }
@@ -98,28 +99,24 @@ function startGettingTweets (cb, isPublic, source) {
                             "authenticating via twitter; public sources include: " + srcs})
         }
     }
-    res.writeHead(200, {'Content-Type':'application/json'})
-    res.write("{")
     cb(null, "") 
 }
 
 
 function getFollowersById(blank, tweets) { 
-    console.log(params)
+    
+    var corpus = {"followers":[]}
+    
     twit.getFollowersIds(params.screen_name, function (err, data) {
         data = data.slice(0, params.count)
         twit.showUser(data, function (err, data) {
-            corpus = corpus.concat(data[0].screen_name)
-            res.write(data[0].screen_name)
             for (var i=1; i<data.length; i++){
-                corpus = corpus.concat(", "+data[i].screen_name)
-                res.write(", " + data[i].screen_name)
+                corpus.followers.push(data[i].screen_name)
             }
             updateTweets(corpus)
         })
     })
 }
-
 
 
 function getTweets(maxid, tweets) {
@@ -176,16 +173,18 @@ function getTweets(maxid, tweets) {
 
 function updateTweets (corpus) {
 
+    console.log(corpus)
+    res.json(corpus)
+
     var updateDate = {
         'screen_name':params.screen_name,
         'count':maxTweets,
-        'content':corpus+"}",
+        'content':JSON.stringify(corpus),
         'dateRequested':Date.now(),
         'maxid':0,
         'mode':mode
     }
    
-    console.log(acct)
     replaceCache = function (acct, sn, data) {
         for (a in acct.streams) {
             if (acct.streams[a].screen_name==sn) {
@@ -198,9 +197,6 @@ function updateTweets (corpus) {
         return acct
     }
     acct = replaceCache(acct, params.screen_name, updateDate)
-    res.write("}")
-    res.end()
-    
     acct.save(function (err) {
         if (err) console.log(err)
     })
