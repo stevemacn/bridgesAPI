@@ -19,7 +19,58 @@ Setup
     git submodule update
     grunt
     
-Usage
+
+Get Timelines 
 --
-  
-Still to do :)
+Can only choose handles: "usgs", "earthquake", or "cltweather" unless account authenticated w/ twitter
+    
+    form: stream/:source/:twitterHandle/:requestType/:resultCount
+    
+    example: http://localhost:3000/streams/twitter.com/timeline/earthquake/4
+    
+Sample output for the above querry    
+    
+```json
+{
+    "tweets": [
+    {
+        "date": "Mon Jan 13 04:11:10 +0000 2014",
+        "tweet": "#earthquake M 5.5, Puerto Rico region Jan 13, 2014 04:01:06 UTC http://t.co/psn2ygRxLl"
+    },
+    {
+        "date": "Mon Jan 13 04:11:10 +0000 2014",
+        "tweet": "#earthquake M 6.4, Puerto Rico region Jan 13, 2014 04:00:58 UTC http://t.co/ACW0oLMKHz"
+    },
+    {
+      "date": "Thu Jan 09 21:22:25 +0000 2014",
+      "tweet": "#earthquake M 5.0, Cuba region Jan  9, 2014 20:57:47 UTC http://t.co/rea0KzZPbZ"
+    },
+    {
+      "date": "Wed Jan 01 16:22:47 +0000 2014",
+      "tweet": "#earthquake M 6.6, Vanuatu Jan  1, 2014 16:03:31 UTC http://t.co/AUNcjtRaIH"
+    }
+    ]
+}
+```
+
+
+Get Followers
+--
+   
+    form: stream/:source/:twitterHandle/:requestType/:resultCount
+    
+    example: http://localhost:3000/streams/twitter.com/followers/stephen_macneil/5
+
+
+```json
+{
+  "followers": [
+    "dataScienceRet",
+    "bilalalsallakh",
+    "RachelShadoan",
+    "geovisual",
+    "kanitw"
+  ]
+}
+
+```
