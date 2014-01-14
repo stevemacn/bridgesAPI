@@ -10,7 +10,12 @@ module.exports = function(app, passport, streamable){
     app.get('/home' , isLoggedIn, users.display)
     app.get('/home/:username', isLoggedIn, users.display)
 
-    app.delete('/users/:id')
+    app.post('/users/:id', function() {
+        console.log("posted")
+    })
+    app.delete('/users/:id', function() {
+        console.log("DELETED")
+    })
 
     app.get('/logout', users.logout)
 
