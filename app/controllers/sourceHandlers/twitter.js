@@ -111,7 +111,7 @@ function getFollowersById(blank, tweets) {
     twit.getFollowersIds(params.screen_name, function (err, data) {
         data = data.slice(0, params.count)
         twit.showUser(data, function (err, data) {
-            for (var i=1; i<data.length; i++){
+            for (var i=0; i<data.length; i++){
                 corpus.followers.push(data[i].screen_name)
             }
             updateTweets(corpus)
