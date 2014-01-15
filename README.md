@@ -10,7 +10,7 @@ Requirements
 3. Edit "config/twitterKeysSample.json" with your keys
 4. Save "config/twitterKeysSample.json" to "config/twitterKeys.json"
 
-Setup
+Setup 
 ---
 
     npm install
@@ -18,7 +18,17 @@ Setup
     git submodule init
     git submodule update
     grunt
-    
+
+Authenticating Datasources
+--    
+[bridgesAPI][bridge] has been designed to support multiple datasources; however, currently we are only supporting [Twitter][twit]. 
+
+Current authentication is using [passport][passport] and consequently twitter's callback must be to http://127.0.0.1 if testing locally. This has some implications: when testing locally the url must be http://127.0.0.1:3000 rather than [http://localhost:3000][c]
+
+[bridge]: https://github.com/stevemacn/bridgesAPI
+[passport]: https://github.com/jaredhanson/passport
+[twit]: http://twitter.com
+[c]: http://127.0.0.1:3000
 
 Get Timelines 
 --
@@ -26,7 +36,7 @@ Can only choose handles: "usgs", "earthquake", or "cltweather" unless account au
     
     form: stream/:source/:twitterHandle/:requestType/:resultCount
     
-    example: http://localhost:3000/streams/twitter.com/timeline/earthquake/4
+    example: http://127.0.0.1:3000/streams/twitter.com/timeline/earthquake/4
     
 Sample output for the above querry    
     
@@ -53,13 +63,12 @@ Sample output for the above querry
 }
 ```
 
-
 Get Followers
 --
    
     form: stream/:source/:twitterHandle/:requestType/:resultCount
     
-    example: http://localhost:3000/streams/twitter.com/followers/stephen_macneil/5
+    example: http://127.0.0.1:3000/streams/twitter.com/followers/stephen_macneil/5
 
 
 ```json
