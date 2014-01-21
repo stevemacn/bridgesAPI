@@ -10,8 +10,9 @@ Requirements
 3. Edit "config/twitterKeysSample.json" with your keys
 4. Save "config/twitterKeysSample.json" to "config/twitterKeys.json"
 
-Setup
----    
+Setup 
+---
+
     npm install
     bower install
     git submodule init
@@ -30,6 +31,17 @@ or individually...
     npm install -g grunt-cli
     npm install -g bower
 
+=======
+Authenticating Datasources
+--    
+[bridgesAPI][bridge] has been designed to support multiple datasources; however, currently we are only supporting [Twitter][twit]. 
+
+Current authentication is using [passport][passport] and consequently twitter's callback must be to http://127.0.0.1 if testing locally. This has some implications: when testing locally the url must be http://127.0.0.1:3000 rather than [http://localhost:3000][c]
+
+[bridge]: https://github.com/stevemacn/bridgesAPI
+[passport]: https://github.com/jaredhanson/passport
+[twit]: http://twitter.com
+[c]: http://127.0.0.1:3000
 
 Get Timelines 
 --
@@ -63,7 +75,6 @@ Sample output for the above querry
     ]
 }
 ```
-
 
 Get Followers
 --
