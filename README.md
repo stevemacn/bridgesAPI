@@ -19,10 +19,8 @@ Setup
     git submodule update
     grunt
 
-For the uninitiated,[install node and npm][nodenpm]
+For the uninitiated, [install node and npm][nodenpm], then to get grunt, yo and bower...
 [nodenpm]:http://www.joyent.com/blog/installing-node-and-npm
-
-then to get grunt, yo and bower...
 
     npm install -g yo 
 
