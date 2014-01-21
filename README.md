@@ -20,7 +20,7 @@ Setup
     grunt
 
 For the uninitiated,[install node and npm][nodenpm]
-[npm]:http://www.joyent.com/blog/installing-node-and-npm
+[nodenpm]:http://www.joyent.com/blog/installing-node-and-npm
 
 then to get grunt, yo and bower...
 
