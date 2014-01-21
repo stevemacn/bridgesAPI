@@ -15,19 +15,20 @@ module.exports = function (grunt) {
     watch: {
       options: {
         nospawn: true,
-        livereload: reloadPort
+        livereload: true //reloadPort
       },
       js: {
         files: [
           'app.js',
           'app/**/*.js',
+          'app/**/**/*js',
           'config/*.js'
         ],
         tasks: ['develop', 'delayed-livereload']
       },
       jade: {
         files: ['app/views/**/*.jade'],
-        options: { livereload: reloadPort },
+        options: { livereload: true },
       },
     }
   });
@@ -40,10 +41,6 @@ module.exports = function (grunt) {
            done(err);
       })
   })
-
-
-
-
 
   grunt.config.requires('watch.js.files');
   files = grunt.config('watch.js.files');

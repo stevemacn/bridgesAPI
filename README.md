@@ -11,14 +11,25 @@ Requirements
 4. Save "config/twitterKeysSample.json" to "config/twitterKeys.json"
 
 Setup
----
-
+---    
     npm install
     bower install
     git submodule init
     git submodule update
     grunt
+
+For the uninitiated,[install node and npm][nodenpm]
+[npm]:http://www.joyent.com/blog/installing-node-and-npm
+
+then to get grunt, yo and bower...
+
+    npm install -g yo 
+
+or individually...
     
+    npm install -g grunt-cli
+    npm install -g bower
+
 
 Get Timelines 
 --
@@ -26,7 +37,7 @@ Can only choose handles: "usgs", "earthquake", or "cltweather" unless account au
     
     form: stream/:source/:twitterHandle/:requestType/:resultCount
     
-    example: http://localhost:3000/streams/twitter.com/timeline/earthquake/4
+    example: http://127.0.0.1:3000/streams/twitter.com/timeline/earthquake/4
     
 Sample output for the above querry    
     
@@ -59,7 +70,7 @@ Get Followers
    
     form: stream/:source/:twitterHandle/:requestType/:resultCount
     
-    example: http://localhost:3000/streams/twitter.com/followers/stephen_macneil/5
+    example: http://127.0.0.1:3000/streams/twitter.com/followers/stephen_macneil/5
 
 
 ```json
