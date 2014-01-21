@@ -96,7 +96,7 @@ function startGettingTweets (cb, isPublic, source) {
             for (i in publicSources) {
                 srcs+=i+" "
             }
-            return res.json({"Error":source+" isn't supported without " +
+            return res.json({"error":source+" isn't supported without " +
                             "authenticating via twitter; public sources include: " + srcs})
         }
     }
