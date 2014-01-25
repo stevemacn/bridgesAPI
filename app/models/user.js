@@ -1,101 +1,94 @@
  // Module dependencies.
 
 var mongoose = require('mongoose')
-  , Schema = mongoose.Schema
-  , crypto = require('crypto')
-  , _ = require('underscore')
-  , authTypes = ['twitter']
-
-
+    , Schema = mongoose.Schema
+    , crypto = require('crypto')
+    , _ = require('underscore')
+    , authTypes = ['twitter']
 
 // User Schema
-
 var UserSchema = new Schema({
-  email: { type: String, default: '' },
-  username: { type: String, default: '' },
-  provider: { type: String, default: '' },
-  hashed_password: { type: String, default: '' },
-  salt: { type: String, default: '' },
+    email: { type: String, default: '' },
+    username: { type: String, default: '' },
+    provider: { type: String, default: '' },
+    hashed_password: { type: String, default: '' },
+    salt: { type: String, default: '' },
+    apikey: {type: String, default: ''}
 })
 
- // Virtuals
-
+// Virtuals
 UserSchema
-  .virtual('password')
-  .set(function(password) {
-    this._password = password
-    this.salt = this.makeSalt()
-    this.hashed_password = this.encryptPassword(password)
-  })
-  .get(function() { return this._password })
+    .virtual('password')
+    .set(function(password) {
+        this._password = password
+        this.salt = this.makeSalt()
+        this.hashed_password = this.encryptPassword(password)
+    })
+    .get(function() { return this._password })
 
-//  Validations
- 
-
+// Validations
 var validatePresenceOf = function (value) {
-  return value && value.length
+    return value && value.length
 }
 
-//Validate Email
+// Validate Email
 UserSchema.path('email').validate(function (email) {
-  // if you are authenticating by any of the oauth strategies, don't validate
-  if (authTypes.indexOf(this.provider) !== -1) return true
-  return email.length
+    // if authenticating by an oauth strategies, don't validate
+    if (authTypes.indexOf(this.provider) !== -1) return true
+        return email.length
 }, 'Email cannot be blank')
 
 UserSchema.path('email').validate(function (email, fn) {
-  var User = mongoose.model('User')
+    var User = mongoose.model('User')
   
-  // if you are authenticating by any of the oauth strategies, don't validate
-  if (authTypes.indexOf(this.provider) !== -1) fn(true)
+    // if authenticating by an oauth strategies, don't validate
+    if (authTypes.indexOf(this.provider) !== -1) fn(true)
 
-  // Check only when it is a new user or when email field is modified
-  if (this.isNew || this.isModified('email')) {
-    User.find({ email: email }).exec(function (err, users) {
-      fn(!err && users.length === 0)
-    })
-  } else fn(true)
+    // Check only when it is a new user or when email field is modified
+    if (this.isNew || this.isModified('email')) {
+        User.find({ email: email }).exec(function (err, users) {
+        fn(!err && users.length === 0)
+        })
+    } else fn(true)
 }, 'Email already exists')
 
 //Validate Username
 UserSchema.path('username').validate(function (username) {
-  // if you are authenticating by any of the oauth strategies, don't validate
-  if (authTypes.indexOf(this.provider) !== -1) return true
-  return username.length
+    // if authenticating by an oauth strategies, don't validate
+    if (authTypes.indexOf(this.provider) !== -1) return true
+        return username.length
 }, 'Username cannot be blank')
 
 UserSchema.path('username').validate(function (username, fn) {
-  var User = mongoose.model('User')
+    var User = mongoose.model('User')
   
-  // if you are authenticating by any of the oauth strategies, don't validate
-  if (authTypes.indexOf(this.provider) !== -1) fn(true)
+    // if authenticating by an oauth strategies, don't validate
+    if (authTypes.indexOf(this.provider) !== -1) fn(true)
 
-  // Check only when it is a new user or when email field is modified
-  if (this.isNew || this.isModified('username')) {
-    User.find({ username: username }).exec(function (err, users) {
-      fn(!err && users.length === 0)
-    })
-  } else fn(true)
+    // Check only when it is a new user or when email field is modified
+    if (this.isNew || this.isModified('username')) {
+        User.find({ username: username }).exec(function (err, users) {
+            fn(!err && users.length === 0)
+        })
+    } else fn(true)
 }, 'Username already exists')
 
 UserSchema.path('hashed_password').validate(function (hashed_password) {
-  // if you are authenticating by any of the oauth strategies, don't validate
-  if (authTypes.indexOf(this.provider) !== -1) return true
-  return hashed_password.length
+    // if authenticating by an oauth strategies, don't validate
+    if (authTypes.indexOf(this.provider) !== -1) return true
+        return hashed_password.length
 }, 'Password cannot be blank')
 
 
 //Pre-save hook
- 
-
 UserSchema.pre('save', function(next) {
-  if (!this.isNew) return next()
+    if (!this.isNew) return next()
 
-  if (!validatePresenceOf(this.password)
-    && authTypes.indexOf(this.provider) === -1)
-    next(new Error('Invalid password'))
-  else
-    next()
+    if (!validatePresenceOf(this.password)
+        && authTypes.indexOf(this.provider) === -1)
+        next(new Error('Invalid password'))
+    else
+        next()
 })
 
 /**
@@ -114,6 +107,10 @@ UserSchema.methods = {
 
   authenticate: function (plainText) {
     return this.encryptPassword(plainText) === this.hashed_password
+  },
+
+  generateKey: function () {
+    this.apikey = Math.round(new Date().valueOf() * Math.random()) 
   },
 
   /**
