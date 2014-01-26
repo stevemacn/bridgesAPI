@@ -1,6 +1,6 @@
 var mongoose = require('mongoose')
     , Account = mongoose.model('Account')
-    , ntwitter = require('ntwitter')
+    , ntwitter = require('twit')
     , keys = require('../../../config/twitterKeys.json')
     , params    
     , maxTweets = 200
@@ -57,11 +57,11 @@ exports.init = function (account, args, resp) {
     if (acct) {
         if (!(acct.email=='public')) isPublic = false
         if (acct.tokens) {
-            key.access_token_key = acct.tokens.token
+            key.access_token = acct.tokens.token
             key.access_token_secret = acct.tokens.tokenSecret
         }
     } else return res.json ({"error":"no account could be found or used"})
-
+    console.log(key)
     twit = new ntwitter(key)
 
     //set up parameters for timeline or followers
@@ -108,13 +108,19 @@ function getFollowersById(blank, tweets) {
     
     var corpus = {"followers":[]}
     
-    twit.getFollowersIds(params.screen_name, function (err, data) {
-        data = data.slice(0, params.count)
-        twit.showUser(data, function (err, data) {
-            for (var i=0; i<data.length; i++){
-                corpus.followers.push(data[i].screen_name)
-            }
-            updateTweets(corpus)
+    console.log(params.screen_name);
+    
+    twit.get('followers/ids',{"screen_name":params.screen_name},function (err, data) {
+        if (err) return res.json(
+            {"error":"unable to retrieve from twitter api"})
+        if (!data) return res.json({"error":"no results found"})
+        data = data.ids.slice(0, params.count)
+        twit.get('/users/lookup', {"user_id":data.toString()}, 
+            function (err, processed) {
+                for (var i=0; i<processed.length; i++){
+                    corpus.followers.push(processed[i].screen_name)
+                }
+                updateTweets(corpus)
         })
     })
 }
@@ -126,7 +132,7 @@ function getTweets(maxid, tweets) {
     if ((maxTweets-foundTweets)<params.count) params.count = maxTweets-foundTweets
     
 
-    twit.getUserTimeline(params, function (err, data) {
+    twit.get("/statuses/user_timeline", params, function (err, data) {
         if (err) {
             res.json({"error":err}) 
             return err
