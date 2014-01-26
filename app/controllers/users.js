@@ -84,6 +84,13 @@ exports.deletePerson = function (req, res) {
         })*/
 }
 
+exports.getkey = function (req, res) {
+    user = req.user 
+    user.generateKey()
+    user.save()
+    res.send(user.apikey)
+}
+
 
 
 //set up the signup

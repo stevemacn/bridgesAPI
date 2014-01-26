@@ -1,33 +1,32 @@
-
-module.exports = function(app, passport, streamable){
+module.exports = function(app, passport, streamable) {
 
     //user routes
     var users = require('../app/controllers/users')
     app.get('/signup', users.signup)
     app.post('/users', users.create)
-   
+
     app.get('/login', users.login)
-    app.get('/home' , isLoggedIn, users.display)
+    app.get('/home', isLoggedIn, users.display)
     app.get('/home/:username', isLoggedIn, users.display)
 
     app.delete('/users/:id', isLoggedIn, users.deletePerson)
-    
+    app.get('/users/apikey', users.getkey)
     app.get('/logout', users.logout)
 
     //general routes
-	app.get('/', users.index);
+    app.get('/', users.index);
 
     //stream routes
-    
+
     var streams = require('../app/controllers/streams.js')
-    app.get('/streams/:domain/*', isLoggedIn, streamable, streams.getSource)
-    app.get('/streams/:domain', isLoggedIn, streamable, streams.getSource)
-    
+    app.get('/streams/:domain/*', hasAccess, streamable, streams.getSource)
+    app.get('/streams/:domain', hasAccess, streamable, streams.getSource)
+
     //assignment routes
     //var assignments = require('../app/controllers/assignments.js')
     //app.post('/assignments/:assignmentNumber', assignments.upload)
     //app.get('/assignments/:username/:assignmentNumber', assignments.viewD3)
-    
+
     //gallery routes
     //var gallery = require('../app/controllers/gallery.js')
     //app.get('/assignments/', gallery.view)
@@ -37,24 +36,28 @@ module.exports = function(app, passport, streamable){
         passport.authenticate('local-log', {
             successRedirect: '/home',
             failureRedirect: '/login',
-            failureFlash: true 
+            failureFlash: true
         }))
-        //, 
-        //users.session)
-    
+    //, 
+    //users.session)
+
     app.get('/connect/twitter',
-        passport.authorize('twitter-authz', { failureRedirect: '/login' })
+        passport.authorize('twitter-authz', {
+            failureRedirect: '/login'
+        })
     )
 
     app.get('/auth/twitter/callback',
-        passport.authorize('twitter-authz', { failureRedirect: '/login' }),
+        passport.authorize('twitter-authz', {
+            failureRedirect: '/login'
+        }),
         function(req, res) {
             var user = req.user
             var account = req.account
             // Associate the Twitter account with the logged-in user.
             account.email = user.email
             account.save(function(err) {
-                if (err) return (err) 
+                if (err) return (err)
                 res.redirect('/home')
 
             })
@@ -63,10 +66,25 @@ module.exports = function(app, passport, streamable){
 
 }
 
-//authentication
-function isLoggedIn (req, res, next) {
-    if (req.isAuthenticated())
-        return next()
+//Allows users to by pass authentication to api requests
+//if they have a valid api key.
+function hasAccess(req, res, next) {
+    var mongoose = require('mongoose'),
+        User = mongoose.model('User')
 
+    User
+        .findOne({
+            apikey: "apikey"
+        })
+        .exec(function(err, user) {
+            if (err || !user) return isLoggedIn(req, res, next)
+            req.user = user
+            return next()
+        })
+}
+
+//authentication
+function isLoggedIn(req, res, next) {
+    if (req.isAuthenticated()) return next()
     res.redirect("/login")
 }
