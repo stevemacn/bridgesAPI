@@ -45,25 +45,20 @@ block form
         .panel-body      
             div  
                 strong.col-lg-4 User Name: 
-                div#user 
-                |   #{user.username}
+                div#user #{user.username}
             div  
                 Strong.col-lg-4 Email: 
-                div#email
-                | #{user.email}
+                div#email #{user.email}
             div
                 Strong.col-lg-4 API Sha1 Key:
-                div#api
-                | #{user.hashed_password}
+                div#api #{user.apikey}
             br
             input#getKey.btn.btn-block.btn-info( 
-                    type='submit', 
                     value="Generate new API key")
             hr
             if (acct.domainProvider)
                 div 
-                    Strong.col-lg-4 Authenticated: 
-                    | #{acct.domainProvider}
+                    Strong.col-lg-4 Authenticated: #{acct.domainProvider}
             else 
                 div 
                     Strong.col-lg-6 Not authenticated
