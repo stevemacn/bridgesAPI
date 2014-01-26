@@ -1,38 +1,39 @@
 {
-  "name": "bridgesapi",
-  "version": "0.0.1",
-  "private": true,
-  "scripts": {
-    "start": "app.js",
-     "test": "grunt test"
-  },
-  "dependencies": {
-    "express": "~3.3.4",
-    "jade": "~0.34.0",
-    "mongoose": "~3.6.14",
-    "ntwitter":"latest",
-    "passport":"latest",
-    "passport-twitter": "latest",
-    "passport-local": "latest",
-    "socket.io":"latest",
-    "streamable":"latest",
-    "crypto":"latest",
-    "underscore":"latest",
-    "connect-mongo":"*",
-    "connect-flash":"*",
-    "view-helpers":"*"
-  },
-  "devDependencies": {
-    "grunt": "~0.4.1",
-    "grunt-develop": "~0.1.1",
-    "grunt-contrib-watch": "~0.4.4",
-    "grunt-contrib-compass": "~0.2.0",
-    "request": "~2.22.0",
-    "mocha":"latest",
-    "should":"latest",
-    "supertest":"latest",
-    "superagent":"latest",
-    "jquerygo":"latest",
-    "async":"latest"
-  }
+    "name": "bridgesapi",
+    "version": "0.0.1",
+    "private": true,
+    "scripts": {
+        "start": "app.js",
+        "test": "grunt test"
+    },
+    "dependencies": {
+        "express": "latest",
+        "jade": "latest",
+        "mongoose": "latest",
+        "ntwitter": "latest",
+        "twit":"latest",
+        "passport": "latest",
+        "passport-twitter": "latest",
+        "passport-local": "latest",
+        "socket.io": "latest",
+        "streamable": "latest",
+        "crypto": "latest",
+        "underscore": "latest",
+        "connect-mongo": "*",
+        "connect-flash": "*",
+        "view-helpers": "*"
+    },
+    "devDependencies": {
+        "grunt": "~0.4.1",
+        "grunt-develop": "~0.1.1",
+        "grunt-contrib-watch": "~0.4.4",
+        "grunt-contrib-compass": "~0.2.0",
+        "request": "~2.22.0",
+        "mocha": "latest",
+        "should": "latest",
+        "supertest": "latest",
+        "superagent": "latest",
+        "jquerygo": "latest",
+        "async": "latest"
+    }
 }
