@@ -12,7 +12,8 @@ Requirements
 
 Setup 
 ---
-
+    git clone git@github.com:stevemacn/bridgesAPI.git
+    
     npm install
     bower install
     git submodule init
