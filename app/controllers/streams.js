@@ -63,7 +63,7 @@ function getPublicFeeds (domain, cb) {
         })
         .exec(function (err, acct) {
             if (acct) return cb(acct)    
-            
+            //caution what if this account becomes invalidated?
             var config = require ("../../config/twitterKeys.json")  
             , acct = new Account();
             
