@@ -7,6 +7,7 @@
     "components"
   ],
   "dependencies": {
-        "modernizr": "*"        
+        "modernizr": "*",        
+        "d3": "git://github.com/mbostock/d3.git"
   }
 }

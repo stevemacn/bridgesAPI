@@ -7,3 +7,7 @@ var mongoose = require('mongoose')
 exports.upload = function (req, res) {
     res.json("success") 
 }
+
+exports.show = function (req, res) {
+    res.render ('assignments/index', {})
+}
