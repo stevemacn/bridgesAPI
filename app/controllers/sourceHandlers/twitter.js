@@ -140,6 +140,10 @@ function getFollowersById(blank, tweets) {
         }
 
         twit.get('/users/lookup', param, function(err, processed) {
+            if (err) return res.json({"err":err})
+            if (!processed) return res.json({
+                "err":"the number of items you "+
+                "requested appears to be to large"})
             for (var i = 0; i < processed.length; i++) {
                 corpus.followers.push(processed[i].screen_name)
             }
