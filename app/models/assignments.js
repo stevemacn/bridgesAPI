@@ -10,8 +10,10 @@ var Assignment = new Schema ({
     email:              { type: String, default: ''},
     assignmentNumber:   {type: String, default: ''},
     dateCreated:        {type: String, default: ''},
-
-    //uploaded data, nodes can be x,y as in scatteplots, links can be any association 
+    shared:             {type: Boolean, default: 'false'},//public or private
+    
+    //uploaded data, nodes can be x,y as in scatteplots
+    //links can be any association 
     nodes: [Schema.Types.Mixed],
     links: [{ 
         to:     {type: String, default: ''},
