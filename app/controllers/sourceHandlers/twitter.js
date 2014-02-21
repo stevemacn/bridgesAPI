@@ -35,7 +35,13 @@ exports.checkCache = function(acct, args) {
     for (var index in acct.streams) {
         var at = acct.streams[index]
         if (at.screen_name == sn && at.mode == mode && at.count >= ct && at.dateRequested >= dt) {
-            console.log(at)
+            
+            content = JSON.parse(at.content)
+            //ghetto fix when you have time!
+            for (i in content) {
+                content[i] = content[i].slice(0, ct)
+            }
+            at.content = JSON.stringify(content)
             return at
         }
     }
