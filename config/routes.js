@@ -70,25 +70,19 @@ module.exports = function(app, passport, streamable) {
 //Allows users to by pass authentication to api requests
 //if they have a valid api key.
 function hasAccess(req, res, next) {
-   
+
     //authenticated
     if (req.isAuthenticated()) return next()
-    //not authenticated and no api key, use public
-    if (!req.params[0]) return res.json({
-        "error":"you must have an account to access the api"})
-    
-    //use api key
-    var query = req.params[0].split("/")
-    
-    if (!query[3]) return res.json({
-        "error":"because you are not logged in you must use an api key"})
-    
+
     var mongoose = require('mongoose'),
         User = mongoose.model('User')
 
+    if (!req.query.apikey) return res.json({
+        "error":"you are not logged in, you must provide" +
+                " an apikey as a query variable"})
     User
         .findOne({
-            apikey: query[3]
+            apikey: req.query.apikey
         })
         .exec(function(err, user) {
             if (!user) return res.json({ 
