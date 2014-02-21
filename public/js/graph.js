@@ -1,5 +1,5 @@
 //based loosely on bostock's example and 
-//interaction by amelia greenhall
+//http://bl.ocks.org/d3noob/5141278
 
 nodes = [
     {"name":"steve"},
@@ -7,15 +7,18 @@ nodes = [
     {"name":"joe"},
     {"name":"matt"},
     {"name":"bob"},
-    {"name":"kevin"}
+    {"name":"kevin"},
+    {"name":"dalka"}
+    
 ],
 links = [
-    {"source":1, "target":0},
-    {"source":1, "target":2},
-    {"source":3, "target":2},
-    {"source":3, "target":1},
-    {"source":1, "target":3},
-    {"source":4, "target":3}
+    {"source":1, "target":2, "value":1},
+    {"source":6, "target":0, "value":3},
+    {"source":0, "target":6, "value":3},
+    {"source":3, "target":2, "value":1},
+    {"source":3, "target":1, "value":1},
+    {"source":1, "target":3, "value":2},
+    {"source":4, "target":3, "value":1}
 ]
 
 var width = 960;
@@ -23,7 +26,7 @@ var height = 600;
 
 var force = d3.layout.force()
     .charge([-250])
-    .linkDistance([30])
+    .linkDistance([50])
     .size([width, height])
     .nodes(nodes)
     .links(links)
@@ -35,14 +38,28 @@ var svg = d3.select("#vis").append("svg")
     .attr("width", width)
     .attr("height", height);
 
-var link = svg.selectAll(".link")
+svg.append("svg:defs").selectAll("marker")
+    .data(["end"])// Different path types defined here
+      .enter().append("svg:marker")  
+      .attr("id", String)
+      .attr("viewBox", "0 -5 10 10")
+      .attr("refX", 15)
+      .attr("refY", -3)
+      .attr("markerWidth", 6)
+      .attr("markerHeight", 6)
+      .attr("orient", "auto")
+      .append("svg:path")
+      .attr("d", "M0,-5L10,0L0,5");
+
+var link = svg.append("svg:g").selectAll("path")
     .data(links)
-    .enter()
-    .append("line")
+    .enter().append("svg:path")
+    .attr("class", function(d) { return "link " + d.type; })
     .attr("class", "link")
-    //Set this as css for the page...
-    .style("stroke", "#ccc")
-    .style("stroke-width", 1);
+    .attr("marker-end", "url(#end)")
+    .style("stroke-width", 1.5)
+    .style("stroke", "#666")
+    .style("fill", "none")
 
 var node = svg.selectAll(".node")
     .data(nodes)
@@ -51,14 +68,16 @@ var node = svg.selectAll(".node")
     .on("mouseover", mouseover)
     .on("mouseout", mouseout)
     .call(force.drag);
+
 node 
     .append("circle")
-    .attr("r", 10)
+    .attr("r", 7)
     .style("fill", function(d, i) {
         return colors(i);
     })
 
-node.append("text")
+node
+    .append("text")
     .attr("x", 12)
     .attr("dy", ".35em")
     .text(function(d) {
@@ -66,24 +85,40 @@ node.append("text")
     });
 
 force.on("tick", function() {
-    link 
-        .attr("x1", function(d) {return d.source.x;})
-        .attr("y1", function(d) {return d.source.y;})
-        .attr("x2", function(d) {return d.target.x;})
-        .attr("y2", function(d) {return d.target.y;});
+    link
+        .attr("d", function(d) {
+            var dx = d.target.x - d.source.x,
+                dy = d.target.y - d.source.y,
+                dr = Math.sqrt(dx * dx + dy * dy);
+            return "M" + 
+                d.source.x + "," + 
+                d.source.y + "A" + 
+                dr + "," + dr + " 0 0,1 " + 
+                d.target.x + "," + 
+                d.target.y;
+        });
+    
     node
         .attr("transform", function(d) {
             return "translate(" + d.x + "," + d.y + ")";
         });
-});
+})
 
 function mouseover() {
+    
+    d3.select(this).select("text").transition()
+        .duration(750)
+        .style("font-weight","bold")
     d3.select(this).select("circle").transition()
         .duration(750)
         .attr("r", 16);
 }
 
 function mouseout() {
+    
+    d3.select(this).select("text").transition()
+        .duration(750)
+        .style("font-weight","normal")
     d3.select(this).select("circle").transition()
         .duration(750)
         .attr("r", 8);
