@@ -7,10 +7,10 @@ var mongoose = require('mongoose')
 var Assignment = new Schema ({
 
     //For tracking submissions and route creation
-    email:              { type: String, default: ''},
-    assignmentNumber:   {type: String, default: ''},
-    dateCreated:        {type: String, default: ''},
-    shared:             {type: Boolean, default: 'false'},//public or private
+    email:          { type: String, default: ''},
+    assignmentID:   {type: String, default: ''},
+    dateCreated:    {type: Date, default: Date.now()},
+    shared:         {type: Boolean, default: 'false'},//public or private
     
     //uploaded data, nodes can be x,y as in scatteplots
     //links can be any association 
