@@ -23,8 +23,8 @@ module.exports = function(app, passport, streamable) {
     app.get('/streams/:domain', hasAccess, streamable, streams.getSource)
 
     //assignment routes
-    //var assignments = require('../app/controllers/assignments.js')
-    //app.post('/assignments/:assignmentNumber', assignments.upload)
+    var assignments = require('../app/controllers/assignments.js')
+    app.post('/assignments/', assignments.upload)
     //app.get('/assignments/:username/:assignmentNumber', assignments.viewD3)
 
     //gallery routes
