@@ -56,12 +56,23 @@ module.exports = function (app, config, passport) {
     app.use(passport.session())
     app.use(flash())
 
-    //https://github.com/evilpacket/express-secure-skeleton/blob/master/app.js
-    app.use(express.csrf());
+    
+//http://stackoverflow.com/questions/13516898/disable-csrf-validation-for-some-requests-on-express
     app.use(function (req, res, next) {
-        res.locals.csrftoken = req.csrfToken();
-        next();
-    });
+
+        needCSRF = false;
+        if (req.url.indexOf("/assignments")==-1) needCSRF=true
+        
+        if (needCSRF) {
+            express.csrf()(req, res, function () {
+                res.locals.csrftoken = req.csrfToken();
+                next ();
+            });
+        } else {
+            next();
+        }
+    })
+
     // routes should be at the last
     app.use(app.router)
 
