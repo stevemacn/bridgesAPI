@@ -1,14 +1,14 @@
 .jumbotron {
-  background-color:#FD8402 ;
+  color:#FD8402 ;
+  background-color:white ;
 }
 
-.jumbotron h1, .jumbotron h3, .jumbotron h4 {
-  color:#FFFFFF;
+.jumbotron h3, .jumbotron h4 {
+  color:#FD8402 ;
 }
 img {
   float:right;
   content:clear;
   background-color:#FD8402 ;
-  padding:5%;
 }
 
