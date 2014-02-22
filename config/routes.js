@@ -24,14 +24,17 @@ module.exports = function(app, passport, streamable) {
 
     //assignment routes
     var assignments = require('../app/controllers/assignments.js')
-    app.post('/assignments/', assignments.upload)
-    app.get('/assignments', assignments.show)
+    app.post('/assignments/:assignmentID', 
+             hasAccess, assignments.upload)
+   
+    app.get('/assignments/:assignmentID/:username', 
+            assignments.show)
     //app.get('/assignments/:username/:assignmentNumber', assignments.viewD3)
 
     //gallery routes
     //var gallery = require('../app/controllers/gallery.js')
     //app.get('/assignments/', gallery.view)
-    //app.get('/assignments/:username', gallery.view)
+    //app.get('/assignments/:assignmentID', gallery.view)
 
     app.post('/users/session',
         passport.authenticate('local-log', {
