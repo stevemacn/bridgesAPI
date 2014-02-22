@@ -15,11 +15,7 @@ var Assignment = new Schema ({
     //uploaded data, nodes can be x,y as in scatteplots
     //links can be any association 
     nodes: [Schema.Types.Mixed],
-    links: [{ 
-        to:     {type: String, default: ''},
-        from:   {type: String, default: ''},
-        value:  {type: String, default: ''}
-    }]
+    links: [Schema.Types.Mixed]
     //add a before and after so that student can see changes
 })
 
