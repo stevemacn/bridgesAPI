@@ -38,6 +38,19 @@ module.exports = function (app, config, passport) {
     // cookieParser should be above session
     app.use(express.cookieParser())
 
+    //custom middleware from https://gist.github.com/shesek/4651267
+    //to get rawbody from request.
+    app.use(function(req, res, next) {
+      if (!req.is('text/plain')) {
+          return next();
+        }
+      req.body = '';
+      req.on('data', function(data) {
+          return req.body += data;
+        });
+      return req.on('end', next);
+    })
+
     // bodyParser should be above methodOverride
     app.use(express.bodyParser())
     app.use(express.methodOverride())
