@@ -1,25 +1,6 @@
 //based loosely on bostock's example and 
 //http://bl.ocks.org/d3noob/5141278
 
-nodes = [
-    {"name":"steve"},
-    {"name":"dan"},
-    {"name":"joe"},
-    {"name":"matt"},
-    {"name":"bob"},
-    {"name":"kevin"},
-    {"name":"dalka"}
-    
-],
-links = [
-    {"source":1, "target":2, "value":1},
-    {"source":6, "target":0, "value":3},
-    {"source":0, "target":6, "value":3},
-    {"source":3, "target":2, "value":1},
-    {"source":3, "target":1, "value":1},
-    {"source":1, "target":3, "value":2},
-    {"source":4, "target":3, "value":1}
-]
 
 var width = 960;
 var height = 600;

@@ -2,5 +2,8 @@ extends layout
 
 block js
     script(src='/components/d3/d3.min.js')
+    script.
+        var nodes = !{JSON.stringify(nodes)}
+        var links = !{JSON.stringify(links)}
     script(src='/js/graph.js')
 
