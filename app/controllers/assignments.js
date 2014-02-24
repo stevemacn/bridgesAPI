@@ -3,14 +3,6 @@ var mongoose = require('mongoose')
     , Account = mongoose.model('Account')
     , Assignment = mongoose.model('Assignment')
 
-function checkKey (query) {
-    if (typeof req.query.apikey === 'undefined') 
-        return res.json({"error":"apikey is not valid"})
-    if (!req.query.apikey) 
-        return res.json({"error":"apikey must be used"})
-
-}
-
 function replaceAssignment (res, user, assignmentID) {
 
     //overwrite previous assignments by removing the original
@@ -37,7 +29,7 @@ function replaceAssignment (res, user, assignmentID) {
 }
 
 
-//Setup for logging in via twitter
+//problem because we aren't getting by username but by apikey
 exports.upload = function (req, res) {
     
     try { rawBody = JSON.parse(req.body) } 
@@ -55,50 +47,86 @@ exports.upload = function (req, res) {
             if (err) return res.json({"error":err})
             if (!user) 
                 return res.json({"error":"could not find user"})
-            if (!user.email)
-                return res.json({"error":"invalid user"})
+            
             replaceAssignment(res, user, assignmentID) 
         })
 }
 
 
-function getAssignment (req, res, email) {
+function getAssignment (req, res, email, cb) {
     Assignment
         .findOne({
             email: email,
             assignmentID: req.params.assignmentID 
         })
         .exec(function (err, assignment) {
-            console.log(err)
-            console.log(assignment)
-            return res.render ('assignments/index', {
-                "nodes":assignment.nodes,
-                "links":assignment.links})
+            if (err) return res.json({"error": err})
+            if (!assignment) return res.json({
+                "error":"couldn't find assignment"})
+            
+            if (assignment.shared!==true) return cb(assignment)
+            return renderVis(res, assignment)         
         })
 }
 
-
 exports.show = function (req, res) {
+
+    var username = req.params.username
+    var apikey = req.query.apikey 
     
-    console.log("User: "+req.user.email)
-
-    if (!req.user && !req.query.apikey)
-        return res.json({"error":"not authorized to view this page"})
-  
-    if (req.user) {
-        return getAssignment(req, res, req.user.email)
-    }
-
     User
-        .findOne({
-            apikey:req.query.apikey,
+        .findOne({username: username})
+        .exec(function(err, usr){
+            if (err) return res.json({"error": err})
+            if (!usr) return res.json({"error": 
+                "could not find the username: "+username})
+           
+            getAssignment(req, res, usr.email, function (assign) {
+               
+                //Test whether user has permission to view vis
+                testByUser(res, req, username, assign, function (){
+                    testByKey(res, apikey, username, assign, null)
+                })
+            })
         })
-        .exec(function (err, user) {
-            if (!user) return res.json({"msg":"no user found"})
-            getAssignment(req, res, user.email) 
-        })
-    
-    //get data from databse...
-    //get based upon request...
+}
 
+//find whether there is a session, then test
+function testByUser (res, req, username, assign, nextTest) {
+    if (typeof req.user != "undefined") {
+        sessionUser = req.user.username
+        return testAndMoveOn(
+            res, sessionUser, username, assign, nextTest) 
+    } else return nextTest()
+}
+
+//find user by key, then test
+function testByKey (res, apikey, username, assign, nextTest) {
+    if (apikey) {
+        User
+            .findOne({apikey:apikey})
+            .exec(function (err, n){
+                if (err) return res.json({"error":err})
+                if (!n) return res.json ({"error":"invalid api key"})
+                return testAndMoveOn(
+                    res, n.username, username, assign, null) 
+            })
+    } else return nextTest()
+}
+
+//compare the usernames and move on
+function testAndMoveOn (res, un1, un2, assign, nextTest) {
+    console.log(un1 + " " + un2)
+    if (un1 === un2) return renderVis (res, assign)
+
+    if (nextTest) return nextTest()
+    else return res.json({
+        "error":"the data you requested is not public"})
+}
+
+function renderVis (res, assignment) {
+    return res.render ('assignments/index', {
+        "nodes":assignment.nodes,
+        "links":assignment.links
+    })
 }
