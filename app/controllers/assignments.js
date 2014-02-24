@@ -97,7 +97,11 @@ function testByUser (res, req, username, assign, nextTest) {
         sessionUser = req.user.username
         return testAndMoveOn(
             res, sessionUser, username, assign, nextTest) 
-    } else return nextTest()
+    } else {
+        if (nextTest) return nextTest()
+        else
+            return testAndMoveOn(res, true, false, assign, null) 
+    }
 }
 
 //find user by key, then test
@@ -111,7 +115,11 @@ function testByKey (res, apikey, username, assign, nextTest) {
                 return testAndMoveOn(
                     res, n.username, username, assign, null) 
             })
-    } else return nextTest()
+    } else {
+        if (nextTest) return nextTest()
+        else
+            return testAndMoveOn(res, true, false, assign, null) 
+    }
 }
 
 //compare the usernames and move on
