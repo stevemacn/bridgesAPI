@@ -11,6 +11,31 @@ function checkKey (query) {
 
 }
 
+function replaceAssignment (res, user, assignmentID) {
+
+    //overwrite previous assignments by removing the original
+    Assignment
+        .remove({
+            assignmentID: assignmentID,
+            email: user.email        
+        })
+        .exec(function (err, resp) {
+        
+            //need to replace in the database...
+            assignment = new Assignment()
+            assignment.email = user.email
+            assignment.nodes=rawBody.nodes
+            assignment.links=rawBody.links
+            assignment.assignmentID = assignmentID
+            assignment.save()
+            
+            //notify user and log
+            msg = "assignment added: "+user.email+" "+assignmentID
+            console.log(msg)
+            res.json({"msg":msg}) 
+        })
+}
+
 
 //Setup for logging in via twitter
 exports.upload = function (req, res) {
@@ -19,7 +44,8 @@ exports.upload = function (req, res) {
     catch (e) {return res.json({
         "error": "invalid json syntax for body"})}
     //need to add a more helpful response.
-      
+    
+    var assignmentID = req.params.assignmentID
     
     User
         .findOne({
@@ -31,25 +57,16 @@ exports.upload = function (req, res) {
                 return res.json({"error":"could not find user"})
             if (!user.email)
                 return res.json({"error":"invalid user"})
-           
-            //need to replace in the database...
-            assignment = new Assignment()
-            assignment.email = user.email
-            assignment.nodes=rawBody.nodes
-            assignment.links=rawBody.links
-            assignment.assignmentID = req.params.assignmentID
-            assignment.save()
-            console.log("new assignment added for "+
-                user.email+ " "+req.params.assignmentID)
-            res.json("success") 
+            replaceAssignment(res, user, assignmentID) 
         })
 }
 
 
-function getAssignment (res, email) {
+function getAssignment (req, res, email) {
     Assignment
         .findOne({
-            email: email
+            email: email,
+            assignmentID: req.params.assignmentID 
         })
         .exec(function (err, assignment) {
             console.log(err)
@@ -69,7 +86,7 @@ exports.show = function (req, res) {
         return res.json({"error":"not authorized to view this page"})
   
     if (req.user) {
-        return getAssignment(res, req.user.email)
+        return getAssignment(req, res, req.user.email)
     }
 
     User
@@ -78,7 +95,7 @@ exports.show = function (req, res) {
         })
         .exec(function (err, user) {
             if (!user) return res.json({"msg":"no user found"})
-            getAssignment(res, user.email) 
+            getAssignment(req, res, user.email) 
         })
     
     //get data from databse...
