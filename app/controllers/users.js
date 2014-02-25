@@ -20,8 +20,14 @@ exports.session = login
 
 exports.index = function (req, res) {
     if (!user) var user
-    user = req.user
-    res.render('home/index', {})
+    if (req.user)
+        user = req.user
+    else 
+        var user = ""
+    res.render('home/index', {
+        title: 'Index',
+        user: user
+    })
 }
 
 exports.login = function (req, res) {
