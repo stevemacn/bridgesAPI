@@ -69,7 +69,11 @@ exports.init = function(account, args, resp) {
     } else return res.json({
         "error": "no account could be found or used"
     })
-    twit = new ntwitter(key)
+    try { twit = new ntwitter(key) }
+    catch (err) { 
+        acct.tokens=null
+        acct.save()
+    }
 
     //set up parameters for timeline or followers
     if (args) {
