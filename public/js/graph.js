@@ -61,6 +61,7 @@ node
     .append("text")
     .attr("x", 12)
     .attr("dy", ".35em")
+    .style("display", "none")
     .text(function(d) {
         return d.name;
     });
@@ -89,17 +90,17 @@ function mouseover() {
     
     d3.select(this).select("text").transition()
         .duration(750)
-        .style("font-weight","bold")
+        .style("display","block")
     d3.select(this).select("circle").transition()
         .duration(750)
-        .attr("r", 16);
+        .attr("r", 12);
 }
 
 function mouseout() {
     
     d3.select(this).select("text").transition()
         .duration(750)
-        .style("font-weight","normal")
+        .style("display","none")
     d3.select(this).select("circle").transition()
         .duration(750)
         .attr("r", 8);
