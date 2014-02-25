@@ -69,11 +69,14 @@ function getAssignment (req, res, email, cb) {
         })
 }
 
+var sessionUser = null;
+
 exports.show = function (req, res) {
 
     var username = req.params.username
     var apikey = req.query.apikey 
     
+    if (typeof req.user != "undefined") sessionUser = req.user
     User
         .findOne({username: username})
         .exec(function(err, usr){
@@ -93,10 +96,9 @@ exports.show = function (req, res) {
 
 //find whether there is a session, then test
 function testByUser (res, req, username, assign, nextTest) {
-    if (typeof req.user != "undefined") {
-        sessionUser = req.user.username
+    if (sessionUser) {
         return testAndMoveOn(
-            res, sessionUser, username, assign, nextTest) 
+            res, sessionUser.username, username, assign, nextTest) 
     } else {
         if (nextTest) return nextTest()
         else
@@ -134,6 +136,7 @@ function testAndMoveOn (res, un1, un2, assign, nextTest) {
 
 function renderVis (res, assignment) {
     return res.render ('assignments/index', {
+        "user":sessionUser,
         "nodes":assignment.nodes,
         "links":assignment.links
     })
