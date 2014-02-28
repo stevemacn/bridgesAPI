@@ -30,7 +30,7 @@ exports.checkCache = function(acct, args) {
     if (args[1]) sn = args[1]
     if (args[2]) ct = args[2]
     var dt = new Date();
-    dt.setMinutes(dt.getMinutes() - 15);
+    dt.setMinutes(dt.getMinutes() - 1500);
 
     for (var index in acct.streams) {
         var at = acct.streams[index]
@@ -130,7 +130,7 @@ function getFollowersById(blank, tweets) {
         }
 
     twit.get('followers/ids', param, function(err, data) {
-        if (err) return res.json({
+        if (err) return res.json(503, {
             "error": "unable to retrieve from twitter api"
         })
 
