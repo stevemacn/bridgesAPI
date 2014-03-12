@@ -1,7 +1,7 @@
 var mongoose = require('mongoose'),
     Account = mongoose.model('Account'),
     ntwitter = require('twit'),
-    keys = require('../../../config/twitterKeys.json'),
+    keys = require('../../../config/keys.json'),
     params, maxTweets = 200,
     foundTweets = 0,
     corpus, twit, acct, res, mode = 'timeline',
@@ -55,10 +55,13 @@ exports.init = function(account, args, resp) {
     corpus = "{"
     mode = args[0]
     foundTweets = 0
-
-    var key = keys,
-        isPublic = true
-
+    
+    if (keys.twitter) {
+        var key = keys, isPublic = true
+    } else {
+        return res.json({"error":
+            "twitter has not been configured on the server"})
+    }
         //check to see whether the account is associated with twitter
     if (acct) {
         if (!(acct.email == 'public')) isPublic = false

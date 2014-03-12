@@ -5,7 +5,7 @@
 var mongoose = require('mongoose')
     , LocalStrategy = require('passport-local').Strategy
     , TwitterStrategy = require('passport-twitter').Strategy
-    , twitterKeys = require('./twitterKeys')
+    , keys = require('./keys')
     , User = mongoose.model('User')
     , Account = mongoose.model('Account')
 
@@ -76,7 +76,7 @@ module.exports = function (passport, config) {
     //passport twitter setup
     //======================
 
-   
+    twitterKeys = keys.twitter
     passport.use('twitter-authz', new TwitterStrategy({
         consumerKey:    twitterKeys.consumer_key,
         consumerSecret: twitterKeys.consumer_secret,
