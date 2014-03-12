@@ -1,0 +1,13 @@
+{
+  "twitter":
+  {
+    "consumer_key":     "0RtaMNbvugB76O7Hsd50Fg",
+    "consumer_secret":  "wHrNMmsEy1QGYIwLorVMWkTKZYfBrDb6JItzOyA18",
+    "access_token":     "150478028-R35ZvhNWqPobIb0O5HknrSxD0j5ywSghYGt9cRYU",
+    "access_token_secret":  "KjBQDRJXPPcUkjaQYt6nczsoGGqrzfWjsMhbCr8pUc"
+  },
+  "rotten":
+  {
+    "api-key": "t8k7yvg62hc5tc6a8nsgjkqd"
+  }
+}
