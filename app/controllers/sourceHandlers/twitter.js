@@ -52,6 +52,29 @@ exports.checkCache = function(acct, args) {
     }
     return null
 }
+//create public accounts for each datasource
+exports.getPublicFeeds = function (domain, cb) {
+    //twitter-public
+    Account
+        .findOne({
+            email : "public",
+            domainProvider: domain 
+        })
+        .exec(function (err, acct) {
+            if (acct) return cb(acct)    
+            //caution what if this account becomes invalidated?
+            keys = require('../../../config/keys.json'),
+            config = keys.twitter
+            , acct = new Account();
+            
+            acct.email="public" 
+            acct.domainProvider="twitter.com"
+            acct.tokens.token = config.access_token_key
+            acct.tokens.tokenSecret = config.access_token_secret 
+            
+            return cb(acct)
+        })
+} 
 
 
 exports.init = function(account, args, resp) {
