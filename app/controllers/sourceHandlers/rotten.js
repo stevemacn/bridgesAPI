@@ -13,10 +13,9 @@ exports.checkCache = function(acct, args) {
     //no way to access cache
     if (!acct.streams) return null
     if (!args) return null
-    if (args[0]) params.movie = args[1]
+    if (args[0]) params.movie = args[0]
     var dt = new Date();
     dt.setMinutes(dt.getMinutes() - 1500);
-
     for (var index in acct.streams) {
         var at = acct.streams[index]
         if (at.screen_name == params.movie  && at.dateRequested >= dt) {
@@ -63,9 +62,8 @@ exports.init = function(account, args, resp) {
 function updateTomatoes(err, corpus) {
 
     if (err) res.json({"error":err})
-    console.log(corpus)
     
-    return res.json(corpus)
+    res.json(corpus)
     
     var updateDate = {
         'screen_name': params.movie,
@@ -75,7 +73,6 @@ function updateTomatoes(err, corpus) {
         'maxid': 0,
         'mode': 0
     }
-
     replaceCache = function(acct, sn, data) {
         
         for (a in acct.streams) {
