@@ -11,14 +11,18 @@ var mongoose = require('mongoose'),
         'ieeevis': 1,
         'twitscores':1
     }
-
-
+    
     /* Checks cache for screenname, count and date.
      *
      * This should use maxid if date is stale so that the
      * full record doesn't need to be fetched...
      *
      * */
+
+exports.configured = function() {
+    if (keys.twitter.configured==1) return true
+    else return false
+}
 
 exports.checkCache = function(acct, args) {
     //no way to access cache
@@ -34,7 +38,8 @@ exports.checkCache = function(acct, args) {
 
     for (var index in acct.streams) {
         var at = acct.streams[index]
-        if (at.screen_name == sn && at.mode == mode && at.count >= ct && at.dateRequested >= dt) {
+        if (at.screen_name == sn && at.mode == mode 
+            && at.count >= ct && at.dateRequested >= dt) {
             
             content = JSON.parse(at.content)
             //ghetto fix when you have time!
@@ -48,6 +53,7 @@ exports.checkCache = function(acct, args) {
     return null
 }
 
+
 exports.init = function(account, args, resp) {
 
     acct = account
@@ -56,12 +62,7 @@ exports.init = function(account, args, resp) {
     mode = args[0]
     foundTweets = 0
     
-    if (keys.twitter) {
-        var key = keys, isPublic = true
-    } else {
-        return res.json({"error":
-            "twitter has not been configured on the server"})
-    }
+    var key = keys.twitter, isPublic = true
         //check to see whether the account is associated with twitter
     if (acct) {
         if (!(acct.email == 'public')) isPublic = false
@@ -129,8 +130,8 @@ function getFollowersById(blank, tweets) {
     var corpus = {
         "followers": []
     }, param = {
-            "screen_name": params.screen_name
-        }
+        "screen_name": params.screen_name
+    }
 
     twit.get('followers/ids', param, function(err, data) {
         if (err) return res.json(503, {
