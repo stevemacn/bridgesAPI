@@ -10,7 +10,32 @@ var mongoose = require('mongoose')
                 //  /streams/twitter.com/followers/usgs/200
 
 exports.getSource = function (req, res, next) {
-    
+  
+    console.log(req.user.email)
+
+    //gets previous data from the cache if it exists
+    var getFromCache = function (srcHandler, acct) {
+        cachedStream = srcHandler.checkCache(acct, req.params[0].split('/'))
+        //if acct date is valid give the cache...
+        if (cachedStream==null) { 
+            srcHandler.init(acct, req.params[0].split('/'), res)
+        } else {
+            console.log("Cache Hit")
+            console.log(cachedStream.content)
+            res.json(JSON.parse(cachedStream.content))
+        }
+    }
+    //gets the appropriate source handler based upon the request 
+    var getSourceHandler = function (domain, cb) {
+        var src = './sourceHandlers/'+sourceHandlers[domain]
+        var srcHandler = require(src)
+        if (!srcHandler.configured()) 
+            return res.json({
+                "error":"data source "+domain+" not yet implemented"})  
+        cb(srcHandler)
+    }
+
+
     console.log("User: "+req.user.email+" requests "+req.params.domain)
     console.log("Params: "+req.params)
 
@@ -28,53 +53,16 @@ exports.getSource = function (req, res, next) {
         })
         .exec(function (err, acct) {
             if (err) return next(err)
-           
-            cb = function (acct) {
-                var src = './sourceHandlers/'+sourceHandlers[req.params.domain]
-                var srcHandler = require(src)
-                if (!srcHandler.configured()) 
-                    return res.json({"error":"data source "+req.params.domain+" not yet implemented"})  
-                cachedStream = srcHandler.checkCache(acct, req.params[0].split('/'))
-                if (cachedStream==null) { //if acct date is valid give the cache...
-                    srcHandler.init(acct, req.params[0].split('/'), res)
-                } else {
-                    console.log("Cache Hit")
-                    console.log(cachedStream.content)
-                    //console.log(cachedStream.screen_name + " " + cachedStream.count)
-                    
-                    res.json(JSON.parse(cachedStream.content))
-                }
-            }
-
-            if (!acct)
-                //should be more general to twitter or whatever not just 
-                //twitter.
-                acct = getPublicFeeds(req.params.domain, cb)
-            else 
-                cb(acct)
+            
+            reqDomain = req.params.domain
+    
+            getSourceHandler(reqDomain, function (srcHandler) {
+                if (!acct) {
+                    srcHandler.getPublicFeeds(reqDomain, function (acct) {
+                        getFromCache(srcHandler, acct)
+                    })
+                } else getFromCache(srcHandler, acct)
+            })
         })
+
 }
-
-
-//create public accounts for each datasource
-function getPublicFeeds (domain, cb) {
-    //twitter-public
-    Account
-        .findOne({
-            email : "public",
-            domainProvider: domain 
-        })
-        .exec(function (err, acct) {
-            if (acct) return cb(acct)    
-            //caution what if this account becomes invalidated?
-            var config = require ("../../config/twitterKeys.json")  
-            , acct = new Account();
-            
-            acct.email="public" 
-            acct.domainProvider="twitter.com"
-            acct.tokens.token = config.access_token_key
-            acct.tokens.tokenSecret = config.access_token_secret 
-            
-            return cb(acct)
-        })
-} 
