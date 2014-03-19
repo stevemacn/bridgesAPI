@@ -32,7 +32,8 @@ exports.getSource = function (req, res, next) {
             cb = function (acct) {
                 var src = './sourceHandlers/'+sourceHandlers[req.params.domain]
                 var srcHandler = require(src)
-            
+                if (!srcHandler.configured()) 
+                    return res.json({"error":"data source "+req.params.domain+" not yet implemented"})  
                 cachedStream = srcHandler.checkCache(acct, req.params[0].split('/'))
                 if (cachedStream==null) { //if acct date is valid give the cache...
                     srcHandler.init(acct, req.params[0].split('/'), res)
@@ -45,7 +46,9 @@ exports.getSource = function (req, res, next) {
                 }
             }
 
-            if (!acct) 
+            if (!acct)
+                //should be more general to twitter or whatever not just 
+                //twitter.
                 acct = getPublicFeeds(req.params.domain, cb)
             else 
                 cb(acct)
