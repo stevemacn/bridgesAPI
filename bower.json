@@ -1,13 +1,32 @@
 {
-  "name": "bridgesapi",
+  "name": "bridgesAPI",
   "version": "0.0.1",
+  "homepage": "https://github.com/stevemacn/bridgesAPI",
+  "authors": [
+    "Stephen MacNiel <smacniel01@gmail.com>",
+    "Sean Gallagher <stgallag@gmail.com>"
+  ],
+  "description": "Bridges API server",
+  "main": "app.js",
+  "keywords": [
+    "bridges",
+    "api",
+    "pedagogy",
+    "cs",
+    "computer-science"
+  ],
+  "license": "MIT",
+  "private": true,
   "ignore": [
     "**/.*",
     "node_modules",
-    "components"
+    "bower_components",
+    "public/components",
+    "test",
+    "tests"
   ],
   "dependencies": {
-        "modernizr": "http://github.com/Modernizr/Modernizr",        
-        "d3": "http://github.com/mbostock/d3"
+    "d3": "3.4.3",
+    "modernizr": "2.7.2"
   }
 }

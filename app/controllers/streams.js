@@ -13,24 +13,26 @@ exports.getSource = function (req, res, next) {
     
     console.log("User: "+req.user.email+" requests "+req.params.domain)
     console.log("Params: "+req.params)
-
-    if (!req.params.domain)
+    var domain = req.params.domain;
+    if (!domain)
         return res.json ({"error": "No datasource was specified"})
-    if (!(req.params.domain in sourceHandlers))
+    domain = domain.toLowerCase();
+
+    if (!(domain in sourceHandlers))
         return res.json (
-            {"error": "Requested datasource not yet supported: " + req.params.domain,
+            {"error": "Requested datasource not yet supported: " + domain,
             "tip":"Currently supported datasources: twitter.com"}) 
      
     Account
         .findOne({
             email : req.user.email,
-            domainProvider: req.params.domain 
+            domainProvider: domain 
         })
         .exec(function (err, acct) {
             if (err) return next(err)
            
             cb = function (acct) {
-                var src = './sourceHandlers/'+sourceHandlers[req.params.domain]
+                var src = './sourceHandlers/'+sourceHandlers[domain]
                 var srcHandler = require(src)
             
                 cachedStream = srcHandler.checkCache(acct, req.params[0].split('/'))
@@ -46,7 +48,7 @@ exports.getSource = function (req, res, next) {
             }
 
             if (!acct) 
-                acct = getPublicFeeds(req.params.domain, cb)
+                acct = getPublicFeeds(domain, cb)
             else 
                 cb(acct)
         })
