@@ -6,8 +6,8 @@ var width = 960;
 var height = 600;
 
 var force = d3.layout.force()
-    .charge([-250])
-    .linkDistance([75])
+    .charge([-100])
+    .linkDistance([55])
     .size([width, height])
     .nodes(nodes)
     .links(links)
