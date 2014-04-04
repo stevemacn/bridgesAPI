@@ -4,8 +4,8 @@ var mongoose = require('mongoose'),
     keys = require('../../../config/keys.json'),
     params = {}
 
-exports.configured = function () {
-    if (keys.rotten.configured==1) return true
+exports.configured = function() {
+    if (keys.rotten.configured == 1) return true
     else return false
 }
 
@@ -18,27 +18,27 @@ exports.checkCache = function(acct, args) {
     dt.setMinutes(dt.getMinutes() - 1500);
     for (var index in acct.streams) {
         var at = acct.streams[index]
-        if (at.screen_name == params.movie  && at.dateRequested >= dt) {
+        if (at.screen_name == params.movie && at.dateRequested >= dt) {
             return at
         }
     }
     return null
 }
 
-exports.getPublicFeeds = function (domain, cb) {
+exports.getPublicFeeds = function(domain, cb) {
     Account
         .findOne({
-            email : "public",
-            domainProvider: domain 
+            email: "public",
+            domainProvider: domain
         })
-        .exec(function (err, acct) {
-            if (acct) return cb(acct)    
+        .exec(function(err, acct) {
+            if (acct) return cb(acct)
             //caution what if this account becomes invalidated?
             acct = new Account();
-            acct.email="public" 
-            acct.domainProvider="rottentomatoes.com"
-            acct.tokens.tokenSecret = keys.rotten.apikey 
-            
+            acct.email = "public"
+            acct.domainProvider = "rottentomatoes.com"
+            acct.tokens.tokenSecret = keys.rotten.apikey
+
             return cb(acct)
         })
 }
@@ -48,23 +48,30 @@ exports.init = function(account, args, resp) {
 
     acct = account
     res = resp
-    if (!args[0]) return res.json(
-        {"error":"a moview must be provided for searching"})
-    params.movie = args[0] 
-    try { movies = rotten(keys.rotten.apikey) }
-    catch (exception) { 
-        return res.json(
-            {"error": exception})
-    } 
-    movies.search(params.movie, updateTomatoes)    
+    if (!args[0]) return res.json({
+        "error": "a moview must be provided for searching"
+    })
+    params.movie = args[0]
+    try {
+        movies = rotten(keys.rotten.apikey)
+    } catch (exception) {
+        return res.json({
+            "error": exception
+        })
+    }
+    console.log(params.movie)
+    movies.search(params.movie, updateTomatoes)
+        //updateTomatoes)
 }
 
 function updateTomatoes(err, corpus) {
 
-    if (err) res.json({"error":err})
-    
+    if (err) res.json({
+        "error": err
+    })
+    console.log(corpus)
     res.json(corpus)
-    
+
     var updateDate = {
         'screen_name': params.movie,
         'count': 1,
@@ -74,7 +81,7 @@ function updateTomatoes(err, corpus) {
         'mode': 0
     }
     replaceCache = function(acct, sn, data) {
-        
+
         for (a in acct.streams) {
             if (acct.streams[a].screen_name == sn) {
                 acct.streams.splice(a)
