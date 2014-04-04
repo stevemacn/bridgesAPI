@@ -10,7 +10,7 @@
         "express": "latest",
         "jade": "latest",
         "mongoose": "latest",
-        "ntwitter": "latest",
+        "tomatoes":"latest",
         "twit":"latest",
         "passport": "latest",
         "passport-twitter": "latest",

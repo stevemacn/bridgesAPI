@@ -7,7 +7,9 @@
     "components"
   ],
   "dependencies": {
-        "modernizr": "http://github.com/Modernizr/Modernizr",        
-        "d3": "http://github.com/mbostock/d3"
+    "modernizr": "latest",
+    "d3": "latest",
+    "jquery":"latest",
+    "css-toggle-switch": "~2.1.5"
   }
 }
