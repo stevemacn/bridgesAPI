@@ -1,9 +1,18 @@
 //based loosely on bostock's example and 
 //http://bl.ocks.org/d3noob/5141278
-
-
-var width = 960;
-var height = 600;
+for (i=0;i<1000000;i++){
+   var b = 0
+   b++
+    b--
+    b++
+    b--
+    b*b
+   b*b
+}
+var ele = document.getElementById("vis")
+console.log(ele)
+var width = ele.offsetWidth;
+var height = ele.offsetHeight;
 
 var force = d3.layout.force()
     .charge([-250])

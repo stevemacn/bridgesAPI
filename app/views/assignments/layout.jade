@@ -4,12 +4,27 @@ head
     meta(charset = 'UTF-8')
     meta(name = 'viewport', content = 'width=device-width')
     title = title
-    link(rel = 'stylesheet', href = '/css/bootstrap.min.css')
-    link(rel = 'stylesheet', href = '/css/bootstrap-responsive.min.css')
+    link(rel='stylesheet', href='/css/bootstrap.min.css')
+    link(rel='stylesheet', href='/css/bootstrap-responsive.min.css')
+    link(rel='stylesheet', href='/css/assignment.css')
+    link(rel='stylesheet', href='/components/css-toggle-switch/dist/toggle-switch.css')
     block css
-    script(src = 'http://localhost:35729/livereload.js')
+    script(src='http://localhost:35729/livereload.js')
 body
     include ../includes/header.jade
-    .container
-        #vis
+    div#assignmentCanvas 
+        #vis.assignmentContainer
+        #optionContainer.assignmentContainer  
+            div(style="margin:10px 10px 10px 10px;")
+                label Share
+                div.switch-toggle.well
+                    input#public(type="radio", name="view")
+                    label(for="public") Public 
+                    input#private(type="radio", name="view")
+                    label(for="private") Private 
+                    a.btn.btn-primary
+                ul.nav.nav-list
+                    li.nav-header Choose your representation
+                    li.active(href="#") Node-link diagram
+                span upload thumbnail
     block js

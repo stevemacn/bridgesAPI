@@ -1,0 +1,22 @@
+.assignmentContainer{
+    border-color:steelblue;
+    border-style:solid;
+    border-radius:25px;
+    padding:0px;
+    margin-left:20px;
+    margin-right:20px;
+}
+
+#vis{
+    float:left;
+    width:70%;
+    height:600px;
+}
+#optionContainer{
+    float:right;
+    width:20%;
+    height:600px;
+}
+#assignmentCanvas{
+    min-width:801px;
+}
