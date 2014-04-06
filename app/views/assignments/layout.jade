@@ -14,23 +14,29 @@ body
     include ../includes/header.jade
     div#assignmentCanvas 
         #vis.assignmentContainer
-        #optionContainer.assignmentContainer  
-            div(style="margin:10px 10px 10px 10px;")
-                label Share #{shared}
-                div.switch-toggle.well
-                    input#public(type="radio", name="view",
-                        onclick="toggleShare(true)")
-                    label(for="public") Public 
-                    input#private(type="radio", name="view",
-                        onclick="toggleShare(false)")
-                    label(for="private") Private 
-                    a.btn.btn-primary
-                ul.nav.nav-list
-                    li.nav-header Choose your representation
-                    li.active(href="#") Node-link diagram
-                span upload thumbnail
+        -if (owner) {    
+            #optionContainer.assignmentContainer  
+                div(style="margin:10px 10px 10px 10px;")
+                    label Share #{shared}
+                    div.switch-toggle.well
+                        input#public(type="radio", name="view",
+                            onclick="toggleShare(true)")
+                        label(for="public") Public 
+                        input#private(type="radio", name="view",
+                            onclick="toggleShare(false)")
+                        label(for="private") Private 
+                        a.btn.btn-primary
+                    ul.nav.nav-list
+                        li.nav-header Choose your representation
+                        li.active(href="#") Node-link diagram
+                    span upload thumbnail
+        -}
     block js
     script.
+        var owner = "#{owner}"
+        if (owner==="false") {
+             $("#vis").css("width","90%") 
+        } 
         var shared = "#{shared}"
         $("#private").prop('checked',false)
         $("#public").prop('checked',false)

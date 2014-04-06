@@ -31,10 +31,6 @@ function replaceAssignment (res, user, assignmentID) {
 
 
 exports.updateVisibility = function (req, res) {
-    console.log(req.params.value)
-    console.log(req.params.assignmentID)
-    console.log(req.user)
-
     Assignment
         .findOne({
             email:req.user.email,
@@ -48,9 +44,6 @@ exports.updateVisibility = function (req, res) {
             assignmentResult.save()
             res.send("OK")
         })
-
-    
-
 }
 
 
@@ -161,11 +154,14 @@ function testAndMoveOn (res, un1, un2, assign, nextTest) {
 }
 
 function renderVis (res, assignment) {
+    var owner=false
+    if (sessionUser.email==assignment.email) owner = true; 
     return res.render ('assignments/index', {
         "user":sessionUser,
         "nodes":assignment.nodes,
         "links":assignment.links,
         "assignmentID":assignmentID,
-        "shared":assignment.shared
+        "shared":assignment.shared,
+        "owner":owner
     })
 }
