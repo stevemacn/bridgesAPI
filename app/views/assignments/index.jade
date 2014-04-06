@@ -5,7 +5,20 @@ block js
     script.
         var nodes = !{JSON.stringify(nodes)}
         var links = !{JSON.stringify(links)}
+        var assignmentID = !{JSON.stringify(assignmentID)}
     script(src = '/js/graph.js')
-
+    script(src = '/components/jquery/dist/jquery.min.js')
+    script.
+        function toggleShare (selected) {
+            $.ajax({
+                url: "/assignments/"+assignmentID+"/share/"+selected,
+                type: "post"
+            }).done(function() {
+                console.log("visibility updated")
+            }).error(function(err){
+                console.log(err)    
+            });    
+            
+        }    
 block options
         

@@ -2,6 +2,7 @@ var mongoose = require('mongoose')
     , User = mongoose.model('User')
     , Account = mongoose.model('Account')
     , Assignment = mongoose.model('Assignment')
+    , assignmentID
 
 function replaceAssignment (res, user, assignmentID) {
 
@@ -26,6 +27,30 @@ function replaceAssignment (res, user, assignmentID) {
             console.log(msg)
             res.json({"msg":msg}) 
         })
+}
+
+
+exports.updateVisibility = function (req, res) {
+    console.log(req.params.value)
+    console.log(req.params.assignmentID)
+    console.log(req.user)
+
+    Assignment
+        .findOne({
+            email:req.user.email,
+            assignmentID: req.params.assignmentID    
+        })
+        .exec(function (err, assignmentResult) {
+            if (err) return res.json({"error":err})
+            if (!assignmentResult) 
+                return res.json({"error":"could not find assignment"})
+            assignmentResult.shared=req.params.value 
+            assignmentResult.save()
+            res.send("OK")
+        })
+
+    
+
 }
 
 
@@ -54,6 +79,7 @@ exports.upload = function (req, res) {
 
 
 function getAssignment (req, res, email, cb) {
+    assignmentID = req.params.assignmentID
     Assignment
         .findOne({
             email: email,
@@ -138,6 +164,8 @@ function renderVis (res, assignment) {
     return res.render ('assignments/index', {
         "user":sessionUser,
         "nodes":assignment.nodes,
-        "links":assignment.links
+        "links":assignment.links,
+        "assignmentID":assignmentID,
+        "shared":assignment.shared
     })
 }

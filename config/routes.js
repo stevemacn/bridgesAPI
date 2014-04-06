@@ -26,7 +26,8 @@ module.exports = function(app, passport, streamable) {
     var assignments = require('../app/controllers/assignments.js')
     app.post('/assignments/:assignmentID', 
              hasAccess, assignments.upload)
-   
+    app.post('/assignments/:assignmentID/share/:value', 
+        hasAccess, assignments.updateVisibility)
     app.get('/assignments/:assignmentID/:username', 
             assignments.show)
     //app.get('/assignments/:username/:assignmentNumber', assignments.viewD3)

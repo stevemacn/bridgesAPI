@@ -16,11 +16,13 @@ body
         #vis.assignmentContainer
         #optionContainer.assignmentContainer  
             div(style="margin:10px 10px 10px 10px;")
-                label Share
+                label Share #{shared}
                 div.switch-toggle.well
-                    input#public(type="radio", name="view")
+                    input#public(type="radio", name="view",
+                        onclick="toggleShare(true)")
                     label(for="public") Public 
-                    input#private(type="radio", name="view")
+                    input#private(type="radio", name="view",
+                        onclick="toggleShare(false)")
                     label(for="private") Private 
                     a.btn.btn-primary
                 ul.nav.nav-list
@@ -28,3 +30,11 @@ body
                     li.active(href="#") Node-link diagram
                 span upload thumbnail
     block js
+    script.
+        var shared = "#{shared}"
+        $("#private").prop('checked',false)
+        $("#public").prop('checked',false)
+        if (shared==="true")
+            $("#public").prop('checked',true)
+        else
+            $("#private").prop('checked',true)
