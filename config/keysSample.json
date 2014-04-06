@@ -10,8 +10,12 @@
     "rotten":
     {
         "configured": 0,
-        "api-key": "put rottentomato api key here, change configured to 1"
+        "apikey": "put rottentomato api key here, change configured to 1"
     }, 
+    "actors": {
+        "configured": 0,
+        "apikey":"put themoviedatabase api key here, then config to 1"
+    },
     "facebook":
     {
         "configured": 0 
