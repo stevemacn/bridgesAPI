@@ -4,7 +4,8 @@ var mongoose = require('mongoose')
     , account
     , sourceHandlers = {
             'twitter.com':'twitter.js',
-            'rottentomatoes.com':'rotten.js'
+            'rottentomatoes.com':'rotten.js',
+            'actors':'actors.js'
     }
 
 //Example Request:  /streams/twitter.com/timeline/usgs/200
