@@ -33,8 +33,8 @@ module.exports = function(app, passport, streamable) {
     //app.get('/assignments/:username/:assignmentNumber', assignments.viewD3)
 
     //gallery routes
-    //var gallery = require('../app/controllers/gallery.js')
-    //app.get('/assignments/', gallery.view)
+    var gallery = require('../app/controllers/gallery.js')
+    app.get('/assignments/:assignmentNumber', gallery.view)
     //app.get('/assignments/:assignmentID', gallery.view)
 
     app.post('/users/session',
