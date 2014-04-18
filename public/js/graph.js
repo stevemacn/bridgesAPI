@@ -54,7 +54,7 @@ node
     .append("circle")
     .attr("r", 7)
     .style("fill", function(d, i) {
-        return colors(i);
+        return d.color || colors(i);
     })
 
 node
