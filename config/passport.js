@@ -76,7 +76,7 @@ module.exports = function (passport, config) {
     //passport twitter setup
     //======================
 
-    twitterKeys = keys.twitter
+    twitterKeys = keys.twitter.keys
     passport.use('twitter-authz', new TwitterStrategy({
         consumerKey:    twitterKeys.consumer_key,
         consumerSecret: twitterKeys.consumer_secret,

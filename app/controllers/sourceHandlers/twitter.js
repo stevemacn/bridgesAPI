@@ -66,7 +66,7 @@ exports.getPublicFeeds = function (domain, cb) {
             if (acct) return cb(acct)    
             //caution what if this account becomes invalidated?
             keys = require('../../../config/keys.json'),
-            config = keys.twitter
+            config = keys.twitter.keys
             , acct = new Account();
             
             acct.email="public" 
@@ -87,7 +87,7 @@ exports.init = function(account, args, resp) {
     mode = args[0]
     foundTweets = 0
     
-    var key = keys.twitter, isPublic = true
+    var key = keys.twitter.keys, isPublic = true
         //check to see whether the account is associated with twitter
     if (acct) {
         if (!(acct.email == 'public')) isPublic = false

@@ -7,7 +7,7 @@
         "test": "grunt test"
     },
     "dependencies": {
-        "express": "latest",
+        "express": "3.5.0",
         "jade": "latest",
         "mongoose": "latest",
         "tomatoes":"latest",
