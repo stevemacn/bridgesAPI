@@ -1,0 +1,13 @@
+doctype html
+html(lang="en")
+head
+    meta(charset = 'UTF-8')
+    meta(name = 'viewport', content = 'width=device-width')
+    title = title
+    link(rel='stylesheet', href='/css/bootstrap.min.css')
+    link(rel='stylesheet', href='/css/bootstrap-responsive.min.css')
+    script(src='http://localhost:35729/livereload.js')
+body
+    include ../includes/header.jade
+    - for (var x = 0; x < usernames.length; x++)
+        h1(style="margin-left:50px") #{usernames[x]}

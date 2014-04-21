@@ -32,7 +32,12 @@ exports.view = function (req, res) {
                 users.push(assignmentResult[i].email)
 
             getUsername(users, [], function(usernames) {
-                res.send(usernames) 
+
+                return res.render ('assignments/gallery', {
+                    //"user":sessionUser,
+                    "title":"Assignment gallery",
+                    "usernames":usernames
+                })
             })
         })
 }
