@@ -9,7 +9,9 @@ var mongoose = require('mongoose'),
         'earthquake': 1,
         'usgs': 1,
         'ieeevis': 1,
-        'twitscores':1
+        'twitscores':1,
+        'wired':1,
+        'twitterapi':1
     }
     
     /* Checks cache for screenname, count and date.
