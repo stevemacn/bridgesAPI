@@ -9,5 +9,9 @@ head
     script(src='http://localhost:35729/livereload.js')
 body
     include ../includes/header.jade
-    - for (var x = 0; x < usernames.length; x++)
-        h1(style="margin-left:50px") #{usernames[x]}
+    div(style="margin:5%")
+        - for (var x = 0; x < usernames.length; x++)
+            a(href=usernames[x],
+                style="float:left;width:100px; margin-left:50px")
+                div(style="height:100px; background-color:steelblue; border-radius:100px;")
+                h4(style="text-align: center") #{usernames[x]}
