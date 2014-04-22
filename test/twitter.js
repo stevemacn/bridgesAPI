@@ -135,18 +135,6 @@ describe('Twitter API', function () {
     })
   })
 
-  it('GET `direct_messages`', function (done) {
-    twit.get('direct_messages', function (err, reply, response) {
-      checkReply(err, reply)
-      assert.ok(Array.isArray(reply))
-      exports.checkDm(reply[0])
-
-      checkResponse(response)
-
-      done()
-    })
-  })
-
   it('GET `followers/ids`', function (done) {
     twit.get('followers/ids', function (err, reply, response) {
       checkReply(err, reply)
@@ -204,30 +192,6 @@ describe('Twitter API', function () {
       done()
     })
   })
-
-  describe('error handling', function () {
-    describe('handling errors from the twitter api', function () {
-      it('should callback with an Error object with all the info', function (done) {
-        var twit = new Twit({
-          consumer_key: 'a',
-          consumer_secret: 'b',
-          access_token: 'c',
-          access_token_secret: 'd'
-        })
-        twit.get('account/verify_credentials', function (err, reply, res) {
-          assert(err instanceof Error)
-          assert(err.statusCode === 401)
-          assert(err.code > 0)
-          assert(err.message.match(/token/))
-          assert(err.twitterReply)
-          assert(err.allErrors)
-          assert(!reply)
-          assert(!res)
-          done()
-        })
-      })
-    })
-    })
 })
 
 /**
