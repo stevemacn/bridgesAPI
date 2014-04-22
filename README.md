@@ -1,34 +1,51 @@
 bridgesAPI
 ==========
 
-Data delivery system for multiple data sources (Twitter, Facebook, etc). 
+Data delivery system for multiple data sources (Twitter, Rotten Tomatoes, Facebook, etc). 
 
 Requirements
 --
-1. Install mongoDB. Run it in the background
-2. Add your own twitter developer keys 
-3. Edit "config/twitterKeysSample.json" with your keys
-4. Save "config/twitterKeysSample.json" to "config/twitterKeys.json"
+
+1. Install mongoDB. Run it in the background. 
+2. [Install node and npm][nodenpm](node's package manager) 
+2. Server on which you can host nodejs (nginx to proxy requests).
+3. Route requests from server to node.js (running by default on port 3000)
+
+On OSX? Install mongoDB, node, npm, and yeoman using [homebrew][hbrew] 
+
+[hbrew]:http://brew.sh/
 
 Setup 
 ---
-    git clone git@github.com:stevemacn/bridgesAPI.git
     
+First we need our task runner, dependency manager and scaffold generators (you don't need to know what they are)
+
+    npm install -g yo 
+
+Then we need to get BRIDGES' server code
+
+    git clone https://github.com/stevemacn/bridgesAPI
+  
+We install it (bower needs --allow-root to be sudoed)
+
     npm install
     bower install
     git submodule init
     git submodule update
+    mongod & 
     grunt
 
-For the uninitiated, [install node and npm][nodenpm], then to get grunt, yo and bower...
 [nodenpm]:http://www.joyent.com/blog/installing-node-and-npm
 
-    npm install -g yo 
 
-or individually...
-    
-    npm install -g grunt-cli
-    npm install -g bower
+
+=======
+Testing
+--
+
+*This should be done after authenticating datasources. We mention it here to keep in mind after sources are authenticated.*
+
+
 
 =======
 Authenticating Datasources
