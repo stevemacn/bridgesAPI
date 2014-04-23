@@ -37,35 +37,51 @@ We install it (bower needs --allow-root to be sudoed)
 
 [nodenpm]:http://www.joyent.com/blog/installing-node-and-npm
 
-
-
 =======
 Testing
 --
 
 *This should be done after authenticating datasources. We mention it here to keep in mind after sources are authenticated.*
 
-
-
 =======
 Authenticating Datasources
 --    
-[bridgesAPI][bridge] has been designed to support multiple datasources; however, currently we are only supporting [Twitter][twit]. 
+[bridgesAPI][bridge] has been designed to support multiple datasources; however, currently we are only supporting [Twitter][twit], [RottenTomatoes][rt], and actors. 
 
-Current authentication is using [passport][passport] and consequently twitter's callback must be to http://127.0.0.1 if testing locally. This has some implications: when testing locally the url must be http://127.0.0.1:3000 rather than [http://localhost:3000][c]
+Current authentication is using [passport][passport] and consequently twitter's callback must be to http://127.0.0.1 rather than [http://localhost:3000][c] if testing locally.
 
 [bridge]: https://github.com/stevemacn/bridgesAPI
 [passport]: https://github.com/jaredhanson/passport
 [twit]: http://twitter.com
 [c]: http://127.0.0.1:3000
+[rt]:http://www.rottentomatoes.com
 
-Get Timelines 
+
+Twitter: Set up
 --
-Can only choose handles: "usgs", "earthquake", or "cltweather" unless account authenticated w/ twitter
+
+1. Setup a twitter application and get keys. [For example instructions][twitterinstruct]
+2. Edit “config/twitterKeysSample.json” with your keys
+3. Save “config/twitterKeysSample.json” to “config/twitterKeys.json”
+
+[twitterinstruct]: http://bridgesuncc.github.io/technical/twitter/ 
+
+=======
+Using Datasources
+--  
+
+
+Routes are used as follows:
     
-    form: stream/:source/:twitterHandle/:requestType/:resultCount
+    serverAddress/streams/:datasourceName/*parameters?apikey=xxxxx
+
+Can only choose handles: "usgs", "earthquake", "twitscores", "twitterapi" or "wired" unless account authenticated w/ twitter
     
-    example: http://127.0.0.1:3000/streams/twitter.com/timeline/earthquake/4
+    form: streams/twitter.com/:followersOrTimeline/:twitterHandle/:resultCount?apikey=xxxx
+
+Twitter: Get Timelines 
+--
+    example: http://127.0.0.1:3000/streams/twitter.com/timeline/earthquake/4?apikey=143214
     
 Sample output for the above querry    
     
@@ -81,23 +97,21 @@ Sample output for the above querry
         "tweet": "#earthquake M 6.4, Puerto Rico region Jan 13, 2014 04:00:58 UTC http://t.co/ACW0oLMKHz"
     },
     {
-      "date": "Thu Jan 09 21:22:25 +0000 2014",
-      "tweet": "#earthquake M 5.0, Cuba region Jan  9, 2014 20:57:47 UTC http://t.co/rea0KzZPbZ"
+        "date": "Thu Jan 09 21:22:25 +0000 2014",
+        "tweet": "#earthquake M 5.0, Cuba region Jan  9, 2014 20:57:47 UTC http://t.co/rea0KzZPbZ"
     },
     {
-      "date": "Wed Jan 01 16:22:47 +0000 2014",
-      "tweet": "#earthquake M 6.6, Vanuatu Jan  1, 2014 16:03:31 UTC http://t.co/AUNcjtRaIH"
+        "date": "Wed Jan 01 16:22:47 +0000 2014",
+        "tweet": "#earthquake M 6.6, Vanuatu Jan  1, 2014 16:03:31 UTC http://t.co/AUNcjtRaIH"
     }
     ]
 }
 ```
 
-Get Followers
+Twitter: Get Followers
 --
    
-    form: stream/:source/:twitterHandle/:requestType/:resultCount
-    
-    example: http://127.0.0.1:3000/streams/twitter.com/followers/stephen_macneil/5
+    example: http://127.0.0.1:3000/streams/twitter.com/followers/stephen_macneil/5?apikey=143214
 
 
 ```json
