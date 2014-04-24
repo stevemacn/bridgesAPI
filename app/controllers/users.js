@@ -1,7 +1,7 @@
 var mongoose = require('mongoose')
     , User = mongoose.model('User')
     , Account = mongoose.model('Account')
-
+    , Assignment = mongoose.model("Assignment")
 //Setup for logging in via twitter
 var login = function (req, res) {
     
@@ -74,23 +74,38 @@ exports.display = function (req, res) {
 exports.deletePerson = function (req, res) {
 
     user = req.user
-    console.log(user)
-    /*
+    console.log("Deleting user: " + user.email)
+    
     User
         .findOne({email: user.email})
         .exec(function (err, user) {
             if (err) return next(err)
-                user.remove()
+            if (user) user.remove()
+        })
+    Assignment
+        .find({email: user.email})
+        .exec(function(err, assign) {
+            if (err) return next(err)
+            for (i in assign) {
+                console.log(assign[i].assignmentID)
+                assign[i].remove()
+            }
+            return res.redirect("login")
         })
     Account
-        .findOne({email: user.email})
+        .find({email: user.email})
         .exec(function(err, acct) {
             if (err) return next(err)
-                acct.remove()
-        })*/
+            for (i in acct) {
+                console.log(acct[i].domain)
+                acct[i].remove()
+            }
+            return res.redirect("login")
+        })
 }
 
 exports.getkey = function (req, res) {
+    console.log(req.user)
     user = req.user 
     user.generateKey()
     user.save()
@@ -108,6 +123,7 @@ exports.signup = function (req, res) {
 }
 
 exports.create = function (req, res) {
+    console.log("Creating user: "+ req.body.email)
     var user = new User(req.body)
     user.provider = 'local'
     user.save(function (err) {
