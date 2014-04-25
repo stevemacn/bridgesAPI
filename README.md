@@ -82,6 +82,14 @@ You must email one of the investigators to obtain an apikey.
 
 [twitterinstruct]: http://bridgesuncc.github.io/technical/twitter/ 
 
+#Testing
+    
+From the directory containing the server typically /var/www/ run the following command. These tests are to make sure the server is accessible, and to make sure that the datasources are properly configured. 
+
+
+    npm test
+
+
 #Using Datasources
 
 To use datasources, you must 
@@ -275,12 +283,55 @@ example: http://127.0.0.1:3000/streams/actors/ewan mcgregor?apikey=143214
 ]
 ```
 
-#Testing
+#Submitting Assignments
+
+After a datasource is received by the client, the user can apply manipulations to the data. These manipulations are typically, storing data into a data strucutre, applying algorthims to the datastructures, or both. After this point the manipulated data can be sent back to the server so that it can be visualized. 
+
+**The following explains how requests work; however, the client will typically handle these requests for the user.**
+
+###Posting an assignment
+
+After the client has manipulated the data, the client can POST the data to server via: 
+
+```
+serverAddress/assignments/:assignmentNumber?apikey=xxxx
+```
+
+An example
+```
+bridges.cs.uncc.edu/assignments/0?apikey=1145327585291
+```
+With the following passed in the raw body of the post request.
+```json
+{
+  "nodes" :[
+    {"name":"stephen"},
+    {"name":"meghna"},
+    {"name":"joe"},
+    {"name":"hooram"},
+    {"name":"dan"},
+    {"name":"jeffrey"},
+    {"name":"dahlia"}
     
-From the directory containing the server typically /var/www/ run the following command. These tests are to make sure the server is accessible, and to make sure that the datasources are properly configured. 
+],
+  "links" : [
+    {"source":1, "target":2, "value":1},
+    {"source":6, "target":0, "value":3},
+    {"source":0, "target":6, "value":3},
+    {"source":3, "target":2, "value":1},
+    {"source":3, "target":1, "value":1},
+    {"source":1, "target":3, "value":2},
+    {"source":4, "target":3, "value":1}
+]}
+```
 
 
-    npm test
+
+
+
+
+
+
     
 
 
