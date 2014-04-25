@@ -90,7 +90,6 @@ exports.deletePerson = function (req, res) {
                 console.log(assign[i].assignmentID)
                 assign[i].remove()
             }
-            return res.redirect("login")
         })
     Account
         .find({email: user.email})
@@ -100,8 +99,8 @@ exports.deletePerson = function (req, res) {
                 console.log(acct[i].domain)
                 acct[i].remove()
             }
-            return res.redirect("login")
         })
+            return res.redirect("login")
 }
 
 exports.getkey = function (req, res) {

@@ -12,6 +12,9 @@
 node_modules/
 public/components/
 
+# Don't include test output
+test/imgs/
+
 # Don't steal my keys!! #
 ###################
 keys.json
