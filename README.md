@@ -219,12 +219,11 @@ example: http://127.0.0.1:3000/streams/rottentomatoes.com/starbuck?apikey=143214
 form: streams/actors/:actorName?apikey=xxxx
 ```
 
-The result is rather long, a simplified version is shown below     (only relevant feilds shown).
+The result is rather long, a simplified version is shown below (only relevant feilds shown).
 
 ```
-example: http://127.0.0.1:3000/streams/actors/ewan mcgregor    ?apikey=143214
+example: http://127.0.0.1:3000/streams/actors/ewan mcgregor?apikey=143214
 ```
-
 
 ```json
 [
@@ -274,7 +273,7 @@ example: http://127.0.0.1:3000/streams/actors/ewan mcgregor    ?apikey=143214
   {more roles},
   {more roles}
 ]
-
+```
 
 #Testing
     
