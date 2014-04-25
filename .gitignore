@@ -14,8 +14,8 @@ public/components/
 
 # Don't steal my keys!! #
 ###################
-twitterKeys.json
-config/twitterKeys.json
+keys.json
+config/keys.json
 
 # Logs and databases #
 ######################
