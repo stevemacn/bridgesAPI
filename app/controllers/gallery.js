@@ -34,7 +34,6 @@ exports.view = function (req, res) {
             getUsername(users, [], function(usernames) {
 
                 return res.render ('assignments/gallery', {
-                    //"user":sessionUser,
                     "title":"Assignment gallery",
                     "usernames":usernames
                 })
