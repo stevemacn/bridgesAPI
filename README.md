@@ -18,21 +18,26 @@ On OSX? Install mongoDB, node, npm, and yeoman using [homebrew][hbrew]
 
 First we need our task runner, dependency manager and scaffold generators (you don't need to know what they are)
 
-    npm install -g yo 
+```
+npm install -g yo 
+```
 
 Then we need to get BRIDGES' server code
 
-    git clone https://github.com/stevemacn/bridgesAPI
-  
+```
+git clone https://github.com/stevemacn/bridgesAPI
+```  
+
 We install it (bower needs --allow-root to be sudoed)
 
-    npm install
-    bower install
-    git submodule init
-    git submodule update
-    mongod & 
-    grunt
-    
+```
+npm install
+bower install
+git submodule init
+git submodule update
+mongod & 
+grunt
+```    
 *Now we need to authenticate datasources and test these datasources are properly configured.*
 
 [nodenpm]:http://www.joyent.com/blog/installing-node-and-npm
@@ -77,6 +82,14 @@ You must email one of the investigators to obtain an apikey.
 
 [twitterinstruct]: http://bridgesuncc.github.io/technical/twitter/ 
 
+#Testing
+    
+From the directory containing the server typically /var/www/ run the following command. These tests are to make sure the server is accessible, and to make sure that the datasources are properly configured. 
+
+
+    npm test
+
+
 #Using Datasources
 
 To use datasources, you must 
@@ -88,17 +101,23 @@ To use datasources, you must
 ###Twitter: General usage
 
 Routes are used as follows:
-    
+
+```    
     serverAddress/streams/:datasourceName/*parameters?apikey=xxxxx
+```
 
 Can only choose handles: "usgs", "earthquake", "twitscores", "twitterapi" or "wired" unless account authenticated w/ twitter
-    
-    form: streams/twitter.com/:followersOrTimeline/:twitterHandle/:resultCount?apikey=xxxx
+
+```    
+form: streams/twitter.com/:followersOrTimeline/:twitterHandle/:resultCount?apikey=xxxx
+```
 
 ###Twitter: Get Timelines 
 
-    example: http://127.0.0.1:3000/streams/twitter.com/timeline/earthquake/4?apikey=143214
-    
+```
+example: http://127.0.0.1:3000/streams/twitter.com/timeline/earthquake/4?apikey=143214
+```
+
 Sample output for the above querry    
     
 ```json
@@ -125,9 +144,10 @@ Sample output for the above querry
 ```
 
 ###Twitter: Get Followers
-   
-    example: http://127.0.0.1:3000/streams/twitter.com/followers/stephen_macneil/5?apikey=143214
 
+```
+example: http://127.0.0.1:3000/streams/twitter.com/followers/stephen_macneil/5?apikey=143214
+```
 
 ```json
 {
@@ -144,11 +164,15 @@ Sample output for the above querry
 
 ###Rotten Tomatoes: General usage
 
-    form: streams/rottentomatoes.com/:movieTitle?apikey=xxxx
+```
+form: streams/rottentomatoes.com/:movieTitle?apikey=xxxx
+```
     
 The result is rather long, a simplified version is shown below (only relevant feilds shown).
 
-    example: http://127.0.0.1:3000/streams/rottentomatoes.com/starbuck?apikey=143214
+```
+example: http://127.0.0.1:3000/streams/rottentomatoes.com/starbuck?apikey=143214
+```
 
 ```json
 [
@@ -197,13 +221,117 @@ The result is rather long, a simplified version is shown below (only relevant fe
 ]
 ```
 
+###Actors: General usage
 
-#Testing
+```
+form: streams/actors/:actorName?apikey=xxxx
+```
+
+The result is rather long, a simplified version is shown below (only relevant feilds shown).
+
+```
+example: http://127.0.0.1:3000/streams/actors/ewan mcgregor?apikey=143214
+```
+
+```json
+[
+  {
+    "adult": false,
+    "character": "Joe Taylor",
+    "credit_id": "52fe422ac3a36847f80092b1",
+    "id": 237,
+    "original_title": "Young Adam",
+    "poster_path": "/zruee1cUYJXMuGFWJfJ1o0WE7Wm.jpg",
+    "release_date": "2003-09-26",
+    "title": "Young Adam"
+  },
+  {
+    "adult": false,
+    "character": "Younger Ed Bloom",
+    "credit_id": "52fe4258c3a36847f8016fff",
+    "id": 587,
+    "original_title": "Big Fish",
+    "poster_path": "/6DRFdlNZpAaEt7eejsbAlJGgaM7.jpg",
+    "release_date": "2003-12-10",
+    "title": "Big Fish"
+  },
+  {
+    "adult": false,
+    "character": "Renton",
+    "credit_id": "52fe4260c3a36847f8019913",
+    "id": 627,
+    "original_title": "Trainspotting",
+    "poster_path": "/p1O3eFsdb0GEIYu87xlwV7P4jM1.jpg",
+    "release_date": "1996-07-19",
+    "title": "Trainspotting"
+  },
+  {
+    "adult": false,
+    "character": "Christian",
+    "credit_id": "52fe427cc3a36847f802277d",
+    "id": 824,
+    "original_title": "Moulin Rouge!",
+    "poster_path": "/zsphaxX7NaZyFTYpdlo2yz7q7wy.jpg",
+    "release_date": "2001-05-16",
+    "title": "Moulin Rouge!"
+  },
+  
+  ...
+  
+  {more roles},
+  {more roles}
+]
+```
+
+#Submitting Assignments
+
+After a datasource is received by the client, the user can apply manipulations to the data. These manipulations are typically, storing data into a data strucutre, applying algorthims to the datastructures, or both. After this point the manipulated data can be sent back to the server so that it can be visualized. 
+
+**The following explains how requests work; however, the client will typically handle these requests for the user.**
+
+###Posting an assignment
+
+After the client has manipulated the data, the client can POST the data to server via: 
+
+```
+serverAddress/assignments/:assignmentNumber?apikey=xxxx
+```
+
+An example
+```
+bridges.cs.uncc.edu/assignments/0?apikey=1145327585291
+```
+With the following passed in the raw body of the post request.
+```json
+{
+  "nodes" :[
+    {"name":"stephen"},
+    {"name":"meghna"},
+    {"name":"joe"},
+    {"name":"hooram"},
+    {"name":"dan"},
+    {"name":"jeffrey"},
+    {"name":"dahlia"}
     
-From the directory containing the server typically /var/www/ run the following command. These tests are to make sure the server is accessible, and to make sure that the datasources are properly configured. 
+],
+  "links" : [
+    {"source":1, "target":2, "value":1},
+    {"source":6, "target":0, "value":3},
+    {"source":0, "target":6, "value":3},
+    {"source":3, "target":2, "value":1},
+    {"source":3, "target":1, "value":1},
+    {"source":1, "target":3, "value":2},
+    {"source":4, "target":3, "value":1}
+]}
+```
 
 
-    npm test
+
+
+
+
+
+
     
 
 
