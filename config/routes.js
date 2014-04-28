@@ -1,16 +1,54 @@
 module.exports = function(app, passport, streamable) {
 
+    //Allows users to by pass authentication to api requests
+    //if they have a valid api key.
+    var hasAccess = function (req, res, next) {
+    
+        //authenticated
+        if (req.isAuthenticated()) return next()
+    
+        var mongoose = require('mongoose'),
+            User = mongoose.model('User')
+    
+        if (!req.query.apikey) return next(
+            "Not logged in: you must provide" +
+            " an apikey as a query variable")
+        
+        User
+            .findOne({
+                apikey: req.query.apikey
+            })
+            .exec(function(err, user) {
+                if (!user) 
+                    return next("your api key is invalid")
+                req.user = user
+                return next()
+            })
+    }
+    
+    //authentication
+    var isLoggedIn = function (req, res, next) {
+        if (req.isAuthenticated()) return next()
+        res.redirect("/login")
+    }
+
+    var handleError = function (err, req, res, next) {
+        return res.json(503, {
+            "error":err
+        })
+    }
+
     //user routes
     var users = require('../app/controllers/users')
-    app.get('/signup', users.signup)
-    app.post('/users', users.create)
+    app.get('/signup', users.signup, handleError)
+    app.post('/users', users.create, handleError)
 
-    app.get('/login', users.login)
-    app.get('/home', isLoggedIn, users.display)
-    app.get('/home/:username', isLoggedIn, users.display)
+    app.get('/login', users.login, handleError)
+    app.get('/home', isLoggedIn, users.display, handleError)
+    app.get('/home/:username', isLoggedIn, users.display, handleError)
 
     app.delete('/users/:id', isLoggedIn, users.deletePerson)
-    app.get('/users/apikey', users.getkey)
+    app.get('/users/apikey', users.getkey, handleError)
     app.get('/logout', users.logout)
 
     //general routes
@@ -19,8 +57,10 @@ module.exports = function(app, passport, streamable) {
     //stream routes
 
     var streams = require('../app/controllers/streams.js')
-    app.get('/streams/:domain/*', hasAccess, streamable, streams.getSource)
-    app.get('/streams/:domain', hasAccess, streamable, streams.getSource)
+    app.get('/streams/:domain/*', 
+            hasAccess, streamable, streams.getSource, handleError)
+    app.get('/streams/:domain', 
+            hasAccess, streamable, streams.getSource, handleError)
 
     //assignment routes
     var assignments = require('../app/controllers/assignments.js')
@@ -34,7 +74,7 @@ module.exports = function(app, passport, streamable) {
 
     //gallery routes
     var gallery = require('../app/controllers/gallery.js')
-    app.get('/assignments/:assignmentNumber', gallery.view)
+    app.get('/assignments/:assignmentNumber', gallery.view, handleError)
     //app.get('/assignments/:assignmentID', gallery.view)
 
     app.post('/users/session',
@@ -71,34 +111,3 @@ module.exports = function(app, passport, streamable) {
 
 }
 
-//Allows users to by pass authentication to api requests
-//if they have a valid api key.
-function hasAccess(req, res, next) {
-
-    //authenticated
-    if (req.isAuthenticated()) return next()
-
-    var mongoose = require('mongoose'),
-        User = mongoose.model('User')
-
-    if (!req.query.apikey) return res.json({
-        "error":"you are not logged in, you must provide" +
-                " an apikey as a query variable"})
-    User
-        .findOne({
-            apikey: req.query.apikey
-        })
-        .exec(function(err, user) {
-            if (!user) return res.json({ 
-                "error":"you're api key is invalid"})
-            
-            req.user = user
-            return next()
-        })
-}
-
-//authentication
-function isLoggedIn(req, res, next) {
-    if (req.isAuthenticated()) return next()
-    res.redirect("/login")
-}

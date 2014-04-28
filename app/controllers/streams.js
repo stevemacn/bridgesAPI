@@ -17,11 +17,16 @@ exports.getSource = function (req, res, next) {
 
     //gets previous data from the cache if it exists
     var getFromCache = function (srcHandler, acct) {
-        cachedStream = srcHandler.checkCache(acct, req.params[0].split('/'))
+       
+        try { rout = req.params[0].split('/') }
+        catch (e) {
+            return next("invalid route supplied for selected source")
+        }
+        
+        cachedStream = srcHandler.checkCache(acct, rout)
         //if acct date is valid give the cache...
-        if (cachedStream==null) { 
-            srcHandler.init(acct, req.params[0].split('/'), res)
-        } else {
+        if (cachedStream==null) srcHandler.init(acct, rout, res) 
+        else {
             console.log("Cache Hit")
             console.log(cachedStream.content)
             res.json(JSON.parse(cachedStream.content))
@@ -32,8 +37,8 @@ exports.getSource = function (req, res, next) {
         var src = './sourceHandlers/'+sourceHandlers[domain]
         var srcHandler = require(src)
         if (!srcHandler.configured()) 
-            return res.json({
-                "error":"data source "+domain+" not yet implemented"})  
+            return next("data source "+domain+" not yet implemented") 
+        
         cb(srcHandler)
     }
 
@@ -42,9 +47,9 @@ exports.getSource = function (req, res, next) {
     console.log("Params: "+req.params)
 
     if (!req.params.domain)
-        return res.json ({"error": "No datasource was specified"})
+        return next("No data-source was specified")
     if (!(req.params.domain in sourceHandlers))
-        return res.json (
+        return res.json (503, 
             {"error": "Requested datasource not yet supported: " + req.params.domain,
             "tip":"Currently supported datasources: twitter.com"}) 
      

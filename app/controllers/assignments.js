@@ -37,9 +37,9 @@ exports.updateVisibility = function (req, res) {
             assignmentID: req.params.assignmentID    
         })
         .exec(function (err, assignmentResult) {
-            if (err) return res.json({"error":err})
+            if (err) return next(err)
             if (!assignmentResult) 
-                return res.json({"error":"could not find assignment"})
+                return next("could not find assignment")
             assignmentResult.shared=req.params.value 
             assignmentResult.save()
             res.send("OK")
@@ -51,10 +51,8 @@ exports.updateVisibility = function (req, res) {
 exports.upload = function (req, res) {
     
     try { rawBody = JSON.parse(req.body) } 
-    catch (e) {return res.json({
-        "error": "invalid json syntax for body"})}
-    //need to add a more helpful response.
-    
+    catch (e) { return next("invalid syntax for raw body of request")}
+
     var assignmentID = req.params.assignmentID
     
     User
@@ -62,9 +60,9 @@ exports.upload = function (req, res) {
             apikey:req.query.apikey
         })
         .exec(function (err, user) {
-            if (err) return res.json({"error":err})
-            if (!user) 
-                return res.json({"error":"could not find user"})
+            if (err) return next (err)
+            if (!user) return ("could not find user by apikey: " + 
+                        req.query.apikey) 
             
             replaceAssignment(res, user, assignmentID) 
         })
@@ -79,9 +77,8 @@ function getAssignment (req, res, email, cb) {
             assignmentID: req.params.assignmentID 
         })
         .exec(function (err, assignment) {
-            if (err) return res.json({"error": err})
-            if (!assignment) return res.json({
-                "error":"couldn't find assignment"})
+            if (err) return next(err) 
+            if (!assignment) return next("could not find assignment") 
             
             if (assignment.shared!==true) return cb(assignment)
             return renderVis(res, assignment)         
@@ -99,9 +96,9 @@ exports.show = function (req, res) {
     User
         .findOne({username: username})
         .exec(function(err, usr){
-            if (err) return res.json({"error": err})
-            if (!usr) return res.json({"error": 
-                "could not find the username: "+username})
+            if (err) return next(err) 
+            if (!usr) 
+                return next("couldn't find the username "+username) 
            
             getAssignment(req, res, usr.email, function (assign) {
                
@@ -131,8 +128,8 @@ function testByKey (res, apikey, username, assign, nextTest) {
         User
             .findOne({apikey:apikey})
             .exec(function (err, n){
-                if (err) return res.json({"error":err})
-                if (!n) return res.json ({"error":"invalid api key"})
+                if (err) return next(err)
+                if (!n) return next("Invalid apikey: "+apikey)
                 return testAndMoveOn(
                     res, n.username, username, assign, null) 
             })
@@ -149,8 +146,7 @@ function testAndMoveOn (res, un1, un2, assign, nextTest) {
     if (un1 === un2) return renderVis (res, assign)
 
     if (nextTest) return nextTest()
-    else return res.json({
-        "error":"the data you requested is not public"})
+    else return next("the data you requested is not public")
 }
 
 function renderVis (res, assignment) {
