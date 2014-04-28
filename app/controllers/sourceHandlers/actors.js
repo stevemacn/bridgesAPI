@@ -85,10 +85,11 @@ exports.init = function(account, args, resp) {
 
 function updateActors(err, corpus) {
 
-    if (err) res.json({
-        "error": err
-    })
-    console.log(corpus)
+    if (err) next(err) 
+    
+    console.log("added "+ params.movie + 
+        " to the cache on "+Date.now())
+    
     res.json(corpus)
 
     var updateDate = {
