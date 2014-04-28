@@ -36,7 +36,7 @@ exports.checkCache = function(acct, args) {
     if (args[1]) sn = args[1]
     if (args[2]) ct = args[2]
     var dt = new Date();
-    dt.setMinutes(dt.getMinutes() - 1500);
+    dt.setMinutes(dt.getMinutes() - 15);
 
     for (var index in acct.streams) {
         var at = acct.streams[index]
