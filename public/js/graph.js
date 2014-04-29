@@ -1,18 +1,14 @@
 //based loosely on bostock's example and 
 //http://bl.ocks.org/d3noob/5141278
-for (i=0;i<1000000;i++){
-   var b = 0
-   b++
-    b--
-    b++
-    b--
-    b*b
-   b*b
+
+var count = 0
+for (i in links) {
+   if (count<links[i].value) count = links[i].value 
 }
+
 var ele = document.getElementById("vis")
-console.log(ele)
-var width = ele.offsetWidth;
-var height = ele.offsetHeight;
+    , width = ele.offsetWidth
+     height = ele.offsetHeight
 
 var force = d3.layout.force()
     .charge([-250])
@@ -36,6 +32,9 @@ svg.append("svg:defs").selectAll("marker")
       .attr("refX", 15)
       .attr("refY", -3)
       .attr("markerWidth", 6)
+    .style("opacity", function(d) {
+        return d.value/count || 1
+    })
       .attr("markerHeight", 6)
       .attr("orient", "auto")
       .append("svg:path")
@@ -44,11 +43,13 @@ svg.append("svg:defs").selectAll("marker")
 var link = svg.append("svg:g").selectAll("path")
     .data(links)
     .enter().append("svg:path")
-    .attr("class", function(d) { return "link " + d.type; })
     .attr("class", "link")
     .attr("marker-end", "url(#end)")
     .style("stroke-width", 1.5)
-    .style("stroke", "#666")
+    .style("stroke", "black")
+    .style("opacity", function(d) {
+        return d.value/count || 1
+    })
     .style("fill", "none")
 
 var node = svg.selectAll(".node")
