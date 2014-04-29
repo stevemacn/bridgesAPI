@@ -63,7 +63,7 @@ node
     .append("circle")
     .attr("r", 7)
     .style("fill", function(d, i) {
-        return colors[i] || defaultColors(i);
+        return d.color || defaultColors(i);
     })
 
 node
