@@ -65,11 +65,11 @@ module.exports = function(app, passport, streamable) {
     //assignment routes
     var assignments = require('../app/controllers/assignments.js')
     app.post('/assignments/:assignmentID',
-        hasAccess, assignments.upload)
+        hasAccess, assignments.upload, handleError)
     app.post('/assignments/:assignmentID/share/:value',
-        hasAccess, assignments.updateVisibility)
+        hasAccess, assignments.updateVisibility, handleError)
     app.get('/assignments/:assignmentID/:username',
-        assignments.show)
+        assignments.show, handleError)
     //app.get('/assignments/:username/:assignmentNumber', assignments.viewD3)
 
     //gallery routes

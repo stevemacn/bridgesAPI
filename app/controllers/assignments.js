@@ -13,12 +13,11 @@ function replaceAssignment (res, user, assignmentID) {
             email: user.email        
         })
         .exec(function (err, resp) {
-        
+            console.log(rawBody) 
             //need to replace in the database...
             assignment = new Assignment()
             assignment.email = user.email
-            assignment.nodes=rawBody.nodes
-            assignment.links=rawBody.links
+            assignment.data=rawBody
             assignment.assignmentID = assignmentID
             assignment.save()
             
@@ -30,7 +29,7 @@ function replaceAssignment (res, user, assignmentID) {
 }
 
 
-exports.updateVisibility = function (req, res) {
+exports.updateVisibility = function (req, res, next) {
     Assignment
         .findOne({
             email:req.user.email,
@@ -48,10 +47,13 @@ exports.updateVisibility = function (req, res) {
 
 
 //problem because we aren't getting by username but by apikey
-exports.upload = function (req, res) {
+exports.upload = function (req, res, next) {
     
     try { rawBody = JSON.parse(req.body) } 
-    catch (e) { return next("invalid syntax for raw body of request")}
+    catch (e) { 
+        console.log(e)
+        return next("invalid syntax for raw body of request")
+    }
 
     var assignmentID = req.params.assignmentID
     
@@ -61,7 +63,7 @@ exports.upload = function (req, res) {
         })
         .exec(function (err, user) {
             if (err) return next (err)
-            if (!user) return ("could not find user by apikey: " + 
+            if (!user) return next ("could not find user by apikey: " + 
                         req.query.apikey) 
             
             replaceAssignment(res, user, assignmentID) 
@@ -87,7 +89,7 @@ function getAssignment (req, res, email, cb) {
 
 var sessionUser = null;
 
-exports.show = function (req, res) {
+exports.show = function (req, res, next) {
 
     var username = req.params.username
     var apikey = req.query.apikey 
@@ -154,8 +156,7 @@ function renderVis (res, assignment) {
     if (sessionUser.email==assignment.email) owner = true; 
     return res.render ('assignments/index', {
         "user":sessionUser,
-        "nodes":assignment.nodes,
-        "links":assignment.links,
+        "data":assignment.data,
         "assignmentID":assignmentID,
         "shared":assignment.shared,
         "owner":owner
