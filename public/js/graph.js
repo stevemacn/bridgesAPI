@@ -22,7 +22,7 @@ var force = d3.layout.force()
     .links(links)
     .start();
 
-var colors = d3.scale.category20(); //10 or 20
+var defaultColors = d3.scale.category20(); //10 or 20
 
 var svg = d3.select("#vis").append("svg")
     .attr("width", width)
@@ -63,7 +63,7 @@ node
     .append("circle")
     .attr("r", 7)
     .style("fill", function(d, i) {
-        return colors(i);
+        return colors[i] || defaultColors(i);
     })
 
 node
