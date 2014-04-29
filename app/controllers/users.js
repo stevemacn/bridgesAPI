@@ -104,7 +104,8 @@ exports.deletePerson = function (req, res) {
 }
 
 exports.getkey = function (req, res) {
-    console.log(req.user)
+    console.log("User: "+req.user.username +"("+req.user.email+")"+
+        " requsted a new apikey")
     user = req.user 
     user.generateKey()
     user.save()

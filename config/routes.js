@@ -2,39 +2,39 @@ module.exports = function(app, passport, streamable) {
 
     //Allows users to by pass authentication to api requests
     //if they have a valid api key.
-    var hasAccess = function (req, res, next) {
-    
+    var hasAccess = function(req, res, next) {
+
         //authenticated
         if (req.isAuthenticated()) return next()
-    
+
         var mongoose = require('mongoose'),
             User = mongoose.model('User')
-    
-        if (!req.query.apikey) return next(
-            "Not logged in: you must provide" +
-            " an apikey as a query variable")
-        
-        User
-            .findOne({
-                apikey: req.query.apikey
-            })
-            .exec(function(err, user) {
-                if (!user) 
-                    return next("your api key is invalid")
-                req.user = user
-                return next()
-            })
+
+            if (!req.query.apikey) return next(
+                "Not logged in: you must provide" +
+                " an apikey as a query variable")
+
+            User
+                .findOne({
+                    apikey: req.query.apikey
+                })
+                .exec(function(err, user) {
+                    if (!user)
+                        return next("your api key is invalid")
+                    req.user = user
+                    return next()
+                })
     }
-    
+
     //authentication
-    var isLoggedIn = function (req, res, next) {
+    var isLoggedIn = function(req, res, next) {
         if (req.isAuthenticated()) return next()
         res.redirect("/login")
     }
 
-    var handleError = function (err, req, res, next) {
+    var handleError = function(err, req, res, next) {
         return res.json(503, {
-            "error":err
+            "error": err
         })
     }
 
@@ -57,19 +57,19 @@ module.exports = function(app, passport, streamable) {
     //stream routes
 
     var streams = require('../app/controllers/streams.js')
-    app.get('/streams/:domain/*', 
-            hasAccess, streamable, streams.getSource, handleError)
-    app.get('/streams/:domain', 
-            hasAccess, streamable, streams.getSource, handleError)
+    app.get('/streams/:domain/*',
+        hasAccess, streamable, streams.getSource, handleError)
+    app.get('/streams/:domain',
+        hasAccess, streamable, streams.getSource, handleError)
 
     //assignment routes
     var assignments = require('../app/controllers/assignments.js')
-    app.post('/assignments/:assignmentID', 
-             hasAccess, assignments.upload)
-    app.post('/assignments/:assignmentID/share/:value', 
+    app.post('/assignments/:assignmentID',
+        hasAccess, assignments.upload)
+    app.post('/assignments/:assignmentID/share/:value',
         hasAccess, assignments.updateVisibility)
-    app.get('/assignments/:assignmentID/:username', 
-            assignments.show)
+    app.get('/assignments/:assignmentID/:username',
+        assignments.show)
     //app.get('/assignments/:username/:assignmentNumber', assignments.viewD3)
 
     //gallery routes
@@ -110,4 +110,3 @@ module.exports = function(app, passport, streamable) {
     )
 
 }
-

@@ -27,8 +27,7 @@ exports.getSource = function (req, res, next) {
         //if acct date is valid give the cache...
         if (cachedStream==null) srcHandler.init(acct, rout, res) 
         else {
-            console.log("Cache Hit")
-            console.log(cachedStream.content)
+            console.log("CACHE HIT: "+cachedStream.screen_name)
             res.json(JSON.parse(cachedStream.content))
         }
     }
