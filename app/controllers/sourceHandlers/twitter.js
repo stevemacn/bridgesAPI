@@ -160,7 +160,7 @@ function getFollowersById(blank, tweets) {
 
     twit.get('followers/ids', param, function(err, data) {
         if (err) return res.json(503, {
-            "error": "unable to retrieve from twitter api"
+            "error": err.message
         })
 
         if (!data) return res.json({
