@@ -13,7 +13,6 @@ function replaceAssignment (res, user, assignmentID) {
             email: user.email        
         })
         .exec(function (err, resp) {
-            console.log(rawBody) 
             //need to replace in the database...
             assignment = new Assignment()
             assignment.email = user.email
