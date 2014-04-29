@@ -66,10 +66,11 @@ exports.init = function(account, args, resp) {
 
 function updateTomatoes(err, corpus) {
 
-    if (err) res.json({
-        "error": err
-    })
-    console.log(corpus)
+    if (err) return next(err) 
+    
+    console.log("added "+ params.movie + 
+        " to the cache on "+Date.getDate())
+    
     res.json(corpus)
 
     var updateDate = {

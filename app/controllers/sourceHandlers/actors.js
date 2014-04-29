@@ -73,7 +73,10 @@ exports.init = function(account, args, resp) {
     searchIDbyName(params.actor) 
     request(host+configuration.path, function (error, response, body) {
      if (!error && response.statusCode == 200) {
-         searchActorsById(JSON.parse(body).results[0].id)
+         actorResponse = JSON.parse(body) 
+         if (actorResponse.total_results=0) return res.json(
+             503, {"error":"actor was not found"})
+         searchActorsById(actorResponse.results[0].id)
          request(host+configuration.path, function (error, response, body){
             if (!error && response.statusCode == 200) {
                 updateActors (null, JSON.parse(body).cast)
