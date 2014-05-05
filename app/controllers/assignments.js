@@ -70,7 +70,7 @@ exports.upload = function (req, res, next) {
 }
 
 
-function getAssignment (req, res, email, cb) {
+function getAssignment (req, res, next, email, cb) {
     assignmentID = req.params.assignmentID
     Assignment
         .findOne({
@@ -101,7 +101,7 @@ exports.show = function (req, res, next) {
             if (!usr) 
                 return next("couldn't find the username "+username) 
            
-            getAssignment(req, res, usr.email, function (assign) {
+            getAssignment(req, res, next, usr.email, function (assign) {
                
                 //Test whether user has permission to view vis
                 testByUser(res, req, username, assign, function (){
