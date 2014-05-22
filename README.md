@@ -313,13 +313,13 @@ With the following passed in the raw body of the post request.
 ```json
 {
   "nodes" :[
-    {"name":"stephen"},
-    {"name":"meghna"},
-    {"name":"joe"},
-    {"name":"hooram"},
-    {"name":"dan"},
-    {"name":"jeffrey"},
-    {"name":"dahlia"}
+    {"name":"stephen", "color":"green"},
+    {"name":"meghna", "color":"blue"},
+    {"name":"joe", "color":"yellow"},
+    {"name":"hooram", "color":"red"},
+    {"name":"dan", "color":"green"},
+    {"name":"jeffrey", "color":"green"},
+    {"name":"dahlia", "color":"orange"}
     
 ],
   "links" : [
