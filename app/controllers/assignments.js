@@ -72,6 +72,7 @@ exports.upload = function (req, res, next) {
 
 function getAssignment (req, res, next, email, cb) {
     assignmentID = req.params.assignmentID
+    next = next
     Assignment
         .findOne({
             email: email,
@@ -88,11 +89,13 @@ function getAssignment (req, res, next, email, cb) {
 
 var sessionUser = null;
 
-exports.show = function (req, res, next) {
+exports.next = null
 
+exports.show = function (req, res, next) {
+    this.next = next 
+    
     var username = req.params.username
     var apikey = req.query.apikey 
-    
     if (typeof req.user != "undefined") sessionUser = req.user
     User
         .findOne({username: username})
@@ -129,8 +132,8 @@ function testByKey (res, apikey, username, assign, nextTest) {
         User
             .findOne({apikey:apikey})
             .exec(function (err, n){
-                if (err) return next(err)
-                if (!n) return next("Invalid apikey: "+apikey)
+                if (err) return next (err)
+                if (!n) return next ("Invalid apikey: "+apikey)
                 return testAndMoveOn(
                     res, n.username, username, assign, null) 
             })
@@ -147,12 +150,14 @@ function testAndMoveOn (res, un1, un2, assign, nextTest) {
     if (un1 === un2) return renderVis (res, assign)
 
     if (nextTest) return nextTest()
-    else return next("the data you requested is not public")
+    else return next ("the data you requested is not public")
 }
 
 function renderVis (res, assignment) {
     var owner=false
-    if (sessionUser.email==assignment.email) owner = true; 
+    if (sessionUser) {
+        if (sessionUser.email==assignment.email) owner = true; 
+    } 
     return res.render ('assignments/index', {
         "user":sessionUser,
         "data":assignment.data,
