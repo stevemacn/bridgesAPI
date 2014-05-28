@@ -26,29 +26,37 @@ var svg = d3.select("#vis").append("svg")
 
 svg.append("svg:defs").selectAll("marker")
     .data(["end"])// Different path types defined here
-      .enter().append("svg:marker")  
-      .attr("id", String)
-      .attr("viewBox", "0 -5 10 10")
-      .attr("refX", 15)
-      .attr("refY", -3)
-      .attr("markerWidth", 6)
-    .style("opacity", function(d) {
-        return d.value/count || 1
+    .enter().append("svg:marker")  
+    .attr("id", String)
+    .attr("viewBox", "0 -5 10 10")
+    .attr("refX", 15)
+    .attr("refY", 0)
+    .attr("markerUnits", "userSpaceOnUse")
+    .style("fill", function (d) {
+        return d.color || "black"
     })
-      .attr("markerHeight", 6)
-      .attr("orient", "auto")
-      .append("svg:path")
-      .attr("d", "M0,-5L10,0L0,5");
+    .style("opacity", function(d) {
+        return d.opacity || 1
+    })
+    .attr("markerWidth", 10)
+    .attr("markerHeight", 10)
+    .attr("orient", "auto")
+    .append("svg:path")
+    .attr("d", "M0,-5L10,0L0,5");
 
 var link = svg.append("svg:g").selectAll("path")
     .data(links)
     .enter().append("svg:path")
     .attr("class", "link")
     .attr("marker-end", "url(#end)")
-    .style("stroke-width", 1.5)
-    .style("stroke", "black")
+    .style("stroke-width", function (d) {
+        return d.width || "1.5"
+    })
+    .style("stroke", function (d) {
+        return d.color || "black"
+    })
     .style("opacity", function(d) {
-        return d.value/count || 1
+        return d.opacity || 1
     })
     .style("fill", "none")
 
@@ -62,7 +70,9 @@ var node = svg.selectAll(".node")
 
 node 
     .append("circle")
-    .attr("r", 7)
+    .attr("r", function (d) {
+        return d.size || 7;
+    })
     .style("fill", function(d, i) {
         return d.color || defaultColors(i);
     })
@@ -113,5 +123,7 @@ function mouseout() {
         .style("display","none")
     d3.select(this).select("circle").transition()
         .duration(750)
-        .attr("r", 8);
+        .attr("r", function(d){
+            return d.size || 7
+        });
 }
