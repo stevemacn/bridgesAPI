@@ -193,18 +193,28 @@ describe('Remove all new users', function() {
     })
 })
 
-/*
+
 describe('Make two more agents for manual testing', function() {
-    it('should create a session for agent 1', function(done) {
-        console.log("HERE")
+    manualAgent = null
+    it('should create agent 1', function(done) {
         agentManager.createAgent(function(la) {
+            manualAgent = la
             done()
         })
+    })
+    it('should create a session for agent 2', function(done) {
+        agentManager.login(manualAgent, done)
     })
 
-    it('should create a session for agent 2', function(done) {
-        agentManager.createAgent(function(la) {
-            done()
-        })
+    it('should generate a new api key', function(done) {
+        manualAgent.agent
+            .get(server + '/users/apikey')
+            .end(function(err, res) {
+                if (err) console.log(err)
+                console.log(localAgent.cred.username + " gets new "+
+                    "apikey: " + res.text)
+                retApiKey = res.text
+                done()
+            })
     })
-})*/
+})
