@@ -1,22 +1,22 @@
 var mongoose = require('mongoose'),
     Account = mongoose.model('Account'),
     request = require('request');
-    keys = require('../../../config/keys.json'),
-    api_key=keys.actors.apikey,
-    params = {},
+keys = require('../../../config/keys.json'),
+api_key = keys.actors.apikey,
+params = {},
 
-    configuration = {
-        host: 'http://private-d9b16-themoviedb.apiary.io'
-    }
+configuration = {
+    host: 'http://private-d9b16-themoviedb.apiary.io'
+}
 
 function searchIDbyName(name) {
     //one search name for id
-    configuration.path="/3/search/person?query="+name+"&api_key="+api_key
+    configuration.path = "/3/search/person?query=" + name + "&api_key=" + api_key
 }
 
-function searchActorsById (id) {
+function searchActorsById(id) {
     //search id for movies
-    configuration.path="/3/person/"+id+"/movie_credits?api_key="+api_key
+    configuration.path = "/3/person/" + id + "/movie_credits?api_key=" + api_key
 }
 
 exports.configured = function() {
@@ -68,32 +68,34 @@ exports.init = function(account, args, resp) {
     })
     params.actor = args[0]
     console.log(params.actor)
-    
+
     var host = configuration.host
-    searchIDbyName(params.actor) 
-    request(host+configuration.path, function (error, response, body) {
-     if (!error && response.statusCode == 200) {
-         actorResponse = JSON.parse(body) 
-         if (actorResponse.total_results==0) return res.json(
-             503, {"error":"actor was not found"})
-                 console.log(actorResponse)
-         searchActorsById(actorResponse.results[0].id)
-         request(host+configuration.path, function (error, response, body){
-            if (!error && response.statusCode == 200) {
-                updateActors (null, JSON.parse(body).cast)
-            }
-         })
-       }
-   })
+    searchIDbyName(params.actor)
+    request(host + configuration.path, function(error, response, body) {
+        if (!error && response.statusCode == 200) {
+            actorResponse = JSON.parse(body)
+            if (actorResponse.total_results == 0) return res.json(
+                503, {
+                    "error": "actor was not found"
+                })
+            console.log(actorResponse)
+            searchActorsById(actorResponse.results[0].id)
+            request(host + configuration.path, function(error, response, body) {
+                if (!error && response.statusCode == 200) {
+                    updateActors(null, JSON.parse(body).cast)
+                }
+            })
+        }
+    })
 }
 
 function updateActors(err, corpus) {
 
-    if (err) next(err) 
-    
-    console.log("added "+ params.movie + 
-        " to the cache on "+Date.now())
-    
+    if (err) next(err)
+
+    console.log("added " + params.movie +
+        " to the cache on " + Date())
+
     res.json(corpus)
 
     var updateDate = {

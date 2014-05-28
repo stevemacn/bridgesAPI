@@ -68,8 +68,8 @@ function updateTomatoes(err, corpus) {
 
     if (err) return next(err) 
     
-    console.log("added "+ params.movie + 
-        " to the cache on "+Date.now())
+    console.log("added " + params.movie +
+        " to the cache on " + Date())
     
     res.json(corpus)
 
