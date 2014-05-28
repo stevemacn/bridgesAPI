@@ -313,25 +313,26 @@ With the following passed in the raw body of the post request.
 ```json
 {
   "nodes" :[
-    {"name":"stephen", "color":"green"},
+    {"name":"stephen", "color":"green", "size":"10"},
     {"name":"meghna", "color":"blue"},
     {"name":"joe", "color":"yellow"},
     {"name":"hooram", "color":"red"},
     {"name":"dan", "color":"green"},
-    {"name":"jeffrey", "color":"green"},
-    {"name":"dahlia", "color":"orange"}
+    {"name":"jeffrey"},
+    {"name":"dahlia"}
     
 ],
   "links" : [
-    {"source":1, "target":2, "value":1},
-    {"source":6, "target":0, "value":3},
-    {"source":0, "target":6, "value":3},
-    {"source":3, "target":2, "value":1},
-    {"source":3, "target":1, "value":1},
-    {"source":1, "target":3, "value":2},
-    {"source":4, "target":3, "value":1}
+    {"source":1, "target":2, "width":12, "color":"steelblue", "opacity":"0.25"},
+    {"source":6, "target":0, "width":11, "color":"#FF00FF", "opacity":"1"},
+    {"source":0, "target":6, "width":2},
+    {"source":3, "target":2, "width":3},
+    {"source":3, "target":1, "width":4},
+    {"source":1, "target":3, "width":5},
+    {"source":4, "target":3}
 ]}
 ```
+*Notice that color can be any css string (hex or name)*
 
 
 
