@@ -1,12 +1,14 @@
 {
-    "name": "bridgesapi",
     "version": "0.0.1",
     "private": true,
     "scripts": {
         "start": "app.js",
-        "test": "grunt test"
+        "test": "grunt test",
+        "postinstall": "./node_modules/bower/bin/bower install"
     },
     "dependencies": {
+        "newrelic":"latest",
+        "npm":"latest",
         "express": "3.5.0",
         "jade": "latest",
         "mongoose": "latest",
@@ -21,14 +23,15 @@
         "underscore": "latest",
         "connect-mongo": "*",
         "connect-flash": "*",
-        "view-helpers": "*"
+        "view-helpers": "*",
+        "request": "~2.22.0",
+        "bower":"*"
     },
     "devDependencies": {
         "grunt": "~0.4.1",
         "grunt-develop": "~0.1.1",
         "grunt-contrib-watch": "~0.4.4",
         "grunt-contrib-compass": "~0.2.0",
-        "request": "~2.22.0",
         "mocha": "latest",
         "should": "latest",
         "supertest": "latest",
