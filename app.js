@@ -27,10 +27,14 @@ require('./config/passport')(passport, config)
 var app = express()
 require('./config/express')(app, config, passport)
 
+//compatible with heroku
+var port = process.env.PORT || config.port;
 
 var server = app.listen(config.port)
 var io = require('socket.io').listen(server);
 var streamable = require('streamable').streamable(io);
+
+console.log("Server listening on port " + port)
 
 //Bootstrap routes.
 require('./config/routes')(app, passport, streamable)
