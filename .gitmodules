@@ -1,3 +1,6 @@
 [submodule "public/css/webicons"]
 	path = public/css/webicons
-	url = https://github.com/adamfairhead/webicons.git
+    url = https://github.com/adamfairhead/webicons.git
+[submodule "public/js/bst"]
+	path = public/js/bst
+	url = https://github.com/stevemacn/d3-bst
