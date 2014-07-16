@@ -39,7 +39,7 @@ module.exports = function (passport, config) {
     },
     
     function(req, email, password, done) {
-        User.findOne({ email: email }, function (err, user) {
+        User.findOne({ username: email }, function (err, user) {
             if (err) { return done(err) }
             if (!user) 
                 return done(null, false, 
