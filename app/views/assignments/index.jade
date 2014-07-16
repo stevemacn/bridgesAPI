@@ -22,6 +22,17 @@ block js
                 console.log(err)    
             });    
             
-        }    
-block options
+        }   
+        function setvis (selected) {
+            $.ajax({
+                url: "/assignments/"+assignmentID+"/vistype/"+selected,
+                type:"post"
+            }).done(function() {
+                location.reload()
+                console.log("visualization type updated")    
+            }).error(function(err) {
+                errmsg = JSON.parse(err.responseText)
+                console.log("Error: "+errmsg.error) 
+            });
+        }
         

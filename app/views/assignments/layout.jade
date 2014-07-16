@@ -25,10 +25,15 @@ body
                             onclick="toggleShare(false)")
                         label(for="private") Private 
                         a.btn.btn-primary
-                    ul.nav.nav-list
-                        li.nav-header Choose your representation
-                        li.active(href="#") Node-link diagram
+                    ul.nav.nav-pills.nav-stacked
+                        li.nav-header 
+                            b Choose your representation
+                        li.active
+                            a(onclick="setvis('nodelink')") Node-link diagram
+                        li 
+                            a(onclick="setvis('tree')") Tree 
                     span upload thumbnail
+                    
         -}
     block js
     script.
