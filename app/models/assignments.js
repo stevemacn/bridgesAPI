@@ -12,9 +12,9 @@ var Assignment = new Schema ({
     assignmentID:   {type: String, default: ''},
     dateCreated:    {type: Date, default: Date.now()},
     shared:         {type: Boolean, default: 'false'},//public or private
-    
+    vistype:        {type: String, default:'nodelink'},
     //use mongoose thumbnail right here....
-
+    
     //uploaded data, nodes can be x,y as in scatteplots
     //links can be any association 
     //nodes: [Schema.Types.Mixed],
