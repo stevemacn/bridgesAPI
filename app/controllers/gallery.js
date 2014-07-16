@@ -40,6 +40,7 @@ var mongoose = require('mongoose'),
                 getUsername(users, [], function(usernames) {
 
                     return res.render('assignments/gallery', {
+                        "user":req.user,
                         "title": "Assignment gallery",
                         "usernames": usernames
                     })
