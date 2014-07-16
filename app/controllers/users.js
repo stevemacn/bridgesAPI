@@ -126,6 +126,7 @@ exports.create = function (req, res) {
     console.log("Creating user: "+ req.body.email)
     var user = new User(req.body)
     user.provider = 'local'
+    user.generateKey()
     user.save(function (err) {
         if (err) {
             return res.render('users/signup', {
