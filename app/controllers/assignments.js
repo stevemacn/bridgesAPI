@@ -27,6 +27,28 @@ function replaceAssignment (res, user, assignmentID) {
         })
 }
 
+exports.updateVistype = function (req, res, next) {
+    console.log("Update vis type")
+    Assignment
+        .findOne({
+            email:req.user.email,
+            assignmentID: req.params.assignmentID    
+        })
+        .exec(function (err, assignmentResult) {
+            if (err) return next(err)
+            if (!assignmentResult) 
+                return next("could not find assignment")
+            //validate the vis type is implemented..
+            vistypes = ["nodelink", "tree"]
+            if (vistypes.indexOf(req.params.value) == -1) 
+                return next("specified vistype is not implemented")
+            assignmentResult.vistype=req.params.value 
+            assignmentResult.save()
+            res.send("OK")
+        })
+}
+
+
 
 exports.updateVisibility = function (req, res, next) {
     Assignment
@@ -43,6 +65,7 @@ exports.updateVisibility = function (req, res, next) {
             res.send("OK")
         })
 }
+
 
 
 //problem because we aren't getting by username but by apikey
@@ -158,11 +181,14 @@ function renderVis (res, assignment) {
     var owner=false
     if (sessionUser) {
         if (sessionUser.email==assignment.email) owner = true; 
-    } 
+    }
+    if (!assignment.vistype) assignment.vistype = "nodelink" 
+
     return res.render ('assignments/index', {
         "user":sessionUser,
         "data":assignment.data,
         "assignmentID":assignmentID,
+        "vistype":assignment.vistype,
         "shared":assignment.shared,
         "owner":owner
     })
