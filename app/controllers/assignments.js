@@ -96,6 +96,7 @@ exports.show = function (req, res, next) {
     
     var username = req.params.username
     var apikey = req.query.apikey 
+    sessionUser = null
     if (typeof req.user != "undefined") sessionUser = req.user
     User
         .findOne({username: username})
