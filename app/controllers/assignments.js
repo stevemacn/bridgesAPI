@@ -28,7 +28,6 @@ function replaceAssignment (res, user, assignmentID) {
 }
 
 exports.updateVistype = function (req, res, next) {
-    console.log("Update vis type")
     Assignment
         .findOne({
             email:req.user.email,
@@ -183,7 +182,7 @@ function renderVis (res, assignment) {
         if (sessionUser.email==assignment.email) owner = true; 
     }
     if (!assignment.vistype) assignment.vistype = "nodelink" 
-
+    console.log(assignment.vistype)
     return res.render ('assignments/index', {
         "user":sessionUser,
         "data":assignment.data,
