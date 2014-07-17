@@ -181,8 +181,10 @@ function renderVis (res, assignment) {
     if (sessionUser) {
         if (sessionUser.email==assignment.email) owner = true; 
     }
+    //default visualization
     if (!assignment.vistype) assignment.vistype = "nodelink" 
-    console.log(assignment.vistype)
+    //check data for flat vs unflattened representation
+        
     return res.render ('assignments/index', {
         "user":sessionUser,
         "data":assignment.data,

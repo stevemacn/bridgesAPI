@@ -12,7 +12,9 @@ block js
     - if (vistype == "nodelink")
         script(src = '/js/graph.js')
     - else
+        link(rel='stylesheet', href='/css/vis/tree.css')
         script(src = '/js/bst/lib/bst.js')
+    script(src = '/js/visconfig.js')
     script(src = '/components/jquery/dist/jquery.min.js')
     script.
         function toggleShare (selected) {
