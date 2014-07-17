@@ -9,7 +9,10 @@ block js
         var links = data[0].links
         
         var assignmentID = !{JSON.stringify(assignmentID)}
-    script(src = '/js/graph.js')
+    - if (vistype == "nodelink")
+        script(src = '/js/graph.js')
+    - else
+        script(src = '/js/bst/lib/bst.js')
     script(src = '/components/jquery/dist/jquery.min.js')
     script.
         function toggleShare (selected) {
