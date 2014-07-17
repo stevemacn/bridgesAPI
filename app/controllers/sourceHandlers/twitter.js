@@ -141,8 +141,11 @@ function startGettingTweets(cb, isPublic, source) {
                 srcs += i + " "
             }
             return res.json({
-                "error": source + " isn't supported without " +
-                    "authenticating via twitter; public sources include: " + srcs
+                "error": source + " isn't supported as a publically available " +
+                "Twitter source. You can solve this by adding the Twitter " +
+                "datasource online at http://bridges-cs.herokuapp.com/home " + 
+                "or choosing a publically available source from the following: " +
+                srcs
             })
         }
     }
