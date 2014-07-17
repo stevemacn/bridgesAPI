@@ -68,6 +68,8 @@ module.exports = function(app, passport, streamable) {
         hasAccess, assignments.upload, handleError)
     app.post('/assignments/:assignmentID/share/:value',
         hasAccess, assignments.updateVisibility, handleError)
+    app.post('/assignments/:assignmentID/vistype/:value',
+        hasAccess, assignments.updateVistype, handleError)
     app.get('/assignments/:assignmentID/:username',
         assignments.show, handleError)
     //app.get('/assignments/:username/:assignmentNumber', assignments.viewD3)
