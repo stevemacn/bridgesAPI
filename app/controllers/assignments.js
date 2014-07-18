@@ -2,7 +2,7 @@ var mongoose = require('mongoose')
     , User = mongoose.model('User')
     , Account = mongoose.model('Account')
     , Assignment = mongoose.model('Assignment')
-    , assignmentID
+    , treemill = require('treemill') 
 
 function replaceAssignment (res, user, assignmentID) {
 
@@ -28,6 +28,7 @@ function replaceAssignment (res, user, assignmentID) {
 }
 
 exports.updateVistype = function (req, res, next) {
+    console.log('update vistype for '+req.user.email+' '+req.params.assignmentID)
     Assignment
         .findOne({
             email:req.user.email,
@@ -92,30 +93,13 @@ exports.upload = function (req, res, next) {
 }
 
 
-function getAssignment (req, res, next, email, cb) {
-    assignmentID = req.params.assignmentID
-    next = next
-    Assignment
-        .findOne({
-            email: email,
-            assignmentID: req.params.assignmentID 
-        })
-        .exec(function (err, assignment) {
-            if (err) return next(err) 
-            if (!assignment) return next("could not find assignment") 
-            
-            if (assignment.shared!==true) return cb(assignment)
-            return renderVis(res, assignment)         
-        })
-}
-
 var sessionUser = null;
 
 exports.next = null
 
 exports.show = function (req, res, next) {
     this.next = next 
-    
+    var assignmentID = req.params.assignmentID
     var username = req.params.username
     var apikey = req.query.apikey 
     sessionUser = null
@@ -135,7 +119,24 @@ exports.show = function (req, res, next) {
                 })
             })
         })
+
+function getAssignment (req, res, next, email, cb) {
+    assignmentID = req.params.assignmentID
+    next = next
+    Assignment
+        .findOne({
+            email: email,
+            assignmentID: req.params.assignmentID 
+        })
+        .exec(function (err, assignment) {
+            if (err) return next(err) 
+            if (!assignment) return next("could not find assignment") 
+            
+            if (assignment.shared!==true) return cb(assignment)
+            return renderVis(res, assignment)         
+        })
 }
+
 
 //find whether there is a session, then test
 function testByUser (res, req, username, assign, nextTest) {
@@ -181,16 +182,45 @@ function renderVis (res, assignment) {
     if (sessionUser) {
         if (sessionUser.email==assignment.email) owner = true; 
     }
+
     //default visualization
     if (!assignment.vistype) assignment.vistype = "nodelink" 
     //check data for flat vs unflattened representation
+    
+    var unflatten = function (data) { 
+        //check whether the data is already hierachical
+        if ("children" in data) return data
+        tm = treemill() 
+        tree = tm.unflatten(data)       
+        return tree
+    }
+
+    var flatten = function (data) {
+        //check whether the data is already flat
+        if ("nodes" in data) return data 
+        tm = treemill() 
+        tree = tm.flatten(data)       
+        return tree 
+    }
+    data = assignment.data.toObject()
+    data = data[0]
+    
+    if (assignment.vistype == "tree") data = unflatten(data)   
+    else data = flatten(data) 
+    
+    vistype = assignment.vistype 
+    if ("error" in data) vistype = "error"  
         
     return res.render ('assignments/index', {
         "user":sessionUser,
-        "data":assignment.data,
+        "data":data,
         "assignmentID":assignmentID,
-        "vistype":assignment.vistype,
+        "vistype":vistype,
         "shared":assignment.shared,
         "owner":owner
     })
 }
+
+
+}
+
