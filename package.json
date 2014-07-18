@@ -8,6 +8,7 @@
     },
     "dependencies": {
         "newrelic":"latest",
+        "treemill":"latest",
         "npm":"latest",
         "express": "3.5.0",
         "jade": "latest",
