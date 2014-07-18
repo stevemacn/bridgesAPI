@@ -2,22 +2,28 @@ extends layout
 
 block js
     script(src = '/components/d3/d3.min.js')
+    script(src = '/components/jquery/dist/jquery.min.js')
     script.
         var data = !{JSON.stringify(data)}
-        
-        var nodes = data[0].nodes
-        var links = data[0].links
         
         var assignmentID = !{JSON.stringify(assignmentID)}
     - if (vistype == "nodelink")
         script(src = '/js/graph.js')
-    - else
+    - else if (vistype == "tree")
         link(rel='stylesheet', href='/css/vis/tree.css')
         script(src = '/js/bst/lib/bst.js')
+    - else  
+        script.
+            var error = !{JSON.stringify(data)}
+            $("#vis")
+                .html(error.error)
+                .css('color', '#eb6864')
+                .css('font-size', '24px')
+                .css('padding', '50px')
     script(src = '/js/visconfig.js')
-    script(src = '/components/jquery/dist/jquery.min.js')
     script.
         function toggleShare (selected) {
+            var assignmentID = !{JSON.stringify(assignmentID)}
             $.ajax({
                 url: "/assignments/"+assignmentID+"/share/"+selected,
                 type: "post"
@@ -29,6 +35,7 @@ block js
             
         }   
         function setvis (selected) {
+            var assignmentID = !{JSON.stringify(assignmentID)}
             $.ajax({
                 url: "/assignments/"+assignmentID+"/vistype/"+selected,
                 type:"post"
