@@ -4,5 +4,5 @@ var ele = document.getElementById("vis")
     
 if (d3.bst) { 
     bst = d3.bst(d3, "#vis", width, height)
-    bst.make(data[0])
+    bst.make(data)
 }

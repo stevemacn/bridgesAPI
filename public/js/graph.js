@@ -1,6 +1,8 @@
 //based loosely on bostock's example and 
 //http://bl.ocks.org/d3noob/5141278
 
+var nodes = data.nodes
+var links = data.links
 var count = 0
 for (i in links) {
    if (count<links[i].value) count = links[i].value 
