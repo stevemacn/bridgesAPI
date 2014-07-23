@@ -1,8 +1,10 @@
-extends layout
+extends includes/boilerplate.jade
 
 block css
     link(rel='stylesheet', href='/css/404.css')
-   block content
+
+block content
+    include includes/header.jade
     .row
         .container
             .jumbotron
