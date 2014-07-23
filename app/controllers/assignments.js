@@ -211,7 +211,7 @@ function renderVis (res, assignment) {
     vistype = assignment.vistype 
     if ("error" in data) vistype = "error"  
         
-    return res.render ('assignments/index', {
+    return res.render ('assignments/assignment', {
         "user":sessionUser,
         "data":data,
         "assignmentID":assignmentID,
