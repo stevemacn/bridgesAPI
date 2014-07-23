@@ -1,16 +1,8 @@
-doctype html
-html(lang="en")
-head
-    meta(charset = 'UTF-8')
-    meta(name = 'viewport', content = 'width=device-width')
-    title = title
-    link(rel = 'stylesheet', href = '/css/bootstrap.min.css')
-    link(rel = 'stylesheet', href = '/css/bootstrap-responsive.min.css')
-    block css
-body
-    include ../includes/header.jade
+extends ../includes/boilerplate.jade 
+block content 
+    include ../includes/header.jade 
     .container
-        .col-lg-6(style = "float:left")
+        .col-lg-6(style = "float:left; min-height:500px;")
             h1 Welcome to Bridges!
             p Creating a bridge between your assignments and the world
         .col-lg-6(style = "float:right")
