@@ -35,7 +35,7 @@ module.exports = function(app, passport, streamable) {
     var handleError = function(err, req, res, next) {
        
         //if provided an object
-        if (!err.err) return errObj(err) 
+        if (err.err) return errObj(err) 
        
         //else provided a string
         return res.json(503, {
