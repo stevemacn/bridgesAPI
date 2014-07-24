@@ -4,31 +4,13 @@ var mongoose = require('mongoose')
     , Assignment = mongoose.model('Assignment')
     , treemill = require('treemill') 
 
-function replaceAssignment (res, user, assignmentID) {
-
-    //overwrite previous assignments by removing the original
-    Assignment
-        .remove({
-            assignmentID: assignmentID,
-            email: user.email        
-        })
-        .exec(function (err, resp) {
-            //need to replace in the database...
-            assignment = new Assignment()
-            assignment.email = user.email
-            assignment.data=rawBody
-            assignment.assignmentID = assignmentID
-            assignment.save()
-            
-            //notify user and log
-            msg = "assignment added: "+user.email+" "+assignmentID
-            console.log(msg)
-            res.json({"msg":msg}) 
-        })
-}
-
+//API route for ajax requests to change the visual 
+//representation of the data they uploaded.
 exports.updateVistype = function (req, res, next) {
-    console.log('update vistype for '+req.user.email+' '+req.params.assignmentID)
+    
+    console.log('update vistype for ' + req.user.email + 
+        ' '+req.params.assignmentID)
+
     Assignment
         .findOne({
             email:req.user.email,
@@ -48,8 +30,8 @@ exports.updateVistype = function (req, res, next) {
         })
 }
 
-
-
+//API route to toggle the visibility of an assignment 
+//between private and public.
 exports.updateVisibility = function (req, res, next) {
     Assignment
         .findOne({
@@ -66,9 +48,8 @@ exports.updateVisibility = function (req, res, next) {
         })
 }
 
-
-
-//problem because we aren't getting by username but by apikey
+//API route for uploading assignment data. If the 
+//assignment already exists it will be replaced.
 exports.upload = function (req, res, next) {
     
     try { rawBody = JSON.parse(req.body) } 
@@ -78,26 +59,55 @@ exports.upload = function (req, res, next) {
     }
 
     var assignmentID = req.params.assignmentID
-    
-    User
-        .findOne({
-            apikey:req.query.apikey
-        })
-        .exec(function (err, user) {
-            if (err) return next (err)
-            if (!user) return next ("could not find user by apikey: " + 
-                        req.query.apikey) 
-            
-            replaceAssignment(res, user, assignmentID) 
-        })
-}
+   
+    //get username from apikey 
+    User.findOne({
+        apikey:req.query.apikey
+    })    
+    .exec(function (err, user) {    
+        if (err) return next (err)    
+        if (!user) return next ("could not find user by apikey: " + 
+                        req.query.apikey)
 
+        //if username found, upload or replace 
+        replaceAssignment(res, user, assignmentID) 
+    })
+
+    function replaceAssignment (res, user, assignmentID) {
+        
+        //remove previously uploaded assignment if exists
+        Assignment.remove({
+            assignmentID: assignmentID,
+            email: user.email        
+        })
+        .exec(function (err, resp) {
+            //create a new assignment in the database
+            assignment = new Assignment()
+            assignment.email = user.email
+            assignment.data = rawBody
+            assignment.assignmentID = assignmentID
+            assignment.save()
+            
+            //log new assignment
+            console.log("assignment added: "+user.email+
+                " "+assignmentID)
+            
+            //report to client
+            User.findOne({
+                email: user.email
+            }).exec(function (err, resp) {
+                res.json({"msg":assignmentID+"/"+resp.username}) 
+            })
+        })
+    }
+}
 
 var sessionUser = null;
 
 exports.next = null
 
 exports.show = function (req, res, next) {
+    
     this.next = next 
     var assignmentID = req.params.assignmentID
     var username = req.params.username
@@ -120,106 +130,107 @@ exports.show = function (req, res, next) {
             })
         })
 
-function getAssignment (req, res, next, email, cb) {
-    assignmentID = req.params.assignmentID
-    next = next
-    Assignment
-        .findOne({
-            email: email,
-            assignmentID: req.params.assignmentID 
-        })
-        .exec(function (err, assignment) {
-            if (err) return next(err) 
-            if (!assignment) return next("could not find assignment") 
-            
-            if (assignment.shared!==true) return cb(assignment)
-            return renderVis(res, assignment)         
-        })
-}
-
-
-//find whether there is a session, then test
-function testByUser (res, req, username, assign, nextTest) {
-    if (sessionUser) {
-        return testAndMoveOn(
-            res, sessionUser.username, username, assign, nextTest) 
-    } else {
-        if (nextTest) return nextTest()
-        else
-            return testAndMoveOn(res, true, false, assign, null) 
-    }
-}
-
-//find user by key, then test
-function testByKey (res, apikey, username, assign, nextTest) {
-    if (apikey) {
-        User
-            .findOne({apikey:apikey})
-            .exec(function (err, n){
-                if (err) return next (err)
-                if (!n) return next ("Invalid apikey: "+apikey)
-                return testAndMoveOn(
-                    res, n.username, username, assign, null) 
+    function getAssignment (req, res, next, email, cb) {
+        assignmentID = req.params.assignmentID
+        next = next
+        Assignment
+            .findOne({
+                email: email,
+                assignmentID: req.params.assignmentID 
             })
-    } else {
+            .exec(function (err, assignment) {
+                if (err) return next(err) 
+                if (!assignment) return next("could not find assignment") 
+                
+                if (assignment.shared!==true) return cb(assignment)
+                return renderVis(res, assignment)         
+            })
+    }
+    
+    
+    //find whether there is a session, then test
+    function testByUser (res, req, username, assign, nextTest) {
+        if (sessionUser) {
+            return testAndMoveOn(
+                res, sessionUser.username, username, assign, nextTest) 
+        } else {
+            if (nextTest) return nextTest()
+            else
+                return testAndMoveOn(res, true, false, assign, null) 
+        }
+    }
+    
+    //find user by key, then test
+    function testByKey (res, apikey, username, assign, nextTest) {
+        if (apikey) {
+            User
+                .findOne({apikey:apikey})
+                .exec(function (err, n){
+                    if (err) return next (err)
+                    if (!n) return next ("Invalid apikey: "+apikey)
+                    return testAndMoveOn(
+                        res, n.username, username, assign, null) 
+                })
+        } else {
+            if (nextTest) return nextTest()
+            else
+                return testAndMoveOn(res, true, false, assign, null) 
+        }
+    }
+    
+    //compare the usernames and move on
+    function testAndMoveOn (res, un1, un2, assign, nextTest) {
+        console.log(un1 + " " + un2)
+        if (un1 === un2) return renderVis (res, assign)
+    
         if (nextTest) return nextTest()
-        else
-            return testAndMoveOn(res, true, false, assign, null) 
+        else return next ("the data you requested is not public")
     }
-}
-
-//compare the usernames and move on
-function testAndMoveOn (res, un1, un2, assign, nextTest) {
-    console.log(un1 + " " + un2)
-    if (un1 === un2) return renderVis (res, assign)
-
-    if (nextTest) return nextTest()
-    else return next ("the data you requested is not public")
-}
-
-function renderVis (res, assignment) {
-    var owner=false
-    if (sessionUser) {
-        if (sessionUser.email==assignment.email) owner = true; 
-    }
-
-    //default visualization
-    if (!assignment.vistype) assignment.vistype = "nodelink" 
-    //check data for flat vs unflattened representation
     
-    var unflatten = function (data) { 
-        //check whether the data is already hierachical
-        if ("children" in data) return data
-        tm = treemill() 
-        tree = tm.unflatten(data)       
-        return tree
-    }
-
-    var flatten = function (data) {
-        //check whether the data is already flat
-        if ("nodes" in data) return data 
-        tm = treemill() 
-        tree = tm.flatten(data)       
-        return tree 
-    }
-    data = assignment.data.toObject()
-    data = data[0]
+    function renderVis (res, assignment) {
+        var owner=false
+        if (sessionUser) {
+            if (sessionUser.email==assignment.email) owner = true; 
+        }
     
-    if (assignment.vistype == "tree") data = unflatten(data)   
-    else data = flatten(data) 
-    
-    vistype = assignment.vistype 
-    if ("error" in data) vistype = "error"  
+        //default visualization
+        if (!assignment.vistype) assignment.vistype = "nodelink" 
+        //check data for flat vs unflattened representation
         
-    return res.render ('assignments/assignment', {
-        "user":sessionUser,
-        "data":data,
-        "assignmentID":assignmentID,
-        "vistype":vistype,
-        "shared":assignment.shared,
-        "owner":owner
-    })
-}
+        var unflatten = function (data) { 
+            //check whether the data is already hierachical
+            if ("children" in data) return data
+            tm = treemill() 
+            tree = tm.unflatten(data)       
+            return tree
+        }
+    
+        var flatten = function (data) {
+            //check whether the data is already flat
+            if ("nodes" in data) return data 
+            tm = treemill() 
+            tree = tm.flatten(data)       
+            return tree 
+        }
+        data = assignment.data.toObject()
+        data = data[0]
+        
+        if (assignment.vistype == "tree") data = unflatten(data)   
+        else data = flatten(data) 
+        
+        vistype = assignment.vistype 
+        if ("error" in data) vistype = "error"  
+            
+        return res.render ('assignments/assignment', {
+            "title":"assignment",
+            "user":sessionUser,
+            "data":data,
+            "assignmentID":assignmentID,
+            "vistype":vistype,
+            "shared":assignment.shared,
+            "owner":owner
+        })
+    }
 
 
 }
