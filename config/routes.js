@@ -33,9 +33,24 @@ module.exports = function(app, passport, streamable) {
     }
 
     var handleError = function(err, req, res, next) {
+       
+        //if provided an object
+        if (!err.err) return errObj(err) 
+       
+        //else provided a string
         return res.json(503, {
             "error": err
         })
+       
+        function errObj(err) {
+            
+            var msg = {} 
+
+            if (err.tip) msg.tip = err.tip
+            if (err.err) msg.error = err.err
+
+            return res.json(503, msg)
+        }
     }
 
     //user routes
