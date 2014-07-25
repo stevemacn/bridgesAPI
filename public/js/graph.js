@@ -60,6 +60,9 @@ var link = svg.append("svg:g").selectAll("path")
     .style("opacity", function(d) {
         return d.opacity || 1
     })
+    .style("stroke-dasharray", function(d) {
+        return d.dasharray || ""
+    })
     .style("fill", "none")
 
 var node = svg.selectAll(".node")
@@ -70,13 +73,16 @@ var node = svg.selectAll(".node")
     .on("mouseout", mouseout)
     .call(force.drag);
 
-node 
+node
     .append("circle")
     .attr("r", function (d) {
         return d.size || 7;
     })
     .style("fill", function(d, i) {
         return d.color || defaultColors(i);
+    })
+    .style("opacity", function(d) {
+        return d.opacity || 1
     })
 
 node
