@@ -42,7 +42,8 @@ exports.view = function(req, res) {
                 return res.render('assignments/gallery', {
                     "title": "Assignment gallery",
                     "user":req.user,
-                    "usernames": usernames
+                    "usernames": usernames,
+                    "assignmentID":req.params.assignmentNumber
                 })
             })
         })
