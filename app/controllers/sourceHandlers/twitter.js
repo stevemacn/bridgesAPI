@@ -88,10 +88,10 @@ exports.init = function(account, args, resp) {
     foundTweets = 0
     
     var key = keys.twitter.keys, isPublic = true
-        //check to see whether the account is associated with twitter
+    //check to see whether the account is associated with twitter
     if (acct) {
         if (!(acct.email == 'public')) isPublic = false
-        if (acct.tokens) {
+        if (acct.tokens==null) {
             key.access_token = acct.tokens.token
             key.access_token_secret = acct.tokens.tokenSecret
         }
@@ -99,11 +99,13 @@ exports.init = function(account, args, resp) {
         "error": "no account could be found or used"
     })
     try { twit = new ntwitter(key) }
-    catch (err) { 
+    catch (err) {
         acct.tokens=null
         acct.save()
+        console.log(err)
+        return res.json(503, {
+            "error":"contact server admin, twitter hasn't been configured properly."})
     }
-
     //set up parameters for timeline or followers
     if (args) {
         if (args[2]) maxTweets = args[2]
