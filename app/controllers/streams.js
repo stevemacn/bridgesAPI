@@ -28,29 +28,37 @@ exports.getSource = function (req, res, next) {
         if (cachedStream==null) srcHandler.init(acct, rout, res) 
         else {
             console.log("CACHE HIT: "+cachedStream.screen_name)
-            res.json(JSON.parse(cachedStream.content))
+            return res.json(JSON.parse(cachedStream.content))
         }
     }
     //gets the appropriate source handler based upon the request 
     var getSourceHandler = function (domain, cb) {
+        domain = domain.toLowerCase();
+        console.log(domain)
         var src = './sourceHandlers/'+sourceHandlers[domain]
         var srcHandler = require(src)
         if (!srcHandler.configured()) 
-            return next("data source "+domain+" not yet implemented") 
+            return next("Data source "+domain+" not yet configured") 
         
         cb(srcHandler)
     }
-
 
     console.log("User: "+req.user.email+" requests "+req.params.domain)
     console.log("Params: "+req.params)
 
     if (!req.params.domain)
         return next("No data-source was specified")
-    if (!(req.params.domain in sourceHandlers))
-        return res.json (503, 
-            {"error": "Requested datasource not yet supported: " + req.params.domain,
-            "tip":"Currently supported datasources: twitter.com"}) 
+    
+    if (!(req.params.domain in sourceHandlers)) {
+        reqsrc = req.params.domain
+        tip = ""
+        for (i in sourceHandlers) tip+=i+" "
+
+        return next({
+            "err":"Requested source isn't implemented: " + reqsrc, 
+            "tip":"Currently supported sources: "+tip
+        }) 
+    }
      
     Account
         .findOne({
