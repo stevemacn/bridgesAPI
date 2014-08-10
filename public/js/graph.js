@@ -65,19 +65,27 @@ var link = svg.append("svg:g").selectAll("path")
     })
     .style("fill", "none")
 
+//scale values between 1 and 100 to a reasonable range
+var scaleSize = d3.scale.linear()
+    .domain([1,100])
+    .range([80,4000]);
+
+//outer node
 var node = svg.selectAll(".node")
     .data(nodes)
     .enter().append("g")
-    .attr("class", "node")
     .on("mouseover", mouseover)
     .on("mouseout", mouseout)
-    .call(force.drag);
+    .call(force.drag)
 
+//inner nodes    
 node
-    .append("circle")
-    .attr("r", function (d) {
-        return d.size || 7;
-    })
+    .append('path')
+    .attr("class", "node")
+    .attr("d", d3.svg.symbol()
+        .type(function(d) { return d.shape || "circle"; })
+        .size(function(d) {return scaleSize(d.size || 1); })
+    )
     .style("fill", function(d, i) {
         return d.color || defaultColors(i);
     })
@@ -85,10 +93,12 @@ node
         return d.opacity || 1
     })
 
+//inner nodes
 node
     .append("text")
     .attr("x", 12)
     .attr("dy", ".35em")
+    .style("color",'black')
     .style("display", "none")
     .text(function(d) {
         return d.name;
@@ -135,3 +145,4 @@ function mouseout() {
             return d.size || 7
         });
 }
+
