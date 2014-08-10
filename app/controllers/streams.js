@@ -46,11 +46,12 @@ exports.getSource = function (req, res, next) {
     console.log("User: "+req.user.email+" requests "+req.params.domain)
     console.log("Params: "+req.params)
 
-    if (!req.params.domain)
+    reqsrc = req.params.domain.toLowerCase()
+
+    if (!reqsrc)
         return next("No data-source was specified")
     
-    if (!(req.params.domain in sourceHandlers)) {
-        reqsrc = req.params.domain
+    if (!(reqsrc in sourceHandlers)) {
         tip = ""
         for (i in sourceHandlers) tip+=i+" "
 
