@@ -125,13 +125,16 @@ force.on("tick", function() {
 })
 
 function mouseover() {
-    
+
     d3.select(this).select("text").transition()
         .duration(750)
         .style("display","block")
-    d3.select(this).select("circle").transition()
+    d3.select(this).select("path").transition()
         .duration(750)
-        .attr("r", 12);
+        .attr('d', function (d) {
+            return d3.svg.symbol().type(d.shape||"circle")
+                    .size(scaleSize(40))()
+        })            
 }
 
 function mouseout() {
@@ -139,10 +142,11 @@ function mouseout() {
     d3.select(this).select("text").transition()
         .duration(750)
         .style("display","none")
-    d3.select(this).select("circle").transition()
+    d3.select(this).select("path").transition()
         .duration(750)
-        .attr("r", function(d){
-            return d.size || 7
-        });
+        .attr('d', function (d) {
+            return d3.svg.symbol().type(d.shape||"circle")
+                    .size(scaleSize(d.size||1))()
+        })            
+        
 }
-
