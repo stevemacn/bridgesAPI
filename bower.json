@@ -9,7 +9,8 @@
   "dependencies": {
     "modernizr": "latest",
     "d3": "latest",
-    "jquery":"latest",
-    "css-toggle-switch": "~2.1.5"
+    "jquery": "latest",
+    "css-toggle-switch": "~2.1.5",
+    "angular": "~1.2.22"
   }
 }
