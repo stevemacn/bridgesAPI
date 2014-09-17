@@ -4,6 +4,7 @@
 d3.queue = function(d3, canvasID, w, h, data) {
 
     var spacing = w / data.length;
+    var defaultSize = 15;
 
     var chart = d3.select(".chart").append("svg")
         .attr("width", w)
@@ -13,20 +14,20 @@ d3.queue = function(d3, canvasID, w, h, data) {
         .data(data)
         .enter().append("g")
         .attr("transform", function(d, i) {
-            size = d.size;
+            size = d.size || defaultSize;
             return "translate(" + 
                 i*spacing+","+(h/2 - size/2)+")";
         })
 
     nodes.append("rect")
         .attr("height", function(d) {
-            return d.size;
+            return d.size || defaultSize;
         })
         .attr("width", function(d) {
-            return d.size;
+            return d.size || defaultSize;
         })
         .style("fill", function (d) {
-            return d.color   
+            return d.color || "steelblue"  
         })
         .style("stroke", "gray")
         .style("stroke-width", 2)
@@ -35,7 +36,7 @@ d3.queue = function(d3, canvasID, w, h, data) {
         .append("text")
             .text(function(d) { return d.name})
             .attr("x", 0)
-            .attr("y", function(d) {return 15+ (d.size)})
+            .attr("y", function(d) {return 15+ (d.size||defaultSize)})
             .attr("dy", ".35em") 
 
         
@@ -43,7 +44,7 @@ d3.queue = function(d3, canvasID, w, h, data) {
 
     for (i = 1; i < data.length; i++) {
         links.push({
-            x2: data[i].size ,
+            x2: data[i].size || defaultSize,
             x1: data[i - 1].size || defaultSize
         })
     }
