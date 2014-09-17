@@ -46,7 +46,7 @@ d3.queue = function(d3, canvasID, w, h, data) {
         .data(data)
         .enter().append("line")
         .attr("x1", function(d, i) {
-            return (i) * spacing + d.size
+            return (i) * spacing + d.size || defaultSize;
         })
         .attr("x2", function(d, i) {
             return (i + 1) * spacing
