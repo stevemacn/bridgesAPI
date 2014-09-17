@@ -28,7 +28,15 @@ d3.queue = function(d3, canvasID, w, h, data) {
         .style("fill", function (d) {
             return d.color   
         })
+        .style("stroke", "gray")
+        .style("stroke-width", 2)
     
+    nodes    
+        .append("text")
+            .text(function(d) { return d.name})
+            .attr("x", 0)
+            .attr("y", function(d) {return 15+ (d.size)})
+            .attr("dy", ".35em") 
 
         
 }
