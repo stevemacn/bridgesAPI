@@ -21,7 +21,7 @@ exports.updateVistype = function (req, res, next) {
             if (!assignmentResult) 
                 return next("could not find assignment")
             //validate the vis type is implemented..
-            vistypes = ["nodelink", "tree"]
+            vistypes = ["nodelink", "tree", "queue"]
             if (vistypes.indexOf(req.params.value) == -1) 
                 return next("specified vistype is not implemented")
             assignmentResult.vistype=req.params.value 
