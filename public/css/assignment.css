@@ -8,14 +8,16 @@
 }
 
 #vis{
-    float:left;
     width:70%;
     height:600px;
+    position:absolute;
+    overflow: scroll;
+    float:left;
 }
 #optionContainer{
-    float:right;
     width:20%;
     height:600px;
+    float:right;
 }
 #assignmentCanvas{
     min-width:801px;
