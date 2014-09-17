@@ -9,6 +9,25 @@ d3.queue = function(d3, canvasID, w, h, data) {
         .attr("width", w)
         .attr("height", h)
 
+    var nodes = chart.selectAll("g")
+        .data(data)
+        .enter().append("g")
+        .attr("transform", function(d, i) {
+            size = d.size;
+            return "translate(" + 
+                i*spacing+","+(h/2 - size/2)+")";
+        })
+
+    nodes.append("rect")
+        .attr("height", function(d) {
+            return d.size;
+        })
+        .attr("width", function(d) {
+            return d.size;
+        })
+        .style("fill", function (d) {
+            return d.color   
+        })
     
 
         
