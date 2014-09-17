@@ -39,21 +39,14 @@ d3.queue = function(d3, canvasID, w, h, data) {
             .attr("y", function(d) {return 15+ (d.size||defaultSize)})
             .attr("dy", ".35em") 
 
-        
-    links = []
-
-    for (i = 1; i < data.length; i++) {
-        links.push({
-            x2: data[i].size || defaultSize,
-            x1: data[i - 1].size || defaultSize
-        })
-    }
+    //we don't want to process the first node
+    data.pop()
 
     var lines = chart.selectAll("line")
-        .data(links)
+        .data(data)
         .enter().append("line")
         .attr("x1", function(d, i) {
-            return (i) * spacing + d.x1
+            return (i) * spacing + d.size
         })
         .attr("x2", function(d, i) {
             return (i + 1) * spacing
