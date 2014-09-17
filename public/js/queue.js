@@ -6,7 +6,7 @@ d3.queue = function(d3, canvasID, w, h, data) {
     var spacing = w / data.length;
     var defaultSize = 15;
 
-    var chart = d3.select(".chart").append("svg")
+    var chart = d3.select(canvasID).append("svg")
         .attr("width", w)
         .attr("height", h)
 
