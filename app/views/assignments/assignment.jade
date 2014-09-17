@@ -28,6 +28,8 @@ block content
                             a(onclick="setvis('nodelink')") Node-link diagram
                         li#tree 
                             a(onclick="setvis('tree')") Tree 
+                        li#queue
+                            a(onclick="setvis('queue')") Queue
                     span upload thumbnail
                     
         -}
@@ -44,7 +46,10 @@ block footerjs
         if (vistype=="tree") {
             $("#tree").addClass("active")
         }
-        else if (vistype=="nodelink") $("#nodelink").addClass("active")  
+        else if (vistype=="queue") {
+            $("#queue").addClass("active")
+        }
+        else $("#nodelink").addClass("active")  
     script.
         var owner = "#{owner}"
         if (owner==="false") {
@@ -67,6 +72,8 @@ block footerjs
     - else if (vistype == "tree")
         link(rel='stylesheet', href='/css/vis/tree.css')
         script(src = '/js/bst/lib/bst.js')
+    - else if (vistype == 'queue')
+        script(src = '/js/queue.js')
     - else  
         script.
             var error = !{JSON.stringify(data)}
