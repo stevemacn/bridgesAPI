@@ -17,7 +17,6 @@ test/imgs/
 
 # Don't steal my keys!! #
 ###################
-keys.json
 config/keys.json
 
 # Logs and databases #
