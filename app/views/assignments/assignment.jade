@@ -7,8 +7,8 @@ block css
                  
 block content                 
     include ../includes/header.jade
-    div#assignmentCanvas 
-        #vis.assignmentContainer
+    div#assignmentCanvas(overflow="auto") 
+        #vis.assignmentContainer(overflow="hidden", display="block")
         -if (owner) {    
             #optionContainer.assignmentContainer  
                 div(style="margin:10px 10px 10px 10px;")
