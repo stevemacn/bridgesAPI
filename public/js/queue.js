@@ -3,11 +3,11 @@
 
 d3.queue = function(d3, canvasID, w, h, data) {
 
-    var spacing = w / data.length;
+    var spacing = 140//w / data.length;
     var defaultSize = 15;
 
     var chart = d3.select(canvasID).append("svg")
-        .attr("width", w)
+        .attr("width", "10000")
         .attr("height", h)
         .style("margin-left", 25)
 
@@ -17,7 +17,7 @@ d3.queue = function(d3, canvasID, w, h, data) {
         .attr("transform", function(d, i) {
             size = parseFloat(d.size || defaultSize);
             return "translate(" +
-                i * spacing + 10 + "," + (h / 2 - size / 2) + ")";
+                i * spacing + "," + (h / 2 - size / 2) + ")";
         })
 
     nodes.append("rect")
