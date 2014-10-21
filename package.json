@@ -12,6 +12,7 @@
         "express": "3.5.0",
         "jade": "latest",
         "mongoose": "latest",
+        "treemill":"latest",
     "tomatoes":"latest",
         "twit":"latest",
         "passport": "latest",
