@@ -9,8 +9,8 @@ for (i in links) {
 }
 
 var ele = document.getElementById("vis")
-    , width = ele.offsetWidth+500
-     height = ele.offsetHeight+500
+    , width = ele.offsetWidth+1000
+     height = ele.offsetHeight+1000
 
 var force = d3.layout.force()
     .charge([-250])
