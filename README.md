@@ -36,10 +36,13 @@ npm install
 bower install
 git submodule init
 git submodule update
+```
+Now copy “config/keysSample.json” to “config/keys.json”   
+(This file will need to be filled in before datasources can be used - next section).
+```
 mongod & 
 grunt
 ```    
-
 If bower install doesn't work, try the following: 
 ```
 git config --global url."https://".insteadOf git://
