@@ -8,9 +8,12 @@ for (i in links) {
    if (count<links[i].value) count = links[i].value 
 }
 
-var ele = document.getElementById("vis")
-    , width = ele.offsetWidth+500
-     height = ele.offsetHeight+500
+var ele = document.getElementById("vis"),
+    //, width = ele.offsetWidth+500
+    // height = ele.offsetHeight+500
+    width = ele.clientWidth,
+    height = ele.clientHeight;
+
 
 var force = d3.layout.force()
     .charge([-250])
