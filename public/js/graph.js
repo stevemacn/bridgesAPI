@@ -107,6 +107,24 @@ node
         return d.name;
     });
 
+
+// Function to add line breaks to node labels
+var insertLineBreaks = function(d) {
+    var el = d3.select(this);
+    var words = d3.select(this).text().split('\n');
+    el.text('');
+
+    for (var i = 0; i < words.length; i++) {
+	var tspan = el.append('tspan').text(words[i]);
+        if (i > 0)
+	    tspan.attr('x',0).attr('dy', '15');
+    }
+}
+
+// Add line breaks to node labels
+svg.selectAll('text').each(insertLineBreaks);
+
+
 force.on("tick", function() {
     link
         .attr("d", function(d) {
