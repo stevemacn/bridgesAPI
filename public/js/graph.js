@@ -27,6 +27,11 @@ var force = d3.layout.force()
 var drag = force.drag();
 drag.on("dragstart",dragstart);
 
+// Create d3 zoom listener
+var zoomListener = d3.behavior.zoom()
+    .scaleExtent([0.1, 5])
+    .on("zoom", zoomHandler);
+
 var defaultColors = d3.scale.category20(); //10 or 20
 
 var svg = d3.select("#vis").append("svg")
@@ -113,6 +118,13 @@ node
         return d.name;
     });
 
+// zoom function
+function zoomHandler() {
+    svg.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
+}
+
+// Apply zoom behavior to svg 
+zoomListener(svg);
 
 // Function to add line breaks to node labels
 var insertLineBreaks = function(d) {
