@@ -23,6 +23,10 @@ var force = d3.layout.force()
     .links(links)
     .start();
 
+// Bind event to dragstart
+var drag = force.drag();
+drag.on("dragstart",dragstart);
+
 var defaultColors = d3.scale.category20(); //10 or 20
 
 var svg = d3.select("#vis").append("svg")
@@ -79,6 +83,7 @@ var node = svg.selectAll(".node")
     .enter().append("g")
     .on("mouseover", mouseover)
     .on("mouseout", mouseout)
+    //.on("dblclick", dblclick) 	// Bind dblclick handler to nodes
     .call(force.drag)
 
 //inner nodes    
@@ -95,6 +100,7 @@ node
     .style("opacity", function(d) {
         return d.opacity || 1
     })
+    .on("dblclick",dblclick)		// Bind dblclick handler to inner nodes
 
 //inner nodes
 node
@@ -123,7 +129,6 @@ var insertLineBreaks = function(d) {
 
 // Add line breaks to node labels
 svg.selectAll('text').each(insertLineBreaks);
-
 
 force.on("tick", function() {
     link
@@ -170,4 +175,22 @@ function mouseout() {
                     .size(scaleSize(d.size||1))()
         })            
         
+}
+
+// Handle doubleclick on node path (shape)
+function dblclick(d) {
+    console.log(this, d);
+    d3.select(this).classed("fixed", d.fixed = false);
+    d3.select(this).attr("d", d3.svg.symbol()
+		.type(function(d) { return d.shape || "circle"; })
+		.size(function(d) { return scaleSize(d.size * 2 || 2); });
+}
+
+// Handle dragstart on force.drag()
+function dragstart(d) {
+    console.log(this, d);
+    d3.select(this).classed("fixed", d.fixed = true);
+    d3.select(this).attr("d", d3.svg.symbol()
+		.type(function(d) { return d.shape || "circle"; })
+		.size(function(d) { return scaleSize(d.size || 1); });
 }
