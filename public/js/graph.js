@@ -36,7 +36,15 @@ var defaultColors = d3.scale.category20(); //10 or 20
 
 var svg = d3.select("#vis").append("svg")
     .attr("width", width)
-    .attr("height", height);
+    .attr("height", height)
+    .append("g")
+        .call(d3.behavior.zoom().scaleExtent([0.5, 5]).on("zoom", zoomHandler)).on("dblclick.zoom", null).on("mousedown.zoom",null);
+        
+svg.append("rect")
+    .attr("width", w)
+    .attr("height", h)
+    .attr("fill","none")
+    .attr("pointer-events","all");
 
 svg.append("svg:defs").selectAll("marker")
     .data(["end"])// Different path types defined here
@@ -88,7 +96,7 @@ var node = svg.selectAll(".node")
     .enter().append("g")
     .on("mouseover", mouseover)
     .on("mouseout", mouseout)
-    //.on("dblclick", dblclick) 	// Bind dblclick handler to nodes
+    .on("dblclick", dblclick)
     .call(force.drag)
 
 //inner nodes    
@@ -105,7 +113,7 @@ node
     .style("opacity", function(d) {
         return d.opacity || 1
     })
-    .on("dblclick",dblclick)		// Bind dblclick handler to inner nodes
+    
 
 //inner nodes
 node
@@ -117,14 +125,6 @@ node
     .text(function(d) {
         return d.name;
     });
-
-// zoom function
-function zoomHandler() {
-    svg.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
-}
-
-// Apply zoom behavior to svg 
-zoomListener(svg);
 
 // Function to add line breaks to node labels
 var insertLineBreaks = function(d) {
@@ -187,6 +187,11 @@ function mouseout() {
                     .size(scaleSize(d.size||1))()
         })            
         
+}
+
+// zoom function
+function zoomHandler() {
+    svg.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
 }
 
 // Handle doubleclick on node path (shape)
