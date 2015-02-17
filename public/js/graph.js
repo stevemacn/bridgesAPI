@@ -27,11 +27,6 @@ var force = d3.layout.force()
 var drag = force.drag();
 drag.on("dragstart",dragstart);
 
-// Create d3 zoom listener
-var zoomListener = d3.behavior.zoom()
-    .scaleExtent([0.1, 5])
-    .on("zoom", zoomHandler);
-
 var defaultColors = d3.scale.category20(); //10 or 20
 
 var svg = d3.select("#vis").append("svg")
