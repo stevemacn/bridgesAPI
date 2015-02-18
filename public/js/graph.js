@@ -28,14 +28,14 @@ drag.on("dragstart",dragstart);
 var defaultColors = d3.scale.category20(); //10 or 20
 
 var svg = d3.select("#vis").append("svg")
-    .attr("width", 100%)
-    .attr("height", 100%)
+    .attr("width", "100%")
+    .attr("height", "100%")
     .append("g")
 	.call(d3.behavior.zoom().scaleExtent([0.5,5]).on("zoom",zoomHandler)).on("dblclick.zoom",null).on("mousedown.zoom",null);
 
 svg.append("rect")
-    .attr("width", 100%)
-    .attr("height", 100%)
+    .attr("width", "100%")
+    .attr("height", "100%")
     //.attr("fill","none")
     	.attr("fill", "grey")
     	.attr("opacity", 0.1)
