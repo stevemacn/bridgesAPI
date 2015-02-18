@@ -59,6 +59,9 @@ exports.upload = function (req, res, next) {
     }
 
     var assignmentID = req.params.assignmentID
+    var visualizationType = rawBody.visual;
+    console.log(visualizationType);
+
    
     //get username from apikey 
     User.findOne({

@@ -8,9 +8,11 @@ for (i in links) {
    if (count<links[i].value) count = links[i].value 
 }
 
-var ele = document.getElementById("vis")
-    , width = ele.offsetWidth+1200
-     height = ele.offsetHeight+1200
+var ele = document.getElementById("vis"), 
+    //width = ele.offsetWidth+1200
+    //height = ele.offsetHeight+1200
+    width = ele.clientWidth,
+    height= ele.clientHeight;
 
 var force = d3.layout.force()
     .charge([-250])
@@ -20,11 +22,22 @@ var force = d3.layout.force()
     .links(links)
     .start();
 
+var drag = force.drag();
+drag.on("dragstart",dragstart);
+
 var defaultColors = d3.scale.category20(); //10 or 20
 
 var svg = d3.select("#vis").append("svg")
     .attr("width", width)
-    .attr("height", height);
+    .attr("height", height)
+    .append("g")
+	.call(d3.behavior.zoom().scaleExtent([0.5,5]).on("zoom",zoomHandler)).on("dblclick.zoom",null).on("mousedown.zoom",null);
+
+svg.append("rect")
+    .attr("width",width)
+    .attr("height", height)
+    .attr("fill","none")
+    .attr("pointer-events","all");
 
 svg.append("svg:defs").selectAll("marker")
     .data(["end"])// Different path types defined here
@@ -76,6 +89,7 @@ var node = svg.selectAll(".node")
     .enter().append("g")
     .on("mouseover", mouseover)
     .on("mouseout", mouseout)
+    .on("dblclick", dblclick)
     .call(force.drag)
 
 //inner nodes    
@@ -103,6 +117,23 @@ node
     .text(function(d) {
         return d.name;
     });
+
+// Function to add line breaks to node labels/names
+var insertLineBreaks = function(d) {
+	var el = d3.select(this);
+	var words = d3.select(this).text().split('\n');
+	el.text('');
+
+	for (var i = 0; i < words.length; i++) {
+	    var tspan = el.append('tspan').text(words[i]);
+	    if (i > 0)
+		tspan.attr('x',0).attr('dy','15');
+	}
+}
+
+// Add line breaks to node labels
+svg.selectAll('text').each(insertLineBreaks);
+
 
 force.on("tick", function() {
     link
@@ -150,3 +181,27 @@ function mouseout() {
         })            
         
 }
+
+// zoom function
+function zoomHandler() {
+    svg.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
+}
+
+// Handle doubleclick on node path (shape)
+function dblclick(d) {
+    console.log(this, d);
+    d3.select(this).classed("fixed", d.fixed = false);
+    d3.select(this).attr("d", d3.svg.symbol()
+		.type(function(d) { return d.shape || "circle"; })
+		.size(function(d) { return scaleSize(d.size * 2 || 2); });
+}
+
+// Handle dragstart on force.drag()
+function dragstart(d) {
+    console.log(this, d);
+    d3.select(this).classed("fixed", d.fixed = true);
+    d3.select(this).attr("d", d3.svg.symbol()
+		.type(function(d) { return d.shape || "circle"; })
+		.size(function(d) { return scaleSize(d.size || 1); });
+}
+
