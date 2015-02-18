@@ -36,7 +36,9 @@ var svg = d3.select("#vis").append("svg")
 svg.append("rect")
     .attr("width",width)
     .attr("height", height)
-    .attr("fill","none")
+    //.attr("fill","none")
+    	.attr("fill", "grey")
+    	.attr("opacity", 0.1)
     .attr("pointer-events","all");
 
 svg.append("svg:defs").selectAll("marker")
