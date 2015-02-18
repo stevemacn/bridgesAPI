@@ -189,21 +189,21 @@ function zoomHandler() {
 
 // Handle doubleclick on node path (shape)
 function dblclick(d) {
-    console.log(this, d);
+    //console.log(this, d);
     d3.select(this).classed("fixed", d.fixed = false);
-    d3.select(this).attr("d", d3.svg.symbol()
-		.type(function(d) { return d.shape || "circle"; })
-		.size(function(d) { return scaleSize(d.size * 2 || 2); })
-	);
+    //d3.select(this).attr("d", d3.svg.symbol()
+	//		.type(function(d) { return d.shape || "circle"; })
+	//		.size(function(d) { return scaleSize(d.size * 2 || 2); })
+	//);
 }
 
 // Handle dragstart on force.drag()
 function dragstart(d) {
-    console.log(this, d);
+    //console.log(this, d);
     d3.select(this).classed("fixed", d.fixed = true);
-    d3.select(this).attr("d", d3.svg.symbol()
-		.type(function(d) { return d.shape || "circle"; })
-		.size(function(d) { return scaleSize(d.size || 1); })
-	);
+    //d3.select(this).attr("d", d3.svg.symbol()
+		//.type(function(d) { return d.shape || "circle"; })
+		//.size(function(d) { return scaleSize(d.size || 1); })
+	//);
 }
 
