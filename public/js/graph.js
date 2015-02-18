@@ -36,7 +36,7 @@ var svg = d3.select("#vis").append("svg")
 var outer_box = svg.append("rect")
     .attr("width", "100%")
     .attr("height", "100%")
-    //.attr("fill","none")
+    .attr("id","outer_box")    //.attr("fill","none")
     	.attr("fill", "grey")
     	.attr("opacity", 0.1)
     .attr("pointer-events","all");
@@ -189,7 +189,8 @@ function mouseout() {
 // zoom function
 function zoomHandler() {
     svg.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
-    //outter_box.attr("width","100%");
+    d3.select("#outer_box").attr("width","100%")
+    .attr("height","100%");//outter_box.attr("width","100%");
 }
 
 // Handle doubleclick on node path (shape)
