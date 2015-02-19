@@ -11,8 +11,8 @@ for (i in links) {
 var ele = document.getElementById("vis"), 
     //width = ele.offsetWidth+1200
     //height = ele.offsetHeight+1200
-    width = ele.clientWidth,
-    height= ele.clientHeight;
+    width = ele.clientWidth - 25,
+    height= ele.clientHeight - 25;
 
 var force = d3.layout.force()
     .charge([-250])
@@ -27,15 +27,17 @@ drag.on("dragstart",dragstart);
 
 var defaultColors = d3.scale.category20(); //10 or 20
 
-var svg = d3.select("#vis").append("svg")
-    .attr("width", "100%")
-    .attr("height", "100%")
+var svgi = d3.select("#vis").append("svg")
+    .attr("width", width)
+    .attr("height", height);
+var svg = svgi
     .append("g")
 	.call(d3.behavior.zoom().scaleExtent([0.5,5]).on("zoom",zoomHandler)).on("dblclick.zoom",null).on("mousedown.zoom",null);
 
-var outer_box = svg.append("rect")
-    .attr("width", "100%")
-    .attr("height", "100%")
+var svgj = svgi.append("g");
+var outer_box = svgj.append("rect")
+    .attr("width", width*2)
+    .attr("height", height*2)
     .attr("x", 0)
     .attr("y", 0)
     .attr("id","outer_box")    //.attr("fill","none")
@@ -191,9 +193,11 @@ function mouseout() {
 // zoom function
 function zoomHandler() {
     svg.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
-    //var w = svg.style("width");
-console.log(d3.event.translate);    
-d3.select("#outer_box").attr("transform","translate(" + -d3.event.translate[0] + ", " + -d3.event.translate[1] + ")scale(" + 1.0/d3.event.scale + ")");
+    //svg.attr("transform", "scale(" + d3.event.scale + ")");    
+
+//var w = svg.style("width");
+//console.log(d3.event.translate);    
+//d3.select("#outer_box").attr("transform","translate(" + -d3.event.translate[0] + ", " + -d3.event.translate[1] + ")scale(" + 1.0/d3.event.scale + ")");
     //.attr("height",height);//outter_box.attr("width","100%");
 }
 
