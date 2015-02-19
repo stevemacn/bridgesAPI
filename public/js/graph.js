@@ -32,6 +32,8 @@ var svg = d3.select("#vis").append("svg")
     .attr("height", height)
     .call(d3.behavior.zoom().scaleExtent([0.5,5]).on("zoom",zoomHandler)).on("dblclick.zoom",null);//.on("mousedown.zoom",null);
 
+var isSelected = false;
+
 var svgGroup = svg.append("g");
 
 
@@ -165,7 +167,7 @@ force.on("tick", function() {
 })
 
 function mouseover() {
-
+    isSelected = true;
     d3.select(this).select("text").transition()
         .duration(750)
         .style("display","block")
@@ -178,7 +180,7 @@ function mouseover() {
 }
 
 function mouseout() {
-    
+    isSelected = false;
     d3.select(this).select("text").transition()
         .duration(750)
         .style("display","none")
@@ -196,7 +198,8 @@ function manualZoom(){
 }
 // zoom function
 function zoomHandler() {
-    svgGroup.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
+    if(!isSelected)
+	svgGroup.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
 }
 
 // Handle doubleclick on node path (shape)
