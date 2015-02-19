@@ -224,7 +224,7 @@ function dragstart(d) {
 		//.type(function(d) { return d.shape || "circle"; })
 }		//.size(function(d) { return scaleSize(d.size || 1); })
 	//);
-}
+
 
 function dragend(d){
 	isDragging = false;
