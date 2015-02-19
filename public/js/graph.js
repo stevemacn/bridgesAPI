@@ -180,10 +180,17 @@ function mouseover() {
                     .size(scaleSize(40))()
         })            
 }
+function mouseup(){
+    isSelected = false;
+    d3.event.translate([0,0]);
+}
 
 function mouseout() {
     if(!isDragging)
+    {
       isSelected = false;
+      d3.event.translate([0,0]);
+    }
     d3.select(this).select("text").transition()
         .duration(750)
         .style("display","none")
@@ -196,9 +203,7 @@ function mouseout() {
         
 }
 
-function manualZoom(){
 
-}
 // zoom function
 function zoomHandler() {
     if(!isSelected)
