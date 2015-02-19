@@ -169,7 +169,7 @@ force.on("tick", function() {
 })
 
 function mouseover() {
-    isSelected = true;
+    //isSelected = true;
     d3.select(this).select("text").transition()
         .duration(750)
         .style("display","block")
@@ -186,12 +186,12 @@ function mouseup(){
 }
 
 function mouseout() {
-    if(!isDragging)
-    {
-      isSelected = false;
-      var zm = d3.behavior.zoom();
-      zm.translate([0,0]);
-    }
+    //if(!isDragging)
+   // {
+    //  isSelected = false;
+    //  var zm = d3.behavior.zoom();
+    //  zm.translate([0,0]);
+   // }
     d3.select(this).select("text").transition()
         .duration(750)
         .style("display","none")
@@ -207,32 +207,24 @@ function mouseout() {
 
 // zoom function
 function zoomHandler() {
-    if(!isSelected)
+    //if(!isSelected)
 	svgGroup.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
 	//svgGroup.attr("transform", "scale(" + d3.event.scale + ")");
 }
 
 // Handle doubleclick on node path (shape)
 function dblclick(d) {
-    //console.log(this, d);
     d3.select(this).classed("fixed", d.fixed = false);
-    //d3.select(this).attr("d", d3.svg.symbol()
-	//		.type(function(d) { return d.shape || "circle"; })
-	//		.size(function(d) { return scaleSize(d.size * 2 || 2); })
-	//);
 }
 
 // Handle dragstart on force.drag()
 function dragstart(d) {
     //console.log(this, d);
-    isDragging = true;
+    //isDragging = true;
     d3.select(this).classed("fixed", d.fixed = true);
-    //d3.select(this).attr("d", d3.svg.symbol()
-		//.type(function(d) { return d.shape || "circle"; })
-}		//.size(function(d) { return scaleSize(d.size || 1); })
-	//);
+}
 
 
 function dragend(d){
-	isDragging = false;
+	//isDragging = false;
 }
