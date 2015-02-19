@@ -23,7 +23,8 @@ var force = d3.layout.force()
     .start();
 
 var drag = force.drag();
-drag.on("dragstart",dragstart);
+drag.on("dragstart",dragstart)
+	.on("dragend",dragend);
 
 var defaultColors = d3.scale.category20(); //10 or 20
 
@@ -33,6 +34,7 @@ var svg = d3.select("#vis").append("svg")
     .call(d3.behavior.zoom().scaleExtent([0.5,5]).on("zoom",zoomHandler)).on("dblclick.zoom",null);//.on("mousedown.zoom",null);
 
 var isSelected = false;
+var isDragging = false;
 
 var svgGroup = svg.append("g");
 
@@ -180,7 +182,8 @@ function mouseover() {
 }
 
 function mouseout() {
-    isSelected = false;
+    if(!isDragging)
+      isSelected = false;
     d3.select(this).select("text").transition()
         .duration(750)
         .style("display","none")
@@ -215,10 +218,14 @@ function dblclick(d) {
 // Handle dragstart on force.drag()
 function dragstart(d) {
     //console.log(this, d);
+    isDragging = true;
     d3.select(this).classed("fixed", d.fixed = true);
     //d3.select(this).attr("d", d3.svg.symbol()
 		//.type(function(d) { return d.shape || "circle"; })
-		//.size(function(d) { return scaleSize(d.size || 1); })
+}		//.size(function(d) { return scaleSize(d.size || 1); })
 	//);
 }
 
+function dragend(d){
+	isDragging = false;
+}
