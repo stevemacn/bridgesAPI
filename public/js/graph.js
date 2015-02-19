@@ -191,9 +191,9 @@ function mouseout() {
 // zoom function
 function zoomHandler() {
     svg.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
-    var w = svg.style("width");
-    d3.select("#outer_box").attr("width",w)
-    .attr("height",height);//outter_box.attr("width","100%");
+    //var w = svg.style("width");
+    //d3.select("#outer_box").attr("width",w)
+    //.attr("height",height);//outter_box.attr("width","100%");
 }
 
 // Handle doubleclick on node path (shape)
