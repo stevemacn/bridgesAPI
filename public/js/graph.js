@@ -27,15 +27,14 @@ drag.on("dragstart",dragstart);
 
 var defaultColors = d3.scale.category20(); //10 or 20
 
-var svgi = d3.select("#vis").append("svg")
+var svg = d3.select("#vis").append("svg")
     .attr("width", width)
-    .attr("height", height);
-var svg = svgi
+    .attr("height", height)
+
     .append("g")
 	.call(d3.behavior.zoom().scaleExtent([0.5,5]).on("zoom",zoomHandler)).on("dblclick.zoom",null).on("mousedown.zoom",null);
 
-var svgj = svgi.append("g");
-var outer_box = svgj.append("rect")
+var outer_box = svg.append("rect")
     .attr("width", width*2)
     .attr("height", height*2)
     .attr("x", 0)
