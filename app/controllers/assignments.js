@@ -60,7 +60,8 @@ exports.upload = function (req, res, next) {
 
     var assignmentID = req.params.assignmentID
     var visualizationType = rawBody.visual;
-   
+    if(visualizationType != "tree")
+	visualizationType == "nodelink";
     //get username from apikey 
     User.findOne({
         apikey:req.query.apikey
@@ -85,7 +86,7 @@ exports.upload = function (req, res, next) {
             //create a new assignment in the database
             assignment = new Assignment()
             assignment.email = user.email
-            //assignment.vistype = visualizationType
+            assignment.vistype = visualizationType
             assignment.data = rawBody
             assignment.assignmentID = assignmentID
             assignment.save()
