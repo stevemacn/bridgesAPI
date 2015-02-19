@@ -192,7 +192,7 @@ function mouseout() {
 function zoomHandler() {
     svg.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
     //var w = svg.style("width");
-    d3.select("#outer_box").attr("transform","scale(" + 1.0/d3.event.scale + ")");
+    d3.select("#outer_box").attr("transform","translate(" + (-1 * d3.event.translate) + ")scale(" + 1.0/d3.event.scale + ")");
     //.attr("height",height);//outter_box.attr("width","100%");
 }
 
