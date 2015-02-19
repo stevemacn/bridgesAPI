@@ -192,7 +192,8 @@ function mouseout() {
 function zoomHandler() {
     svg.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
     //var w = svg.style("width");
-    d3.select("#outer_box").attr("transform","translate(" + (-1 * d3.event.translate) + ")scale(" + 1.0/d3.event.scale + ")");
+console.log(d3.event.translate);    
+d3.select("#outer_box").attr("transform","translate(" + -d3.event.translate.x + ", " + -d3.event.translate.y + ")scale(" + 1.0/d3.event.scale + ")");
     //.attr("height",height);//outter_box.attr("width","100%");
 }
 
