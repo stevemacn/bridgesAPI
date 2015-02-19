@@ -11,15 +11,16 @@ for (i in links) {
 var ele = document.getElementById("vis"), 
     //width = ele.offsetWidth+1200
     //height = ele.offsetHeight+1200
-    width = ele.clientWidth - 25,
-    height= ele.clientHeight - 25;
+    width = ele.clientWidth - 15,
+    height= ele.clientHeight - 15;
 
 var force = d3.layout.force()
     .charge([-250])
-    .linkDistance([75])
+    .linkDistance([50])
     .size([width, height])
     .nodes(nodes)
     .links(links)
+    .gravity(0.001)
     .start();
 
 var drag = force.drag();
