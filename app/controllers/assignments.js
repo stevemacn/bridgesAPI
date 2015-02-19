@@ -85,7 +85,7 @@ exports.upload = function (req, res, next) {
             //create a new assignment in the database
             assignment = new Assignment()
             assignment.email = user.email
-            assignment.vistype = visualizationType
+            //assignment.vistype = visualizationType
             assignment.data = rawBody
             assignment.assignmentID = assignmentID
             assignment.save()
