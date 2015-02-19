@@ -31,7 +31,7 @@ var defaultColors = d3.scale.category20(); //10 or 20
 var svg = d3.select("#vis").append("svg")
     .attr("width", width)
     .attr("height", height)
-    .call(d3.behavior.zoom().scaleExtent([0.5,5]).on("zoom",zoomHandler)).on("dblclick.zoom",null);//.on("mousedown.zoom",null);
+    .call(d3.behavior.zoom().scaleExtent([0.5,5]).on("zoom",zoomHandler)).on("dblclick.zoom",null).on("mousedown.zoom",null);
 
 var isSelected = false;
 var isDragging = false;
@@ -208,7 +208,8 @@ function mouseout() {
 // zoom function
 function zoomHandler() {
     if(!isSelected)
-	svgGroup.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
+	//svgGroup.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
+	svgGroup.attr("transform", "scale(" + d3.event.scale + ")");
 }
 
 // Handle doubleclick on node path (shape)
