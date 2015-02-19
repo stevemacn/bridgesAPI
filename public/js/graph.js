@@ -30,9 +30,10 @@ var defaultColors = d3.scale.category20(); //10 or 20
 var svg = d3.select("#vis").append("svg")
     .attr("width", width)
     .attr("height", height)
+    .call(d3.behavior.zoom().scaleExtent([0.5,5]).on("zoom",zoomHandler)).on("dblclick.zoom",null).on("mousedown.zoom",null);
 
-    .append("g")
-	.call(d3.behavior.zoom().scaleExtent([0.5,5]).on("zoom",zoomHandler)).on("dblclick.zoom",null).on("mousedown.zoom",null);
+var svgGroup = svg.append("g");
+
 
 var outer_box = svg.append("rect")
     .attr("width", width*2)
@@ -42,7 +43,8 @@ var outer_box = svg.append("rect")
     .attr("id","outer_box")    //.attr("fill","none")
     	.attr("fill", "grey")
     	.attr("opacity", 0.1)
-    .attr("pointer-events","all");
+    .attr("pointer-events","all")
+    .on("mousemove", manualZoom);
 
 console.log(outer_box);
 
@@ -66,7 +68,7 @@ svg.append("svg:defs").selectAll("marker")
     .append("svg:path")
     .attr("d", "M0,-5L10,0L0,5");
 
-var link = svg.append("svg:g").selectAll("path")
+var link = svgGroup.append("svg:g").selectAll("path")
     .data(links)
     .enter().append("svg:path")
     .attr("class", "link")
@@ -91,7 +93,7 @@ var scaleSize = d3.scale.linear()
     .range([80,4000]);
 
 //outer node
-var node = svg.selectAll(".node")
+var node = svgGroup.selectAll(".node")
     .data(nodes)
     .enter().append("g")
     .on("mouseover", mouseover)
@@ -139,7 +141,7 @@ var insertLineBreaks = function(d) {
 }
 
 // Add line breaks to node labels
-svg.selectAll('text').each(insertLineBreaks);
+svgGroup.selectAll('text').each(insertLineBreaks);
 
 
 force.on("tick", function() {
@@ -189,15 +191,12 @@ function mouseout() {
         
 }
 
+function manualZoom(){
+
+}
 // zoom function
 function zoomHandler() {
-    svg.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
-    //svg.attr("transform", "scale(" + d3.event.scale + ")");    
-
-//var w = svg.style("width");
-//console.log(d3.event.translate);    
-//d3.select("#outer_box").attr("transform","translate(" + -d3.event.translate[0] + ", " + -d3.event.translate[1] + ")scale(" + 1.0/d3.event.scale + ")");
-    //.attr("height",height);//outter_box.attr("width","100%");
+    svgGroup.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
 }
 
 // Handle doubleclick on node path (shape)
