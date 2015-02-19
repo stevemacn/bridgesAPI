@@ -23,8 +23,7 @@ var force = d3.layout.force()
     .start();
 
 var drag = force.drag();
-drag.on("dragstart",dragstart)
-	.on("dragend",dragend);
+drag.on("dragstart",dragstart);
 
 var defaultColors = d3.scale.category20(); //10 or 20
 
@@ -33,24 +32,7 @@ var svg = d3.select("#vis").append("svg")
     .attr("height", height)
     .call(d3.behavior.zoom().center([width/2, height/2]).scaleExtent([0.1,5]).on("zoom",zoomHandler)).on("dblclick.zoom",null).on("mousedown.zoom",null);
 
-var isSelected = false;
-var isDragging = false;
-
 var svgGroup = svg.append("g");
-
-
-//var outer_box = svg.append("rect")
- //   .attr("width", width*2)
-  //  .attr("height", height*2)
-  //  .attr("x", 0)
-  //  .attr("y", 0)
-  //  .attr("id","outer_box")    //.attr("fill","none")
-  //  	.attr("fill", "grey")
-  //  	.attr("opacity", 0.1)
-  //  .attr("pointer-events","all")
-  //  .on("mousemove", manualZoom);
-
-//console.log(outer_box);
 
 svg.append("svg:defs").selectAll("marker")
     .data(["end"])// Different path types defined here
@@ -169,7 +151,6 @@ force.on("tick", function() {
 })
 
 function mouseover() {
-    //isSelected = true;
     d3.select(this).select("text").transition()
         .duration(750)
         .style("display","block")
@@ -180,18 +161,8 @@ function mouseover() {
                     .size(scaleSize(40))()
         })            
 }
-function mouseup(){
-    isSelected = false;
-    d3.event.translate([0,0]);
-}
 
 function mouseout() {
-    //if(!isDragging)
-   // {
-    //  isSelected = false;
-    //  var zm = d3.behavior.zoom();
-    //  zm.translate([0,0]);
-   // }
     d3.select(this).select("text").transition()
         .duration(750)
         .style("display","none")
@@ -201,15 +172,11 @@ function mouseout() {
             return d3.svg.symbol().type(d.shape||"circle")
                     .size(scaleSize(d.size||1))()
         })            
-        
 }
-
 
 // zoom function
 function zoomHandler() {
-    //if(!isSelected)
-	svgGroup.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
-	//svgGroup.attr("transform", "scale(" + d3.event.scale + ")");
+    svgGroup.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
 }
 
 // Handle doubleclick on node path (shape)
@@ -219,12 +186,6 @@ function dblclick(d) {
 
 // Handle dragstart on force.drag()
 function dragstart(d) {
-    //console.log(this, d);
-    //isDragging = true;
     d3.select(this).classed("fixed", d.fixed = true);
 }
 
-
-function dragend(d){
-	//isDragging = false;
-}
