@@ -30,7 +30,7 @@ var defaultColors = d3.scale.category20(); //10 or 20
 var svg = d3.select("#vis").append("svg")
     .attr("width", width)
     .attr("height", height)
-    .call(d3.behavior.zoom().scaleExtent([0.5,5]).on("zoom",zoomHandler)).on("dblclick.zoom",null).on("mousedown.zoom",null);
+    .call(d3.behavior.zoom().scaleExtent([0.5,5]).on("zoom",zoomHandler)).on("dblclick.zoom",null);//.on("mousedown.zoom",null);
 
 var svgGroup = svg.append("g");
 
