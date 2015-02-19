@@ -189,8 +189,8 @@ function mouseout() {
     if(!isDragging)
     {
       isSelected = false;
-      d3.event.translate[0] = 0;
-      d3.event.translate[1] = 0;
+      var zm = d3.behavior.zoom();
+      zm.translate([0,0]);
     }
     d3.select(this).select("text").transition()
         .duration(750)
