@@ -20,7 +20,6 @@ var force = d3.layout.force()
     .size([width, height])
     .nodes(nodes)
     .links(links)
-    .gravity(0.001)
     .start();
 
 var drag = force.drag();
