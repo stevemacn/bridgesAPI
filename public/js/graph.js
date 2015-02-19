@@ -35,18 +35,18 @@ var svg = d3.select("#vis").append("svg")
 var svgGroup = svg.append("g");
 
 
-var outer_box = svg.append("rect")
-    .attr("width", width*2)
-    .attr("height", height*2)
-    .attr("x", 0)
-    .attr("y", 0)
-    .attr("id","outer_box")    //.attr("fill","none")
-    	.attr("fill", "grey")
-    	.attr("opacity", 0.1)
-    .attr("pointer-events","all")
-    .on("mousemove", manualZoom);
+//var outer_box = svg.append("rect")
+ //   .attr("width", width*2)
+  //  .attr("height", height*2)
+  //  .attr("x", 0)
+  //  .attr("y", 0)
+  //  .attr("id","outer_box")    //.attr("fill","none")
+  //  	.attr("fill", "grey")
+  //  	.attr("opacity", 0.1)
+  //  .attr("pointer-events","all")
+  //  .on("mousemove", manualZoom);
 
-console.log(outer_box);
+//console.log(outer_box);
 
 svg.append("svg:defs").selectAll("marker")
     .data(["end"])// Different path types defined here
