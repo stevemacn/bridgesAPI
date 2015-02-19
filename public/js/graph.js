@@ -193,7 +193,7 @@ function zoomHandler() {
     svg.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
     //var w = svg.style("width");
 console.log(d3.event.translate);    
-d3.select("#outer_box").attr("transform","translate(" + -d3.event.translate.x + ", " + -d3.event.translate.y + ")scale(" + 1.0/d3.event.scale + ")");
+d3.select("#outer_box").attr("transform","translate(" + -d3.event.translate[0] + ", " + -d3.event.translate[1] + ")scale(" + 1.0/d3.event.scale + ")");
     //.attr("height",height);//outter_box.attr("width","100%");
 }
 
