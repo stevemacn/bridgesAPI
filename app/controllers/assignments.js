@@ -61,7 +61,7 @@ exports.upload = function (req, res, next) {
     var assignmentID = req.params.assignmentID
     var visualizationType = rawBody.visual;
     if(visualizationType != "tree")
-	visualizationType == "nodelink";
+	visualizationType = "nodelink";
     //get username from apikey 
     User.findOne({
         apikey:req.query.apikey
