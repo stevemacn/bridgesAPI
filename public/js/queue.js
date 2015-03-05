@@ -7,13 +7,15 @@ d3.queue = function(d3, canvasID, w, h, data) {
     var defaultSize = 15;
 
     var chart = d3.select(canvasID).append("svg")
-        .attr("width", "10000")
+        .attr("width", "50000")
         .attr("height", h)
         .style("margin-left", 25)
 
     var nodes = chart.selectAll("g")
         .data(data)
         .enter().append("g")
+        .on("mouseover", mouseover)
+        .on("mouseout", mouseout)
         .attr("transform", function(d, i) {
             size = parseFloat(d.size || defaultSize);
             return "translate(" +
@@ -35,6 +37,7 @@ d3.queue = function(d3, canvasID, w, h, data) {
 
     nodes
         .append("text")
+        .style("display", "none")
         .text(function(d) {
             return d.name
         })
@@ -74,4 +77,34 @@ d3.queue = function(d3, canvasID, w, h, data) {
         .attr("y1", h / 2)
         .attr("y2", h / 2)
         .style("stroke", "black")
+    
+function mouseover() {
+
+    d3.select(this).select("text").transition()
+        .duration(750)
+        .style("display","block")
+    /*
+    d3.select(this).select("path").transition()
+        .duration(750)
+        .attr('d', function (d) {
+            return d3.svg.symbol().type(d.shape||"circle")
+                    .size(scaleSize(40))()
+        })            
+    */  
+}
+
+function mouseout() {
+    
+    d3.select(this).select("text").transition()
+        .duration(750)
+        .style("display","none")
+    /*
+    d3.select(this).select("path").transition()
+        .duration(750)
+        .attr('d', function (d) {
+            return d3.svg.symbol().type(d.shape||"circle")
+                    .size(scaleSize(d.size||1))()
+        })            
+    */  
+}
 }

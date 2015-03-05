@@ -9,14 +9,14 @@
 
 #vis{
     width:70%;
-    height:600px;
+    height:80%;
     position:absolute;
     overflow: scroll;
     float:left;
 }
 #optionContainer{
     width:20%;
-    height:600px;
+    height:300px;
     float:right;
 }
 #assignmentCanvas{

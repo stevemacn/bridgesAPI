@@ -8,22 +8,20 @@ for (i in links) {
    if (count<links[i].value) count = links[i].value 
 }
 
-var ele = document.getElementById("vis"),
-    //, width = ele.offsetWidth+500
-    // height = ele.offsetHeight+500
-    width = ele.clientWidth,
-    height = ele.clientHeight;
-
+var ele = document.getElementById("vis"), 
+    //width = ele.offsetWidth+1200
+    //height = ele.offsetHeight+1200
+    width = ele.clientWidth - 15,
+    height= ele.clientHeight - 15;
 
 var force = d3.layout.force()
     .charge([-250])
-    .linkDistance([75])
+    .linkDistance([50])
     .size([width, height])
     .nodes(nodes)
     .links(links)
     .start();
 
-// Bind event to dragstart
 var drag = force.drag();
 drag.on("dragstart",dragstart);
 
@@ -32,14 +30,9 @@ var defaultColors = d3.scale.category20(); //10 or 20
 var svg = d3.select("#vis").append("svg")
     .attr("width", width)
     .attr("height", height)
-    .append("g")
-        .call(d3.behavior.zoom().scaleExtent([0.5, 5]).on("zoom", zoomHandler)).on("dblclick.zoom", null).on("mousedown.zoom",null);
-        
-svg.append("rect")
-    .attr("width", w)
-    .attr("height", h)
-    .attr("fill","none")
-    .attr("pointer-events","all");
+    .call(d3.behavior.zoom().center([width/2, height/2]).scaleExtent([0.1,5]).on("zoom",zoomHandler)).on("dblclick.zoom",null).on("mousedown.zoom",null);
+
+var svgGroup = svg.append("g");
 
 svg.append("svg:defs").selectAll("marker")
     .data(["end"])// Different path types defined here
@@ -61,7 +54,7 @@ svg.append("svg:defs").selectAll("marker")
     .append("svg:path")
     .attr("d", "M0,-5L10,0L0,5");
 
-var link = svg.append("svg:g").selectAll("path")
+var link = svgGroup.append("svg:g").selectAll("path")
     .data(links)
     .enter().append("svg:path")
     .attr("class", "link")
@@ -86,7 +79,7 @@ var scaleSize = d3.scale.linear()
     .range([80,4000]);
 
 //outer node
-var node = svg.selectAll(".node")
+var node = svgGroup.selectAll(".node")
     .data(nodes)
     .enter().append("g")
     .on("mouseover", mouseover)
@@ -108,7 +101,6 @@ node
     .style("opacity", function(d) {
         return d.opacity || 1
     })
-    
 
 //inner nodes
 node
@@ -121,21 +113,22 @@ node
         return d.name;
     });
 
-// Function to add line breaks to node labels
+// Function to add line breaks to node labels/names
 var insertLineBreaks = function(d) {
-    var el = d3.select(this);
-    var words = d3.select(this).text().split('\n');
-    el.text('');
+	var el = d3.select(this);
+	var words = d3.select(this).text().split('\n');
+	el.text('');
 
-    for (var i = 0; i < words.length; i++) {
-	var tspan = el.append('tspan').text(words[i]);
-        if (i > 0)
-	    tspan.attr('x',0).attr('dy', '15');
-    }
+	for (var i = 0; i < words.length; i++) {
+	    var tspan = el.append('tspan').text(words[i]);
+	    if (i > 0)
+		tspan.attr('x',0).attr('dy','15');
+	}
 }
 
 // Add line breaks to node labels
-svg.selectAll('text').each(insertLineBreaks);
+svgGroup.selectAll('text').each(insertLineBreaks);
+
 
 force.on("tick", function() {
     link
@@ -158,7 +151,6 @@ force.on("tick", function() {
 })
 
 function mouseover() {
-
     d3.select(this).select("text").transition()
         .duration(750)
         .style("display","block")
@@ -171,7 +163,6 @@ function mouseover() {
 }
 
 function mouseout() {
-    
     d3.select(this).select("text").transition()
         .duration(750)
         .style("display","none")
@@ -181,28 +172,20 @@ function mouseout() {
             return d3.svg.symbol().type(d.shape||"circle")
                     .size(scaleSize(d.size||1))()
         })            
-        
 }
 
 // zoom function
 function zoomHandler() {
-    svg.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
+    svgGroup.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
 }
 
 // Handle doubleclick on node path (shape)
 function dblclick(d) {
-    console.log(this, d);
     d3.select(this).classed("fixed", d.fixed = false);
-    d3.select(this).attr("d", d3.svg.symbol()
-		.type(function(d) { return d.shape || "circle"; })
-		.size(function(d) { return scaleSize(d.size * 2 || 2); });
 }
 
 // Handle dragstart on force.drag()
 function dragstart(d) {
-    console.log(this, d);
     d3.select(this).classed("fixed", d.fixed = true);
-    d3.select(this).attr("d", d3.svg.symbol()
-		.type(function(d) { return d.shape || "circle"; })
-		.size(function(d) { return scaleSize(d.size || 1); });
 }
+
