@@ -3,6 +3,9 @@
 
 d3.queue = function(d3, canvasID, w, h, data) {
 
+    
+    //d3.select("#reset").on("click", reset);
+    
     var spacing = 140//w / data.length;
     var defaultSize = 15;
 
@@ -107,4 +110,17 @@ function mouseout() {
         })            
     */  
 }
+
+//// zoom function
+//function zoomHandler() {
+//    svgGroup.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
+//}
+//    
+//function reset() {
+//    zoom.scale(1);
+//    zoom.translate([0, 0]);
+//    //svgGroup.attr("transform", "translate(0,0)scale(1,1)");
+//    svgGroup.attr("transform", "translate(" + zoom.translate() + ")scale(" + zoom.scale() + ")");
+//}
+    
 }

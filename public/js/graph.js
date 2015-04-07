@@ -22,15 +22,25 @@ var force = d3.layout.force()
     .links(links)
     .start();
 
+ d3.select("#reset").on("click", reset);
+
 var drag = force.drag();
 drag.on("dragstart",dragstart);
+
+ var zoom = d3.behavior.zoom()
+        .scaleExtent([0.1,5])
+        //.on("dblclick.zoom",null)
+        .on("zoom", zoomHandler);
+        //.on("mousedown.zoom",null);
+        zoom.scale(1);
+    //zoom.translate([(w/2), 0]);
 
 var defaultColors = d3.scale.category20(); //10 or 20
 
 var svg = d3.select("#vis").append("svg")
     .attr("width", width)
     .attr("height", height)
-    .call(d3.behavior.zoom().center([width/2, height/2]).scaleExtent([0.1,5]).on("zoom",zoomHandler)).on("dblclick.zoom",null).on("mousedown.zoom",null);
+    .call(zoom);
 
 var svgGroup = svg.append("g");
 
@@ -188,4 +198,12 @@ function dblclick(d) {
 function dragstart(d) {
     d3.select(this).classed("fixed", d.fixed = true);
 }
+
+function reset() {
+    zoom.scale(1);
+    zoom.translate([0, 0]);
+    //svgGroup.attr("transform", "translate(0,0)scale(1,1)");
+    svgGroup.attr("transform", "translate(" + zoom.translate() + ")scale(" + zoom.scale() + ")");
+}
+    
 

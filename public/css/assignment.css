@@ -22,3 +22,8 @@
 #assignmentCanvas{
     min-width:801px;
 }
+
+#reset {
+    margin-left: 25%;
+    width:50%;
+}
