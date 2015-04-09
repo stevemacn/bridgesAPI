@@ -29,18 +29,17 @@ drag.on("dragstart",dragstart);
 
  var zoom = d3.behavior.zoom()
         .scaleExtent([0.1,5])
-        //.on("dblclick.zoom",null)
         .on("zoom", zoomHandler);
-        //.on("mousedown.zoom",null);
         zoom.scale(1);
-    //zoom.translate([(w/2), 0]);
 
 var defaultColors = d3.scale.category20(); //10 or 20
 
 var svg = d3.select("#vis").append("svg")
     .attr("width", width)
     .attr("height", height)
+    //.on("zoom", zoomHandler);
     .call(zoom);
+    
 
 var svgGroup = svg.append("g");
 
@@ -191,12 +190,15 @@ function zoomHandler() {
 
 // Handle doubleclick on node path (shape)
 function dblclick(d) {
+    d3.event.stopImmediatePropagation();
     d3.select(this).classed("fixed", d.fixed = false);
 }
 
 // Handle dragstart on force.drag()
 function dragstart(d) {
+     d3.event.sourceEvent.stopPropagation();
     d3.select(this).classed("fixed", d.fixed = true);
+    force.start();
 }
 
 function reset() {
