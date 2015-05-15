@@ -11,7 +11,7 @@ block content
     div#assignmentCanvas(overflow="auto") 
         
         -if (owner) {    
-            #optionContainer.assignmentContainer  
+            #optionContainer.optionContainer
                 div(style="margin:10px 10px 10px 10px;")
                     label Share #{shared}
                     div.switch-toggle.well
@@ -22,8 +22,12 @@ block content
                             onclick="toggleShare(false)")
                         label(for="private") Private 
                         a.btn.btn-primary
-                    button(class="reset", id="reset")
+                   
+                    button(class="optionButton", id="resize")
+                                label Resize view
+                     button(class="optionButton", id="reset")
                                 label Reset view
+                                
                     //ul.nav.nav-pills.nav-stacked
                         //li.nav-header 
                             //b Choose your representation
@@ -37,13 +41,22 @@ block content
                     
         -}
     
-    
+        table.full
+                tr
+                td.left
+                    button(class="minimize" id="min")
+                        label -
+                td.right
+                
         -for (var i = 0; i < extent; i++) {
-
-        
-            //#vis.assignmentContainer(overflow="hidden", display="block")
-            div(id="vis" + i,display="block").assignmentContainer
-            //(display="block")
+             table.full
+                tr
+                td.left
+                    button(class="minimize" id="min" + i key=i)
+                        label -
+           
+                td.right
+                    div(id="vis" + i,display="block").assignmentContainer
         -}
 
 

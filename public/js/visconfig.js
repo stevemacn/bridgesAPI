@@ -5,6 +5,8 @@ var strokeWidthRange = d3.scale.linear()
                         .clamp(true);
 
 d3.select("#reset").on("click", reset);
+d3.select("#resize").on("click", resize);
+d3.select(".minimize").on("click", minimize);
 allZoom = [];
 allSVG = [];
 
@@ -42,5 +44,47 @@ function reset() {
     }
 }
 
+// Toggle resizing of visualization divs (swaps between two sizes)
+function resize() {
+    if((d3.select(".assignmentContainer")[0])[0].clientHeight < 400) {        
+            d3.selectAll(".assignmentContainer")
+                .attr("height", height);
+
+            d3.selectAll(".svg")
+                .attr("height", height);
+    } else {
+        d3.selectAll(".assignmentContainer")
+                .attr("height", height - height/2);
+
+            d3.selectAll(".svg")
+                .attr("height", height - height/2 + 30);
+    }
+}
+
+// Toggle minimizing and maximizing visualization divs
+function minimize() {
+    
+    if(d3.select(this).attr("minimized") == "true") {
+        d3.select("#vis" + this.id.substr(3))
+            .classed("assignmentContainerMinimized", false);
+
+        d3.select("#svg" + this.id.substr(3))
+            .style("display", "block");
+       
+        d3.select(this).attr("minimized", false);
+        
+        d3.select(this).text("-");
+    } else {
+        d3.select("#vis" + this.id.substr(3))
+            .classed("assignmentContainerMinimized", true);
+        
+        d3.select("#svg" + this.id.substr(3))
+            .style("display", "none");
+        
+        d3.select(this).attr("minimized", true);
+        
+        d3.select(this).text("+");
+    }
+}
 
 

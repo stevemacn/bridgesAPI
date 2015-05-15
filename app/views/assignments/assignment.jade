@@ -8,14 +8,9 @@ block css
 block content                 
     include ../includes/header.jade
     div#assignmentCanvas(overflow="auto") 
-        //#vis.assignmentContainer(overflow="hidden", display="block")
-        #vis0.assignmentContainer(display="block")
-        - var n = 0
-        ul
-          while n < extent
-            li= n++
+     
         -if (owner) {    
-            #optionContainer.assignmentContainer  
+            #optionContainer.optionContainer  
                 div(style="margin:10px 10px 10px 10px;")
                 
                     label Share #{shared}
@@ -27,20 +22,22 @@ block content
                             onclick="toggleShare(false)")
                         label(for="private") Private 
                         a.btn.btn-primary
-                    button(class="reset", id="reset")
-                                label Reset view
-                    //ul.nav.nav-pills.nav-stacked
-                        //li.nav-header 
-                            //b Choose your representation
-                        //li#nodelink
-                            //a(onclick="setvis('nodelink')") Node-link diagram
-                        //li#tree 
-                            //a(onclick="setvis('tree')") Tree 
-                        //li#queue
-                            //a(onclick="setvis('queue')") Queue
-                    //span upload thumbnail
                     
+                    button(class="optionButton", id="resize")
+                                label Resize view    
+                        
+                    button(class="optionButton", id="reset")
+                                label Reset view          
         -}
+        
+           table.full
+            tr
+            td.left
+                button(class="minimize" id="min0" key="0")
+                    label -
+            td.right
+                #vis0.assignmentContainer(display="block")
+        
 
 
 block footerjs

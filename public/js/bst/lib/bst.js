@@ -67,12 +67,14 @@ d3.bst = function (d3, canvasID, w, h) {
         vis = d3.select(canvasID).append("svg:svg")
             .attr("width", w )
             .attr("height", h )
+            .attr("id", "svg" + canvasID.substr(4))
+            .classed("svg", true)
             //.attr("height", h * 2) 
             .call(zoom)
             .call(drag);
 
         svgGroup = vis.append("svg:g")
-            .attr("transform", "translate(" + (mh + (w/2)) + "," + mw + ")");
+            .attr("transform", "translate(" + (mh + (w/2)) + "," + mw + ")")
         allSVG.push(svgGroup);
         
         defs = vis.append('svg:defs')
@@ -305,15 +307,5 @@ function mouseout() {
         .duration(750)
         .style("display","none")
 }
-
-//function reset() {
-//    zoom.scale(1);
-//    zoom.translate([(w/2), 0]);
-//    //svgGroup.attr("transform", "translate(0,0)scale(1,1)");
-//    svgGroup.attr("transform", "translate(" + zoom.translate() + ")scale(" + zoom.scale() + ")");
-//}
-
-
-
 
 };

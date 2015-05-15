@@ -14,6 +14,8 @@ d3.queue = function(d3, canvasID, w, h, data) {
         .attr("width", w)
         .attr("height", h)
         .style("margin-left", 25)
+        .attr("id", "svg" + canvasID.substr(4))
+        .classed("svg", true);
 
     var nodes = chart.selectAll("g")
         .data(data)

@@ -3,13 +3,44 @@
     border-style:solid;
     border-radius:25px;
     padding:6px;
-    margin-left:20px;
-    margin-right:20px;
-    width:70%;
+    margin-left:10px;
+    margin-right:30%;
+    width:75%;
     float: left;
-    margin-bottom: 10px;
+    margin-bottom: 5px;
+    margin-top: 5px;
     min-height: 350px;
 }
+
+.optionContainer{
+    border-color:steelblue;
+    border-style:solid;
+    border-radius:25px;
+    padding:6px;
+    margin-left:10px;
+    margin-right:30%;
+    width:75%;
+    float: left;
+    margin-bottom: 5px;
+    margin-top: 5px;
+    min-height: 350px;
+}
+
+.assignmentContainerMinimized {
+    border-color:steelblue;
+    border-style:solid;
+    border-radius:25px;
+    padding:6px;
+    margin-left:10px;
+    margin-right:30%;
+    width:75%;
+    float: left;
+    margin-bottom: 10px;
+    min-height: 25px;
+    height: 35px;
+    background-color: lightsteelblue;
+}
+
 
 #vis{
     width:70%;
@@ -20,11 +51,15 @@
 }
 
 .vis{
-    width:70%;
+    width:inherit;
     height:600px;
     position:absolute;
     overflow: scroll;
     float:left;
+}
+
+.svg {
+    
 }
 
 #optionContainer{
@@ -39,8 +74,39 @@
     border-radius:25px;
 }
 
-#reset {
+.optionButton {
     margin-left: 25%;
     width:50%;
+    padding: 2px;
+    border-radius: 5px;
+    margin-bottom: 5px;
+}
+
+
+.minimize {
+    position: relative;
+    background-color:lightsteelblue;
+    border-color:steelblue;
+    border-radius: 25px;
+    float: left;
+    margin-left: 5px;
+    height: 25px;
+    width: 25px;
+    line-height: 15px;
+    font-weight: bolder;
+}
+
+table.full {
+    width: 90%; 
+}
+
+td.left {
+    width: 3%;
+    vertical-align: middle;
+}
+
+td.right {
+    width: 97%;
+    vertical-align: middle;
 }
 

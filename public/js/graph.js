@@ -46,6 +46,8 @@ var defaultColors = d3.scale.category20(); //10 or 20
 vis = d3.select(canvasID).append("svg")
     .attr("width", width)
     .attr("height", height)
+    .attr("id", "svg" + canvasID.substr(4))
+    .classed("svg", true)
     .call(zoom);
 
 svgGroup = vis.append("g");
