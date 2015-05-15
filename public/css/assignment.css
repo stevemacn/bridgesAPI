@@ -2,9 +2,13 @@
     border-color:steelblue;
     border-style:solid;
     border-radius:25px;
-    padding:0px;
+    padding:6px;
     margin-left:20px;
     margin-right:20px;
+    width:70%;
+    float: left;
+    margin-bottom: 10px;
+    min-height: 350px;
 }
 
 #vis{
@@ -14,16 +18,29 @@
     overflow: scroll;
     float:left;
 }
+
+.vis{
+    width:70%;
+    height:600px;
+    position:absolute;
+    overflow: scroll;
+    float:left;
+}
+
 #optionContainer{
-    width:20%;
+    max-width:20%;
+    left: 75%;
     height:300px;
-    float:right;
+    position:fixed;
+    
 }
 #assignmentCanvas{
     min-width:801px;
+    border-radius:25px;
 }
 
 #reset {
     margin-left: 25%;
     width:50%;
 }
+

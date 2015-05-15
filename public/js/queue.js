@@ -10,7 +10,8 @@ d3.queue = function(d3, canvasID, w, h, data) {
     var defaultSize = 15;
 
     var chart = d3.select(canvasID).append("svg")
-        .attr("width", "50000")
+        //.attr("width", "50000")
+        .attr("width", w)
         .attr("height", h)
         .style("margin-left", 25)
 
@@ -80,6 +81,9 @@ d3.queue = function(d3, canvasID, w, h, data) {
         .attr("y1", h / 2)
         .attr("y2", h / 2)
         .style("stroke", "black")
+        .style("stroke-width", function(d) {
+                return strokeWidthRange(d.weight) || 1;
+            })
     
 function mouseover() {
 

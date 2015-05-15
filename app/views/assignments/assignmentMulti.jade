@@ -7,17 +7,12 @@ block css
                  
 block content                 
     include ../includes/header.jade
+  
     div#assignmentCanvas(overflow="auto") 
-        //#vis.assignmentContainer(overflow="hidden", display="block")
-        #vis0.assignmentContainer(display="block")
-        - var n = 0
-        ul
-          while n < extent
-            li= n++
+        
         -if (owner) {    
             #optionContainer.assignmentContainer  
                 div(style="margin:10px 10px 10px 10px;")
-                
                     label Share #{shared}
                     div.switch-toggle.well
                         input#public(type="radio", name="view",
@@ -40,6 +35,15 @@ block content
                             //a(onclick="setvis('queue')") Queue
                     //span upload thumbnail
                     
+        -}
+    
+    
+        -for (var i = 0; i < extent; i++) {
+
+        
+            //#vis.assignmentContainer(overflow="hidden", display="block")
+            div(id="vis" + i,display="block").assignmentContainer
+            //(display="block")
         -}
 
 
@@ -90,7 +94,7 @@ block footerjs
                 .css('color', '#eb6864')
                 .css('font-size', '24px')
                 .css('padding', '50px')
-    script(src = '/js/visconfig.js')
+    script(src = '/js/multiVisconfig.js')
     script.
         function toggleShare (selected) {
             var assignmentID = !{JSON.stringify(assignmentID)}

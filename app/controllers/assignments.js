@@ -14,7 +14,7 @@ exports.updateVistype = function (req, res, next) {
     Assignment
         .findOne({
             email:req.user.email,
-            assignmentID: req.params.assignmentID    
+            assignmentID: req.params.assignmentID
         })
         .exec(function (err, assignmentResult) {
             if (err) return next(err)
@@ -58,7 +58,7 @@ exports.upload = function (req, res, next) {
         return next("invalid syntax for raw body of request")
     }
 
-    var assignmentID = req.params.assignmentID
+    var assignmentID = req.params.assignmentID;
     var visualizationType = rawBody.visual;
     if(visualizationType != "tree")
 	visualizationType = "nodelink";
@@ -78,23 +78,36 @@ exports.upload = function (req, res, next) {
 
     function replaceAssignment (res, user, assignmentID) {
         
+        //if this assignment is #.0, remove all sub assignments from #
+        if(assignmentID.split('.')[1] == "0") {
+            Assignment.remove({
+                assignmentID: {$gte: Math.floor(parseFloat(assignmentID)), $lt: Math.floor(parseFloat(assignmentID) + 1) },
+                email: user.email        
+            })
+            .exec(function (err, resp) {
+            })
+        }
+        
         //remove previously uploaded assignment if exists
         Assignment.remove({
             assignmentID: assignmentID,
             email: user.email        
         })
         .exec(function (err, resp) {
+
             //create a new assignment in the database
             assignment = new Assignment()
             assignment.email = user.email
             assignment.vistype = visualizationType
             assignment.data = rawBody
             assignment.assignmentID = assignmentID
+            assignment.schoolID = req.params.schoolID;
+            assignment.classID = req.params.classID;
             assignment.save()
             
             //log new assignment
-            console.log("assignment added: "+user.email+
-                " "+assignmentID)
+            //console.log("assignment added: "+user.email+
+              //  " "+assignmentID)
             
             //report to client
             User.findOne({
@@ -111,13 +124,18 @@ var sessionUser = null;
 exports.next = null
 
 exports.show = function (req, res, next) {
-    
+    //var query = Assignment.find({'username': 'test'});
+    //console.log(query);
+
     this.next = next 
     var assignmentID = req.params.assignmentID
+    var schoolID = req.params.schoolID
+    var classID = req.params.classID
     var username = req.params.username
     var apikey = req.query.apikey 
     sessionUser = null
     if (typeof req.user != "undefined") sessionUser = req.user
+    
     User
         .findOne({username: username})
         .exec(function(err, usr){
@@ -137,18 +155,38 @@ exports.show = function (req, res, next) {
     function getAssignment (req, res, next, email, cb) {
         assignmentID = req.params.assignmentID
         next = next
+        
+        //db.products.find( { qty: { $gt: 25 } }, { item: 1, qty: 1 } )
         Assignment
-            .findOne({
-                email: email,
-                assignmentID: req.params.assignmentID 
-            })
-            .exec(function (err, assignment) {
-                if (err) return next(err) 
-                if (!assignment) return next("could not find assignment") 
+            .find({
+                email: email, 
+                assignmentID: {$gte: Math.floor(parseFloat(assignmentID)), $lt: Math.floor(parseFloat(assignmentID) + 1)}
                 
-                if (assignment.shared!==true) return cb(assignment)
-                return renderVis(res, assignment)         
             })
+            .exec(function(err, assignments) {
+                if (err) return next(err);
+                if (!assignments || assignments.length == 0) {
+                         return next("Could not find assignment " + assignmentID);   
+                } else if (assignments.length == 1) {
+                    //console.log(assignments[0]);
+                    return renderVis(res, assignments[0]);
+                } else 
+                    return renderMultiVis(res, assignments);
+            });
+           // console.log(assignmentID, username);
+        
+//        Assignment
+//            .findOne({
+//                email: email,
+//                assignmentID: req.params.assignmentID 
+//            })
+//            .exec(function (err, assignment) {
+//                if (err) return next(err) 
+//                if (!assignment) return next("could not find assignment") 
+//                
+//                if (assignment.shared!==true) return cb(assignment)
+//                //return renderVis(res, assignment)         
+//            })
     }
     
     
@@ -216,6 +254,8 @@ exports.show = function (req, res, next) {
             tree = tm.flatten(data)       
             return tree 
         }
+        
+        //for(var i = 0; i < assignment.length(); i++)
         data = assignment.data.toObject()
         data = data[0]
         
@@ -224,18 +264,79 @@ exports.show = function (req, res, next) {
         
         vistype = assignment.vistype 
         if ("error" in data) vistype = "error"  
-            
+
         return res.render ('assignments/assignment', {
             "title":"assignment",
             "user":sessionUser,
             "data":data,
             "assignmentID":assignmentID,
+            "schoolID":assignment.schoolID,
+            "classID":assignment.classID,
             "vistype":vistype,
             "shared":assignment.shared,
             "owner":owner
         })
     }
 
+    function renderMultiVis (res, assignments) {
+        var owner=false
+        var allAssigns = {};
+        if (sessionUser) {
+            if (sessionUser.email==assignments[0].email) owner = true; 
+        }
+    
+        //default visualization
+        //if (!assignments.vistype) assignments.vistype = "nodelink" 
+        //check data for flat vs unflattened representation
+        
+        var unflatten = function (data) { 
+            //check whether the data is already hierachical
+            if ("children" in data) return data
+            tm = treemill() 
+            tree = tm.unflatten(data)       
+            return tree
+        }
+    
+        var flatten = function (data) {
+            //check whether the data is already flat
+            if ("nodes" in data) return data 
+            tm = treemill() 
+            tree = tm.flatten(data)       
+            return tree 
+        }
+        
+        for(var i = 0; i < assignments.length; i++) {
+            data = assignments[i].data.toObject()[0]
+            //console.log("----DATA", data);
+            //data = data[0]
+        
+            if (assignments[i].vistype == "tree") data = unflatten(data)   
+            else data = flatten(data) 
+        
+            vistype = assignments[i].vistype 
+            if ("error" in data) vistype = "error" 
+            
+            allAssigns[i] = data;
+            
+            //console.log("reading ", i);
+
+        }
+        
+        return res.render ('assignments/assignmentMulti', {
+            "title":"assignmentMulti",
+            "user":sessionUser,
+            "data":allAssigns,
+            "extent":Object.keys(allAssigns).length,
+            "assignmentID":assignmentID,
+            "schoolID":assignments[0].schoolID,
+            "classID":assignments[0].classID,
+            "vistype":vistype,
+            "shared":assignments[0].shared,
+            "owner":owner
+        })
+    }
+
+    
 
 }
 
