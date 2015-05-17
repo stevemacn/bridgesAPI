@@ -2,11 +2,19 @@ extends ../includes/boilerplate.jade
 block css 
     link(rel='stylesheet', 
          href='/css/assignment.css')
-    link(rel='stylesheet', 
+    link(rel='stylesheet',
+        href='/css/dropzone.css')
+    link(rel='stylesheet',
              href='/components/css-toggle-switch/dist/toggle-switch.css')
                  
-block content                 
+block content
+    script(type="application/ecmascript" async="" src='/js/html2canvas.js')
+    script(type="application/ecmascript" async="" src='/js/FileSaver.js')
+    script(type="application/ecmascript" async="" src='/js/Blob.js')
+    script(type="application/ecmascript" async="" src='/js/dropzone.js')
+
     include ../includes/header.jade
+    script(src='/js/snapshoot.js')
     div#assignmentCanvas(overflow="auto") 
         #vis.assignmentContainer(overflow="hidden", display="block")
         -if (owner) {    
@@ -15,10 +23,10 @@ block content
                     label Share #{shared}
                     div.switch-toggle.well
                         input#public(type="radio", name="view",
-                            onclick="toggleShare(true)")
+                            onclick="toggleShare(false)")
                         label(for="public") Public 
                         input#private(type="radio", name="view",
-                            onclick="toggleShare(false)")
+                            onclick="toggleShare(true)")
                         label(for="private") Private 
                         a.btn.btn-primary
                     ul.nav.nav-pills.nav-stacked
@@ -30,8 +38,19 @@ block content
                             a(onclick="setvis('tree')") Tree 
                         li#queue
                             a(onclick="setvis('queue')") Queue
-                    span upload thumbnail
-                    
+                    //span upload thumbnail
+
+                    //form(name="canvas_options")
+                    //    label Filename:
+                    //                    input(type="text", class="filename", id="canvas-filename", placeholder="doodle").png
+                    //    input(type="submit", value="Save")
+                    //    input(type="button", id="canvas-clear", value="Clear")
+                    div
+                        a.btn.btn-primary(id="saveButton" onclick="snapImage()")
+                            label(for="saveButton") Snapshoot
+                    form(action="users/sessions" class="dropzone" id="my-awesome-dropzone")
+
+
         -}
 
 
@@ -53,8 +72,8 @@ block footerjs
     script.
         var owner = "#{owner}"
         if (owner==="false") {
-             $("#vis").css("width","90%") 
-        } 
+             $("#vis").css("width","90%")
+        }
         var shared = "#{shared}"
         $("#private").prop('checked',false)
         $("#public").prop('checked',false)
@@ -68,7 +87,7 @@ block footerjs
         
         var assignmentID = !{JSON.stringify(assignmentID)}
     - if (vistype == "nodelink")
-        script(src = '/js/graph.js')
+        script(src = '/js/graph_multi.js')
     - else if (vistype == "tree")
         link(rel='stylesheet', href='/css/vis/tree.css')
         script(src = '/js/bst/lib/bst.js')
@@ -109,4 +128,6 @@ block footerjs
                 console.log("Error: "+errmsg.error) 
             });
         }
+
+
         

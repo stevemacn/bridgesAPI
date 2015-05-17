@@ -4,6 +4,8 @@
             a(href="/").navbar-brand Bridges
         .navbar-header 
             a(href="http://bridgesuncc.github.io").navbar-brand Documentation
+        .navbar-header 
+
         .navbar-collapse.collapse
             ul.nav.navbar-nav.navbar-right
              if (!user)
@@ -11,7 +13,33 @@
                     a(href="/login") Log In 
              if (user)
                 li
-                    a(href="/home")=user.username
+                            form(action='/assignments/13.01'+'/', method='post').form-horizontal
+                                ul.nav.navbar-nav
+                                    li
+                                        .fieldset
+                                            div.col-lg-25
+                                                legend Public Projects
+                                                input(type="hidden", name="_csrf", value=csrftoken)
+                                    li
+                                        .form-group
+                                            div.col-lg-11
+                                                input#assignments.form-control(
+                                                    type='number',
+                                                    min='0.00',
+                                                    name='assignmentID',
+                                                    placeholder='Assignment ID')
+                                    li
+                                        .form-group
+                                            div.col-lg-10
+                                                input#submit(type='submit', value='Search').btn.btn-primary
+                                            //a(href="/assignments/"+assignments.value()+"/"+user.username) Search
+                                    //script(console.log('hi'))
+                li
+                li
+                    a(href="/username/"+user.username) My Projects
+                li
+                    //a(href="/home")=user.username
+                    a(href="/home") Profile
                 li
                     a#log(href="/logout") Log Out   
-.container.clearfix
+        .container.clearfix
