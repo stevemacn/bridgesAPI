@@ -10,6 +10,8 @@ var Assignment = new Schema ({
     username:       {type: String, default: ''},
     email:          { type: String, default: ''},
     assignmentID:   {type: String, default: ''},
+    classID:        {type: String, default: ''},
+    schoolID:       {type: String, default: ''},
     dateCreated:    {type: Date, default: Date.now()},
     shared:         {type: Boolean, default: 'false'},//public or private
     vistype:        {type: String, default:'nodelink'},

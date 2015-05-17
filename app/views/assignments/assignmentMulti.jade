@@ -2,54 +2,50 @@ extends ../includes/boilerplate.jade
 block css 
     link(rel='stylesheet', 
          href='/css/assignment.css')
-    link(rel='stylesheet',
-        href='/css/dropzone.css')
-    link(rel='stylesheet',
+    link(rel='stylesheet', 
              href='/components/css-toggle-switch/dist/toggle-switch.css')
                  
-block content
-    script(type="application/ecmascript" async="" src='/js/html2canvas.js')
-    script(type="application/ecmascript" async="" src='/js/FileSaver.js')
-    script(type="application/ecmascript" async="" src='/js/Blob.js')
-    script(type="application/ecmascript" async="" src='/js/dropzone.js')
-
+block content                 
     include ../includes/header.jade
-    script(src='/js/snapshoot.js')
+  
     div#assignmentCanvas(overflow="auto") 
-     
+        
         -if (owner) {    
-            #optionContainer.optionContainer  
+            #optionContainer.optionContainer
                 div(style="margin:10px 10px 10px 10px;")
-                
                     label Share #{shared}
                     div.switch-toggle.well
                         input#public(type="radio", name="view",
-                            onclick="toggleShare(false)")
+                            onclick="toggleShare(true)")
                         label(for="public") Public 
                         input#private(type="radio", name="view",
-                            onclick="toggleShare(true)")
+                            onclick="toggleShare(false)")
                         label(for="private") Private 
                         a.btn.btn-primary
-                    div
-                        a.btn.btn-primary(id="saveButton" onclick="snapImage()")
-                            label(for="saveButton") Snapshoot
-                    form(action="users/sessions" class="dropzone" id="my-awesome-dropzone")
-
+                   
                     button(class="optionButton", id="resize")
-                                label Resize view    
-                        
-                    button(class="optionButton", id="reset")
-                                label Reset view          
+                                label Resize view
+                     button(class="optionButton", id="reset")
+                                label Reset view
         -}
-        
-           table.full
-            tr
-            td.left
-                button(class="minimize" id="min0" key="0")
-                    label -
-            td.right
-                #vis0.assignmentContainer(display="block")
-        
+    
+        table.full
+                tr
+                td.left
+                    button(class="minimize" id="min")
+                        label -
+                td.right
+                
+        -for (var i = 0; i < extent; i++) {
+             table.full
+                tr
+                td.left
+                    button(class="minimize" id="min" + i key=i)
+                        label -
+           
+                td.right
+                    div(id="vis" + i,display="block").assignmentContainer
+        -}
 
 
 block footerjs
@@ -70,8 +66,8 @@ block footerjs
     script.
         var owner = "#{owner}"
         if (owner==="false") {
-             $("#vis").css("width","90%")
-        }
+             $("#vis").css("width","90%") 
+        } 
         var shared = "#{shared}"
         $("#private").prop('checked',false)
         $("#public").prop('checked',false)
@@ -85,7 +81,7 @@ block footerjs
         
         var assignmentID = !{JSON.stringify(assignmentID)}
     - if (vistype == "nodelink")
-        script(src = '/js/graph_multi.js')
+        script(src = '/js/graph.js')
     - else if (vistype == "tree")
         link(rel='stylesheet', href='/css/vis/tree.css')
         script(src = '/js/bst/lib/bst.js')
@@ -99,7 +95,7 @@ block footerjs
                 .css('color', '#eb6864')
                 .css('font-size', '24px')
                 .css('padding', '50px')
-    script(src = '/js/visconfig.js')
+    script(src = '/js/multiVisconfig.js')
     script.
         function toggleShare (selected) {
             var assignmentID = !{JSON.stringify(assignmentID)}
@@ -126,6 +122,4 @@ block footerjs
                 console.log("Error: "+errmsg.error) 
             });
         }
-
-
         
