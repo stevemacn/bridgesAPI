@@ -1,7 +1,7 @@
 
 function snapImage() {
   $("#saveButton").click(function() {
-                      html2canvas($("#vis"), {
+                      html2canvas($("#vis1"), {
                                   onrendered: function(canvas) {
                                   var theCanvas = canvas;
                                  // document.body.appendChild(canvas);
