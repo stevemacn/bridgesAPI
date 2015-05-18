@@ -7,12 +7,12 @@ block css
                  
 block content                 
     include ../includes/header.jade
+  
     div#assignmentCanvas(overflow="auto") 
-     
+        
         -if (owner) {    
-            #optionContainer.optionContainer  
+            #optionContainer.optionContainer
                 div(style="margin:10px 10px 10px 10px;")
-                
                     label Share #{shared}
                     div.switch-toggle.well
                         input#public(type="radio", name="view",
@@ -22,22 +22,30 @@ block content
                             onclick="toggleShare(false)")
                         label(for="private") Private 
                         a.btn.btn-primary
-                    
+                   
                     button(class="optionButton", id="resize")
-                                label Resize view    
-                        
-                    button(class="optionButton", id="reset")
-                                label Reset view          
+                                label Resize view
+                     button(class="optionButton", id="reset")
+                                label Reset view
         -}
-        
-           table.full
-            tr
-            td.left
-                button(class="minimize" id="min0" key="0")
-                    label -
-            td.right
-                #vis0.assignmentContainer(display="block")
-        
+    
+        table.full
+                tr
+                td.left
+                    button(class="minimize" id="min")
+                        label -
+                td.right
+                
+        -for (var i = 0; i < extent; i++) {
+             table.full
+                tr
+                td.left
+                    button(class="minimize" id="min" + i key=i)
+                        label -
+           
+                td.right
+                    div(id="vis" + i,display="block").assignmentContainer
+        -}
 
 
 block footerjs
@@ -87,7 +95,7 @@ block footerjs
                 .css('color', '#eb6864')
                 .css('font-size', '24px')
                 .css('padding', '50px')
-    script(src = '/js/visconfig.js')
+    script(src = '/js/multiVisconfig.js')
     script.
         function toggleShare (selected) {
             var assignmentID = !{JSON.stringify(assignmentID)}

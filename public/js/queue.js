@@ -3,13 +3,19 @@
 
 d3.queue = function(d3, canvasID, w, h, data) {
 
+    
+    //d3.select("#reset").on("click", reset);
+    
     var spacing = 140//w / data.length;
     var defaultSize = 15;
 
     var chart = d3.select(canvasID).append("svg")
-        .attr("width", "50000")
+        //.attr("width", "50000")
+        .attr("width", w)
         .attr("height", h)
         .style("margin-left", 25)
+        .attr("id", "svg" + canvasID.substr(4))
+        .classed("svg", true);
 
     var nodes = chart.selectAll("g")
         .data(data)
@@ -47,8 +53,8 @@ d3.queue = function(d3, canvasID, w, h, data) {
             return 15 + size
         })
         .attr("dy", ".35em")
-
-    var insertLinebreaks = function (d, i) {
+    
+     var insertLinebreaks = function (d, i) {
         var el = d3.select(this);
         var words = d3.select(this).text().split('\n');
         el.text('');
@@ -61,11 +67,6 @@ d3.queue = function(d3, canvasID, w, h, data) {
     };
 
    svg.selectAll('text').each(insertLinebreaks);
-	
-
-
-
-
 
     //we don't want to process the first node
     data.pop()
@@ -82,8 +83,10 @@ d3.queue = function(d3, canvasID, w, h, data) {
         .attr("y1", h / 2)
         .attr("y2", h / 2)
         .style("stroke", "black")
-
-
+        .style("stroke-width", function(d) {
+                return strokeWidthRange(d.weight) || 1;
+            })
+    
 function mouseover() {
 
     d3.select(this).select("text").transition()
@@ -114,6 +117,16 @@ function mouseout() {
     */  
 }
 
-
-
+//// zoom function
+//function zoomHandler() {
+//    svgGroup.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
+//}
+//    
+//function reset() {
+//    zoom.scale(1);
+//    zoom.translate([0, 0]);
+//    //svgGroup.attr("transform", "translate(0,0)scale(1,1)");
+//    svgGroup.attr("transform", "translate(" + zoom.translate() + ")scale(" + zoom.scale() + ")");
+//}
+    
 }

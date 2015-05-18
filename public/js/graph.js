@@ -1,19 +1,27 @@
 //based loosely on bostock's example and 
 //http://bl.ocks.org/d3noob/5141278
 
+d3.graph = function(d3, canvasID, w, h, data) {
+
+    d3.select("#reset").on("click", reset);
+
+     //defaults
+    var graph = {},
+        //mw = 20, mh = 50,
+        mw = 0, mh = 0,
+        w = w || 1280, h = h || 800,
+        i = 0,
+        canvasID = canvasID; //canvasID must have hash like "#vis" or "#canvas"
+    var vis, svgGroup, defs;
+    var count = 0
+    
 var nodes = data.nodes
 var links = data.links
-var count = 0
+
 for (i in links) {
    if (count<links[i].value) count = links[i].value 
 }
-
-var ele = document.getElementById("vis"), 
-    //width = ele.offsetWidth+1200
-    //height = ele.offsetHeight+1200
-    width = ele.clientWidth - 15,
-    height= ele.clientHeight - 15;
-
+   
 var force = d3.layout.force()
     .charge([-250])
     .linkDistance([50])
@@ -22,26 +30,30 @@ var force = d3.layout.force()
     .links(links)
     .start();
 
-d3.select("#reset").on("click", reset);
-
 var drag = force.drag();
 drag.on("dragstart",dragstart);
-
-var zoom = d3.behavior.zoom()
-    .scaleExtent([0.1,5])
-    .on("zoom", zoomHandler);
-    zoom.scale(1);
+    
+    // error when zooming directly after pan on OSX     
+    // https://github.com/mbostock/d3/issues/2205
+ var zoom = d3.behavior.zoom()
+        .scaleExtent([0.1,5])
+        .on("zoom", zoomHandler);
+        zoom.scale(1);
+    allZoom.push(zoom);
 
 var defaultColors = d3.scale.category20(); //10 or 20
 
-var svg = d3.select("#vis").append("svg")
+vis = d3.select(canvasID).append("svg")
     .attr("width", width)
     .attr("height", height)
+    .attr("id", "svg" + canvasID.substr(4))
+    .classed("svg", true)
     .call(zoom);
 
-var svgGroup = svg.append("g");
+svgGroup = vis.append("g");
+    allSVG.push(svgGroup);
 
-svg.append("svg:defs").selectAll("marker")
+vis.append("svg:defs").selectAll("marker")
     .data(["end"])// Different path types defined here
     .enter().append("svg:marker")  
     .attr("id", String)
@@ -67,7 +79,7 @@ var link = svgGroup.append("svg:g").selectAll("path")
     .attr("class", "link")
     .attr("marker-end", "url(#end)")
     .style("stroke-width", function (d) {
-        return d.width || "1.5"
+        return strokeWidthRange(d.weight) || 1;
     })
     .style("stroke", function (d) {
         return d.color || "black"
@@ -199,11 +211,13 @@ function dragstart(d) {
     force.start();
 }
 
-function reset() {
-    zoom.scale(1);
-    zoom.translate([0, 0]);
-    //svgGroup.attr("transform", "translate(0,0)scale(1,1)");
-    svgGroup.attr("transform", "translate(" + zoom.translate() + ")scale(" + zoom.scale() + ")");
-}
+//function reset() {
+//    console.log("resetting");
+//    zoom.scale(1);
+//    zoom.translate([0, 0]);
+//    //svgGroup.attr("transform", "translate(0,0)scale(1,1)");
+//    svgGroup.attr("transform", "translate(" + zoom.translate() + ")scale(" + zoom.scale() + ")");
+//}
     
+};
 
