@@ -163,6 +163,9 @@ exports.show = function (req, res, next) {
                 assignmentID: {$gte: Math.floor(parseFloat(assignmentID)), $lt: Math.floor(parseFloat(assignmentID) + 1)}
                 
             })
+            .sort({ 
+                assignmentID: 1 
+            })
             .exec(function(err, assignments) {
                 if (err) return next(err);
                 if (!assignments || assignments.length == 0) {
