@@ -103,26 +103,22 @@ module.exports = function(app, passport, streamable) {
         hasAccess, assignments.updateVisibility, handleError)
     app.post('/assignments/:assignmentID/vistype/:value',
         hasAccess, assignments.updateVistype, handleError)
-    app.post('/assignments/:assignmentID/:username',
-             hasAccess, assignments.updateVistype, handleError)
+    app.get('/assignments/:assignmentID/:username',
+             hasAccess, assignments.show, handleError)
     app.get('/assignments/:assignmentID/:username',
         assignments.show, handleError)
-    //app.get('/assignments/:username/:assignmentNumber', assignments.viewD3)
 
     //gallery routes
     var gallery = require('../app/controllers/gallery.js')
     app.get('/assignments/:assignmentNumber', gallery.view, handleError)
-    //app.get('/assignments/:assignmentID', gallery.view)
     
     //gallery routes
     var gallery_2 = require('../app/controllers/gallery_2.js')
     app.get('/username/:userNameRes', gallery_2.view, handleError)
-    //app.get('/username/', gallery_2.view, handleError)
-    //app.get('/assignments/:assignmentID', gallery.view)
 
     app.post('/users/session',
         passport.authenticate('local-log', {
-            successRedirect: '/username/',//+ isLoggedIn,//hasAccess.User,//+passport.use.username,  //'/home'
+            successRedirect: '/username/',
             failureRedirect: '/login',
             failureFlash: true
         }))

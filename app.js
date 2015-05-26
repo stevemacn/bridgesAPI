@@ -3,6 +3,7 @@ var express = require('express')
     , fs = require('fs')
     , passport = require('passport')
     , config = require('./config/config')
+    , thumb = require('./config/thumb.js')
 
 //Set up database
 var mongoose = require('mongoose')
