@@ -25,13 +25,13 @@ exports.view = function(req, res) {
     Assignment
         .find({
             assignmentID: req.params.assignmentNumber,
-            shared: true
+            shared: false
         })
         .exec(function(err, assignmentResult) {
             if (err) return next(err)
                 
             if (!assignmentResult) return next("could not find " +
-                "assignemnt " + req.params.assignmentNumber)
+                "assignment " + req.params.assignmentNumber)
 
             var users = []
             for (i = 0; i < assignmentResult.length; i++)

@@ -3,7 +3,6 @@ var express = require('express')
   , mongoStore = require('connect-mongo')(express)
   , pkg = require('../package.json')
   , flash = require('connect-flash')
-  , nr = require('newrelic')
 
 module.exports = function (app, config, passport) {
 
