@@ -4,7 +4,6 @@ var mongoose = require('mongoose')
     , Assignment = mongoose.model("Assignment")
 //Setup for logging in via twitter
 var login = function (req, res) {
-    
     if (req.session.returnTo) {
         res.redirect(req.session.returnTo)
         delete req.session.returnTo
@@ -38,7 +37,6 @@ exports.login = function (req, res) {
         var user = ""
 
     msg = req.flash('loginMessage')
-    
     res.render("users/login", {
         title: 'Login',
         user: user,
@@ -54,11 +52,10 @@ exports.logout = function (req, res) {
 }
 
 exports.display = function (req, res) {
-    
+    console.log("DISPLAY");
     if (!req.user) return res.redirect("login")
     
     user = req.user
-
     Account
         .findOne({ email : user.email })
         .exec(function (err, accts) {

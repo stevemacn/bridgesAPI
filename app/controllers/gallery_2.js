@@ -4,8 +4,9 @@ Account = mongoose.model('Account'),
 Assignment = mongoose.model('Assignment')
 
 exports.view = function(req, res) {
-    
+    console.log("Gallery_2.js");
     var getAssignments = function(assig, assignmentsRes, cb) {
+        console.log(assig, assignmentsRes);
         if (assig.length == 0) return cb(assignmentsRes)
             var assID = assig.pop()
             Assignment
@@ -21,13 +22,33 @@ exports.view = function(req, res) {
 
     if (!req.params.userNameRes)
         return next("no user name provided")
-        
+      
+        //Look up user to get email; assignments are associated with email
+        User
+            .findOne({
+                username: req.params.userNameRes,
+            })
+            .exec(function(err, userResult){
+                if(err) return next(err)
+                
+                if(!userResult) return next("could not find user")
+                
+                
+//            })
+
         Assignment
             .find({
-                  email: req.params.userNameRes,
+                  //email: req.params.userNameRes,
+                email: userResult.email,
+                assignmentID: /.0$/ //Search for assignments with whole numbers
                   //shared: true
             })
+//            .limit( 5 )   //Do we want to load every single whole number assignment, or just some? Query might be time intensive. 
+            .sort({ 
+                assignmentID: -1 
+            })
             .exec(function(err, assignmentResult) {
+                console.log(err);
                 if (err) return next(err)
 
                 if (!assignmentResult) return next("could not find " +
@@ -47,4 +68,5 @@ exports.view = function(req, res) {
                                             })
                           })
               })
+        })
 }

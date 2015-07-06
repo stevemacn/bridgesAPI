@@ -30,6 +30,7 @@ module.exports = function(app, passport, streamable) {
 
     //authentication
     var isLoggedIn = function(req, res, next) {
+
         if (req.isAuthenticated()){
             //res.redirect("/username/"+req.user.username)
             //res.redirect("/home/")
@@ -40,9 +41,9 @@ module.exports = function(app, passport, streamable) {
     
     var isLoggedInGallery = function(req, res, next) {
         if (req.isAuthenticated()){
-            res.redirect("/username/"+req.user.username)
+            return res.redirect("/username/"+req.user.username)
             //res.redirect("/home/")
-            return next()
+            //return next()
         }
         res.redirect("/login")
     }
