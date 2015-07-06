@@ -25,7 +25,7 @@ exports.view = function(req, res) {
     Assignment
         .find({
             assignmentID: req.params.assignmentNumber,
-            shared: true
+            shared: false
         })
         .exec(function(err, assignmentResult) {
             if (err) return next(err)

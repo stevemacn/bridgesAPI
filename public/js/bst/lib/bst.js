@@ -21,7 +21,6 @@ d3.bst = function (d3, canvasID, w, h) {
 
     //defaults
     var bst = {},
-        //mw = 20, mh = 50,
         mw = 0, mh = 0,
         w = w || 1280, h = h || 800,
         i = 0,

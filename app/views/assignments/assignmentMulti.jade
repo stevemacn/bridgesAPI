@@ -5,9 +5,14 @@ block css
     link(rel='stylesheet', 
              href='/components/css-toggle-switch/dist/toggle-switch.css')
                  
-block content                 
+block content   
+    script(type="application/ecmascript" async="" src='/js/html2canvas.js')
+    script(type="application/ecmascript" async="" src='/js/FileSaver.js')
+    script(type="application/ecmascript" async="" src='/js/Blob.js')
+    script(type="application/ecmascript" async="" src='/js/dropzone.js')
+    
     include ../includes/header.jade
-  
+    script(src='/js/snapshoot.js')
     div#assignmentCanvas(overflow="auto") 
         
         -if (owner) {    
@@ -22,11 +27,18 @@ block content
                             onclick="toggleShare(false)")
                         label(for="private") Private 
                         a.btn.btn-primary
-                   
+                
+                div
                     button(class="optionButton", id="resize")
                                 label Resize view
-                     button(class="optionButton", id="reset")
+                    
+                    button(class="optionButton", id="reset")
                                 label Reset view
+                
+                div
+                    a.btn.btn-primary(id="saveButton" onclick="snapImage()")
+                            label(for="saveButton") Snapshoot
+                    form(action="users/sessions" class="dropzone" id="my-awesome-dropzone")
         -}
     
         table.full
