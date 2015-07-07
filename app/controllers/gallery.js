@@ -25,14 +25,18 @@ exports.view = function(req, res) {
     Assignment
         .find({
             assignmentID: req.params.assignmentNumber,
-            shared: false
+            shared: false //? should this not be true?
         })
         .exec(function(err, assignmentResult) {
             if (err) return next(err)
                 
             if (!assignmentResult) return next("could not find " +
                 "assignemnt " + req.params.assignmentNumber)
-
+            
+            if(assignmentResult.length <= 0) {
+                return res.redirect('/username/'+req.user.username);
+            }
+            
             var users = []
             for (i = 0; i < assignmentResult.length; i++)
                 users.push(assignmentResult[i].email)

@@ -123,8 +123,31 @@ module.exports = function(app, passport, streamable) {
             failureRedirect: '/login',
             failureFlash: true
         }))
-    //, 
-    //users.session)
+    
+    // -------------------------------------------------------
+    //
+    //  Search Routes
+    //
+    // -------------------------------------------------------
+    
+    app.post('/search', function(req, res, next) {
+        var id = req.body.assignmentID;
+        if(id.indexOf(".") < 0) id+=".0";
+        res.redirect('/assignments/'+id);
+    });
+    
+    
+    app.get('/search/:assignmentID', function(req, res) {
+        console.log(req.params.assignmentID);
+        res.redirect('/assignments/'+req.params.assignmentID);
+    });
+    
+    
+    // -------------------------------------------------------
+    //
+    //  Authentication Routes
+    //
+    // -------------------------------------------------------
 
     app.get('/connect/twitter',
         passport.authorize('twitter-authz', {

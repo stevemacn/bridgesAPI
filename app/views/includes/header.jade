@@ -15,7 +15,8 @@
                     a(href="/login") Log In 
              if (user)
                 li.centerForm
-                    form(action='/assignments/'+assignmentID+'/'+user.username, method='post').form-horizontal
+                   
+                    form(action='/search/', method='post').form-horizontal
                         ul.nav.navbar-nav
                             li
                                 .fieldset
@@ -29,7 +30,8 @@
                                             type='number',
                                             min='0.00',
                                             name='assignmentID',
-                                            placeholder='Assignment ID')
+                                            placeholder='Assignment ID',
+                                            required)
                             li
                                 .form-group
                                     div.col-lg-10

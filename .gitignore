@@ -36,3 +36,5 @@ config/keys.json
 ehthumbs.db
 Thumbs.db
 
+
+public/js/oldGraph.js
