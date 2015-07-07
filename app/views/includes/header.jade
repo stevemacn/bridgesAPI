@@ -14,13 +14,13 @@
                 li 
                     a(href="/login") Log In 
              if (user)
-                li
+                li.centerForm
                     form(action='/assignments/'+assignmentID+'/'+user.username, method='post').form-horizontal
                         ul.nav.navbar-nav
                             li
                                 .fieldset
                                     div.col-lg-25
-                                        legend Public Projects
+                                        legend.padRight Public Projects
                                         input(type="hidden", name="_csrf", value=csrftoken)
                             li
                                 .form-group
