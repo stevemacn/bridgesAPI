@@ -4,7 +4,7 @@ Account = mongoose.model('Account'),
 Assignment = mongoose.model('Assignment')
 
 exports.view = function(req, res) {
-    console.log("Gallery_2.js");
+    //console.log("Gallery_2.js");
     var getAssignments = function(assig, assignmentsRes, cb) {
         //console.log(assig, assignmentsRes);
         if (assig.length == 0) return cb(assignmentsRes)

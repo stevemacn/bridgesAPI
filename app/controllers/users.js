@@ -52,7 +52,7 @@ exports.logout = function (req, res) {
 }
 
 exports.display = function (req, res) {
-    console.log("DISPLAY");
+    //console.log("DISPLAY");
     if (!req.user) return res.redirect("login")
     
     user = req.user
