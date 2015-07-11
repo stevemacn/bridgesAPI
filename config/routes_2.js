@@ -115,7 +115,7 @@ module.exports = function(app, passport, streamable) {
     
     //gallery routes
     var gallery_2 = require('../app/controllers/gallery_2.js')
-    app.get('/username/:userNameRes', gallery_2.view, handleError)
+    app.get('/username/:userNameRes', isLoggedIn, gallery_2.view, handleError)
 
     app.post('/users/session',
         passport.authenticate('local-log', {
@@ -132,13 +132,13 @@ module.exports = function(app, passport, streamable) {
     
     app.post('/search', function(req, res, next) {
         var id = req.body.assignmentID;
-        if(id.indexOf(".") < 0) id+=".0";
+//        if(id.indexOf(".") < 0) id+=".00";
         res.redirect('/assignments/'+id);
     });
     
     
     app.get('/search/:assignmentID', function(req, res) {
-        console.log(req.params.assignmentID);
+        //console.log(req.params.assignmentID);
         res.redirect('/assignments/'+req.params.assignmentID);
     });
     

@@ -4,7 +4,7 @@ Account = mongoose.model('Account'),
 Assignment = mongoose.model('Assignment')
 
 exports.view = function(req, res) {
-    //console.log("Gallery_2.js");
+ 
     var getAssignments = function(assig, assignmentsRes, cb) {
         //console.log(assig, assignmentsRes);
         if (assig.length == 0) return cb(assignmentsRes)
@@ -40,7 +40,7 @@ exports.view = function(req, res) {
             .find({
                   //email: req.params.userNameRes,
                 email: userResult.email,
-                assignmentID: /.0$/ //Search for assignments with whole numbers
+                $or: [{assignmentID: /.00$/}, {assignmentID: /.0$/}] //Search for assignments with whole numbers
                   //shared: true
             })
 //            .limit( 5 )   //Do we want to load every single whole number assignment, or just some? Query might be time intensive. 
@@ -48,7 +48,6 @@ exports.view = function(req, res) {
                 assignmentID: -1 
             })
             .exec(function(err, assignmentResult) {
-                console.log(err);
                 if (err) return next(err)
 
                 if (!assignmentResult) return next("could not find " +

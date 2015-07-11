@@ -99,6 +99,10 @@ exports.upload = function (req, res, next) {
         
         //if(assignmentID.split('.')[1] == "0") {
         if (((parseFloat(assignmentID)/1.0) % 1.0) == 0) {
+            if(assignmentID.split('.')[1] == "0")
+                //assignmentID = assignmentID.substr(0, assignmentID.indexOf('.') + 2);
+                assignmentID += "0";
+            
             Assignment.remove({
                 assignmentID: {$gte: Math.floor(parseFloat(assignmentID)), $lt: Math.floor(parseFloat(assignmentID) + 1) },
                 email: user.email        
