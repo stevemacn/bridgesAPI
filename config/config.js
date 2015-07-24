@@ -29,7 +29,8 @@ var config = {
       name: 'bridgesapi'
     },
     port: 3000,
-    db: 'mongodb://localhost/bridgesapi-production'
+    //db: 'mongodb://localhost/bridgesapi-production'
+    db: 'mongodb://ds061228.mongolab.com:61228/heroku_app27208241'
   }
 
 
