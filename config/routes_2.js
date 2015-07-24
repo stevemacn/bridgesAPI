@@ -30,7 +30,6 @@ module.exports = function(app, passport, streamable) {
 
     //authentication
     var isLoggedIn = function(req, res, next) {
-
         if (req.isAuthenticated()){
             //res.redirect("/username/"+req.user.username)
             //res.redirect("/home/")
@@ -41,9 +40,9 @@ module.exports = function(app, passport, streamable) {
     
     var isLoggedInGallery = function(req, res, next) {
         if (req.isAuthenticated()){
-            return res.redirect("/username/"+req.user.username)
+            res.redirect("/username/"+req.user.username)
             //res.redirect("/home/")
-            //return next()
+            return next()
         }
         res.redirect("/login")
     }
@@ -115,7 +114,7 @@ module.exports = function(app, passport, streamable) {
     
     //gallery routes
     var gallery_2 = require('../app/controllers/gallery_2.js')
-    app.get('/username/:userNameRes', isLoggedIn, gallery_2.view, handleError)
+    app.get('/username/:userNameRes', gallery_2.view, handleError)
 
     app.post('/users/session',
         passport.authenticate('local-log', {
@@ -123,31 +122,8 @@ module.exports = function(app, passport, streamable) {
             failureRedirect: '/login',
             failureFlash: true
         }))
-    
-    // -------------------------------------------------------
-    //
-    //  Search Routes
-    //
-    // -------------------------------------------------------
-    
-    app.post('/search', function(req, res, next) {
-        var id = req.body.assignmentID;
-//        if(id.indexOf(".") < 0) id+=".00";
-        res.redirect('/assignments/'+id);
-    });
-    
-    
-    app.get('/search/:assignmentID', function(req, res) {
-        //console.log(req.params.assignmentID);
-        res.redirect('/assignments/'+req.params.assignmentID);
-    });
-    
-    
-    // -------------------------------------------------------
-    //
-    //  Authentication Routes
-    //
-    // -------------------------------------------------------
+    //, 
+    //users.session)
 
     app.get('/connect/twitter',
         passport.authorize('twitter-authz', {
