@@ -6,7 +6,7 @@
             a(href="http://bridgesuncc.github.io").navbar-brand Documentation
         .navbar-header 
             div
-                -console.log("hi")
+                
             div
         .navbar-collapse.collapse
             ul.nav.navbar-nav.navbar-right
@@ -14,13 +14,14 @@
                 li 
                     a(href="/login") Log In 
              if (user)
-                li
-                    form(action='/assignments/'+assignmentID+'/'+user.username, method='post').form-horizontal
+                li.centerForm
+                   
+                    form(action='/search/', method='post').form-horizontal
                         ul.nav.navbar-nav
                             li
                                 .fieldset
                                     div.col-lg-25
-                                        legend Public Projects
+                                        legend.padRight Public Projects
                                         input(type="hidden", name="_csrf", value=csrftoken)
                             li
                                 .form-group
@@ -29,7 +30,8 @@
                                             type='number',
                                             min='0.00',
                                             name='assignmentID',
-                                            placeholder='Assignment ID')
+                                            placeholder='Assignment ID',
+                                            required)
                             li
                                 .form-group
                                     div.col-lg-10
