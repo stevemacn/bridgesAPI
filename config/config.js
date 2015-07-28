@@ -10,8 +10,8 @@ var config = {
     app: {
       name: 'bridgesapi'
     },
-    port: 5000,
-    db: 'mongodb://localhost/bridgesapi-development'
+    port: 3000,
+    db: 'mongodb://heroku_app27208241:lg0jm38s5r1pbl0g6e68fcbiih@ds061228.mongolab.com:61228/heroku_app27208241'
   },
 
   test: {
@@ -28,9 +28,9 @@ var config = {
     app: {
       name: 'bridgesapi'
     },
-    port: 5000,
+    port: 3000,
     //db: 'mongodb://localhost/bridgesapi-production'
-    db: 'mongodb://ds061228.mongolab.com:61228/heroku_app27208241'
+    db: db: 'mongodb://heroku_app27208241:lg0jm38s5r1pbl0g6e68fcbiih@ds061228.mongolab.com:61228/heroku_app27208241'
   }
 
 
