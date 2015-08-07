@@ -1,9 +1,12 @@
 extends ../includes/boilerplate.jade
 block css 
-    link(rel='stylesheet', 
+    link(rel='stylesheet',      
+         href='/css/header.css')
+    link(rel='stylesheet',      
          href='/css/assignment.css')
     link(rel='stylesheet',
         href='/css/dropzone.css')
+<<<<<<< HEAD
     link(rel='stylesheet',
              href='/components/css-toggle-switch/dist/toggle-switch.css')
                  
@@ -14,6 +17,20 @@ block content
     script(type="application/ecmascript" async="" src='/js/dropzone.js')
 
     include ../includes/header.jade
+=======
+    link(rel='stylesheet', 
+             href='/components/css-toggle-switch/dist/toggle-switch.css')
+                 
+block content
+    include ../includes/header.jade
+
+    script(type="application/ecmascript" async="" src='/js/html2canvas.js')
+    script(type="application/ecmascript" async="" src='/js/FileSaver.js')
+    script(type="application/ecmascript" async="" src='/js/Blob.js')
+    script(type="application/ecmascript" async="" src='/js/dropzone.js')
+    
+    
+>>>>>>> ef87440e10bb169ef7fad4cac97180768f51ddcf
     script(src='/js/snapshoot.js')
     div#assignmentCanvas(overflow="auto") 
      
@@ -32,6 +49,7 @@ block content
                         a.btn.btn-primary
                     div
                         button(class="optionButton", id="resize")
+<<<<<<< HEAD
                                     label Resize view
                             
                         button(class="optionButton", id="reset")
@@ -39,6 +57,15 @@ block content
                     div
                         a.btn.btn-primary(id="saveButton" onclick="snapImage()")
                             label(for="saveButton") Snapshoot
+=======
+                                    label Resize view    
+
+                        button(class="optionButton", id="reset")
+                                    label Reset view     
+                    div
+                        a.btn.btn-primary(id="saveButton" onclick="snapImage()")
+                        label(for="saveButton") Snapshoot
+>>>>>>> ef87440e10bb169ef7fad4cac97180768f51ddcf
                     div
                         form(action="users/sessions" class="dropzone" id="my-awesome-dropzone")
         -}
@@ -129,4 +156,6 @@ block footerjs
         }
 
 
+        
+        
         

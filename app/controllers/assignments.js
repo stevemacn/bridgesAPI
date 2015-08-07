@@ -48,18 +48,34 @@ exports.updateVisibility = function (req, res, next) {
         })
 }
 
+
 //API route for uploading assignment data. If the 
 //assignment already exists it will be replaced.
 exports.upload = function (req, res, next) {
-    
-    try { rawBody = JSON.parse(req.body) } 
-    catch (e) { 
-        console.log(e)
-        return next("invalid syntax for raw body of request")
+
+    // C++ version posts JSON as object, JAVA posts as plain string
+    if(typeof req.body != "object") {
+        //console.log("STRING: PARSING");
+        try { rawBody = JSON.parse(req.body) } 
+        catch (e) { 
+
+            if(typeof req.body != 'object') {
+                console.log(e)
+                return next(e + " invalid syntax for raw body of request")
+            } else {
+                rawBody = req.body;   
+            }
+
+        }
+    } else { 
+        //console.log("OBJECT ALREADY"); 
+        rawBody = req.body;
     }
+    
 
     var assignmentID = req.params.assignmentID;
     var visualizationType = rawBody.visual;
+    
     if(visualizationType != "tree")
 	visualizationType = "nodelink";
     
@@ -79,7 +95,14 @@ exports.upload = function (req, res, next) {
     function replaceAssignment (res, user, assignmentID) {
         
         //if this assignment is #.0, remove all sub assignments from #
-        if(assignmentID.split('.')[1] == "0") {
+        //console.log(((parseFloat(assignmentID)/1.0) % 1.0) == 0);
+        
+        //if(assignmentID.split('.')[1] == "0") {
+        if (((parseFloat(assignmentID)/1.0) % 1.0) == 0) {
+            if(assignmentID.split('.')[1] == "0")
+                //assignmentID = assignmentID.substr(0, assignmentID.indexOf('.') + 2);
+                assignmentID += "0";
+            
             Assignment.remove({
                 assignmentID: {$gte: Math.floor(parseFloat(assignmentID)), $lt: Math.floor(parseFloat(assignmentID) + 1) },
                 email: user.email        
@@ -101,9 +124,10 @@ exports.upload = function (req, res, next) {
             assignment.vistype = visualizationType
             assignment.data = rawBody
             assignment.assignmentID = assignmentID
-            assignment.schoolID = req.params.schoolID;
-            assignment.classID = req.params.classID;
+            assignment.schoolID = req.params.schoolID || ""
+            assignment.classID = req.params.classID || ""
             assignment.save()
+            
             
             //log new assignment
             //console.log("assignment added: "+user.email+
@@ -163,6 +187,9 @@ exports.show = function (req, res, next) {
                 assignmentID: {$gte: Math.floor(parseFloat(assignmentID)), $lt: Math.floor(parseFloat(assignmentID) + 1)}
                 
             })
+            .sort({ 
+                assignmentID: 1 
+            })
             .exec(function(err, assignments) {
                 if (err) return next(err);
                 if (!assignments || assignments.length == 0) {
@@ -175,6 +202,8 @@ exports.show = function (req, res, next) {
             });
            // console.log(assignmentID, username);
         
+        // OLD CODE
+        // Searches for the unique ID rather than the range
 //        Assignment
 //            .findOne({
 //                email: email,

@@ -3,6 +3,11 @@
 extends ../includes/boilerplate.jade
 block css 
     link(rel='stylesheet', 
+<<<<<<< HEAD
+=======
+         href='/css/header.css')
+    link(rel='stylesheet', 
+>>>>>>> ef87440e10bb169ef7fad4cac97180768f51ddcf
          href='/css/assignment.css')
     link(rel='stylesheet',
         href='/css/dropzone.css')
@@ -26,7 +31,11 @@ block content
                     div(style="height:120px; background-color:red; border-radius:10px;")
                 else
                     div(style="height:120px; background-color:blue; border-radius:30px;")
+<<<<<<< HEAD
                             console.log(assignments[x])
+=======
+                //p #{assignments[x].data[0].visual}
+>>>>>>> ef87440e10bb169ef7fad4cac97180768f51ddcf
                 a(href="/assignments/"+assignments[x].assignmentID+"/"+usernames)
                     h4(style="text-align: center") #{assignments[x].assignmentID} #{assignments[x].data[0].visual}
 
