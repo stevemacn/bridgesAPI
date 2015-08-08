@@ -42,23 +42,16 @@ exports.view = function(req, res) {
      
     Assignment
         .find({
-<<<<<<< HEAD
-            assignmentID: req.params.assignmentNumber,
-            shared: false
-=======
             //assignmentID: req.params.assignmentNumber,
             $or: [{assignmentID: assignmentNumber}, {assignmentID: assignmentNumber_old} ],
             shared: false //? should this not be true?
->>>>>>> ef87440e10bb169ef7fad4cac97180768f51ddcf
         })
         .exec(function(err, assignmentResult) {
             if (err) return next(err)
                 
             if (!assignmentResult) return next("could not find " +
                 "assignment " + req.params.assignmentNumber)
-<<<<<<< HEAD
 
-=======
             
             if(assignmentResult == 0) {
                 return res.render('assignments/gallery', {
@@ -73,7 +66,6 @@ exports.view = function(req, res) {
                 return res.redirect('/username/'+req.user.username);
             }
             
->>>>>>> ef87440e10bb169ef7fad4cac97180768f51ddcf
             var users = []
             for (i = 0; i < assignmentResult.length; i++)
                 users.push(assignmentResult[i].email)

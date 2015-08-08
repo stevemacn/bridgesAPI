@@ -6,11 +6,6 @@
             a(href="http://bridgesuncc.github.io").navbar-brand Documentation
         .navbar-header 
             div
-<<<<<<< HEAD
-                -console.log("hi")
-=======
-                
->>>>>>> ef87440e10bb169ef7fad4cac97180768f51ddcf
             div
         .navbar-collapse.collapse
             ul.nav.navbar-nav.navbar-right
@@ -44,32 +39,6 @@
                 li
                     a(href="/username/"+user.username) My Projects
                 li
-<<<<<<< HEAD
-                    form(action='/assignments/'+assignmentID+'/'+user.username, method='post').form-horizontal
-                        ul.nav.navbar-nav
-                            li
-                                .fieldset
-                                    div.col-lg-25
-                                        legend Public Projects
-                                        input(type="hidden", name="_csrf", value=csrftoken)
-                            li
-                                .form-group
-                                    div.col-lg-11
-                                        input#assignments.form-control(
-                                            type='number',
-                                            min='0.00',
-                                            name='assignmentID',
-                                            placeholder='Assignment ID')
-                            li
-                                .form-group
-                                    div.col-lg-10
-                                        input#submit(type='submit', value='Search').btn.btn-primary
-                                    //a(href="/assignments/"+assignments.value()+"/"+user.username) Search
-                li
-                    a(href="/username/"+user.username) My Projects
-                li
-=======
->>>>>>> ef87440e10bb169ef7fad4cac97180768f51ddcf
                     //a(href="/home")=user.username
                     a(href="/home") Profile
                 li

@@ -43,11 +43,6 @@ exports.login = function (req, res) {
         user: user,
         message: msg
    })
-<<<<<<< HEAD
-    //res.redirect("/username/"+req.user.username)
-=======
-    
->>>>>>> ef87440e10bb169ef7fad4cac97180768f51ddcf
 }
 
 exports.logout = function (req, res) {
@@ -67,11 +62,6 @@ exports.display = function (req, res) {
             if (err) return next(err)
             if (!accts) accts = new Account
             return res.render('users/index', {
-<<<<<<< HEAD
-            //return res.render('assignments/gallery_2', {
-=======
-                
->>>>>>> ef87440e10bb169ef7fad4cac97180768f51ddcf
                 title: user.username + "'s Dashboard - Bridges",
                 user: user,
                 acct: accts
@@ -86,17 +76,6 @@ exports.view = function(req, res) {
         if (assig.length == 0) return cb(assignmentsRes)
             var assID = assig.pop()
             Assignment
-<<<<<<< HEAD
-            .findOne({
-                     "assignmentID": assID
-                     })
-            .exec(function(err, assID) {
-                  if (err) return null;
-                  if (assID) assignmentsRes.push(assID)
-                  getAssignments(assig, assignmentsRes, cb)
-                  })
-            }
-=======
                 .findOne({
                          "assignmentID": assID
                  })
@@ -106,40 +85,11 @@ exports.view = function(req, res) {
                       getAssignments(assig, assignmentsRes, cb)
                 })
     }
->>>>>>> ef87440e10bb169ef7fad4cac97180768f51ddcf
     
     if (!req.params.userNameRes)
         return next("no user name provided")
         
         Assignment
-<<<<<<< HEAD
-        .find({
-              email: req.params.userNameRes,
-              //shared: true
-              })
-        .exec(function(err, assignmentResult) {
-              if (err) return next(err)
-              
-              if (!assignmentResult) return next("could not find " +
-                                                 "assignment " + req.params.userNameRes)
-              
-              var assig = []
-              for (i = 0; i < assignmentResult.length; i++)
-              assig.push(assignmentResult[i].assignmentID)
-              
-              getAssignments(assig, [], function(assignmentsRes) {
-                             
-                             return res.render('assignments/gallery_2', {
-                                               "title": "Assignment gallery",
-                                               "user":req.user,
-                                               "usernames": req.params.userNameRes,
-                                               "assignments":assignmentsRes
-                                               })
-                             })
-              })
-        }
-
-=======
             .find({
                   email: req.params.userNameRes,
                   //shared: true
@@ -165,7 +115,6 @@ exports.view = function(req, res) {
                 })
             })
 }
->>>>>>> ef87440e10bb169ef7fad4cac97180768f51ddcf
 
 exports.deletePerson = function (req, res) {
 

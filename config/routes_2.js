@@ -30,10 +30,7 @@ module.exports = function(app, passport, streamable) {
 
     //authentication
     var isLoggedIn = function(req, res, next) {
-<<<<<<< HEAD
-=======
 
->>>>>>> ef87440e10bb169ef7fad4cac97180768f51ddcf
         if (req.isAuthenticated()){
             //res.redirect("/username/"+req.user.username)
             //res.redirect("/home/")
@@ -44,15 +41,9 @@ module.exports = function(app, passport, streamable) {
     
     var isLoggedInGallery = function(req, res, next) {
         if (req.isAuthenticated()){
-<<<<<<< HEAD
-            res.redirect("/username/"+req.user.username)
-            //res.redirect("/home/")
-            return next()
-=======
             return res.redirect("/username/"+req.user.username)
             //res.redirect("/home/")
             //return next()
->>>>>>> ef87440e10bb169ef7fad4cac97180768f51ddcf
         }
         res.redirect("/login")
     }
@@ -124,11 +115,7 @@ module.exports = function(app, passport, streamable) {
     
     //gallery routes
     var gallery_2 = require('../app/controllers/gallery_2.js')
-<<<<<<< HEAD
-    app.get('/username/:userNameRes', gallery_2.view, handleError)
-=======
     app.get('/username/:userNameRes', isLoggedIn, gallery_2.view, handleError)
->>>>>>> ef87440e10bb169ef7fad4cac97180768f51ddcf
 
     app.post('/users/session',
         passport.authenticate('local-log', {
@@ -136,10 +123,6 @@ module.exports = function(app, passport, streamable) {
             failureRedirect: '/login',
             failureFlash: true
         }))
-<<<<<<< HEAD
-    //, 
-    //users.session)
-=======
     
     // -------------------------------------------------------
     //
@@ -165,7 +148,6 @@ module.exports = function(app, passport, streamable) {
     //  Authentication Routes
     //
     // -------------------------------------------------------
->>>>>>> ef87440e10bb169ef7fad4cac97180768f51ddcf
 
     app.get('/connect/twitter',
         passport.authorize('twitter-authz', {
