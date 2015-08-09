@@ -43,6 +43,7 @@ exports.login = function (req, res) {
         user: user,
         message: msg
    })
+    
 }
 
 exports.logout = function (req, res) {

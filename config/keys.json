@@ -1,0 +1,22 @@
+{
+    "twitter": {
+        "configured": 1,
+        "keys":{
+            "consumer_key": "l8qhSvUdhJRFc1A9E17RzTr1n",
+            "consumer_secret": "QHCmm59wL5Wy41NHkPwlOkEVhH9iUbomLHlaBzIgE2pWKhhKzI",
+            "access_token": "2398051435-5sis5TpkF28Yi8QAJPkkovPzLD8NlJrlPCD7v5c",
+            "access_token_secret": "66Pc5Q4Yct10mT6C9FzTAGYaeYGiOZxY929B1r86S7RdC"
+        }
+    },
+    "rotten": {
+        "configured": 1,
+        "apikey": "znwpc2939dage9gn8hg6ez33"
+    },
+    "actors": {
+        "configured": 1,
+        "apikey": "79ea91fe9259888e8c912eee6a03b52f"
+    },
+    "facebook": {
+        "configured": 0
+    }
+}
