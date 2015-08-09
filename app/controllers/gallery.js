@@ -51,10 +51,6 @@ exports.view = function(req, res) {
                 
             if (!assignmentResult) return next("could not find " +
                 "assignment " + req.params.assignmentNumber)
-<<<<<<< HEAD
-
-=======
->>>>>>> 920df8d4fc5866f029fb2d0d0c76762687376e46
             
             if(assignmentResult == 0) {
                 return res.render('assignments/gallery', {
