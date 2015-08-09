@@ -32,8 +32,16 @@ block content
             div(style="float:left;width:120px; margin-left:50px")
                 if (assignments[x].shared == false)
                     div(style="height:120px; background-color:red; border-radius:10px;")
+                        if(assignments[x].data[0].visual=='AList')
+                            img(src="/img/LList.png")
+                        else if(assignments[x].data[0].visual=='graph')
+                            img(src="/img/graph.png")
                 else
                     div(style="height:120px; background-color:blue; border-radius:30px;")
+                        if(assignments[x].data[0].visual=='AList')
+                            img(src="/img/LList.png")
+                        else if(assignments[x].data[0].visual=='graph')
+                            img(src="/img/graph.png")
                 //p #{assignments[x].data[0].visual}
                 a(href="/assignments/"+assignments[x].assignmentID+"/"+usernames)
                     h4(style="text-align: center") #{assignments[x].assignmentID} #{assignments[x].data[0].visual}
