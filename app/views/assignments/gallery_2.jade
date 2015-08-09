@@ -17,9 +17,19 @@ block content
     .container
         .row
             .col-lg-6
-                h1 Welcome to Bridges!
-                p Create a bridge between your assignments and the world
-                p Your projects are listed below
+                //h1 Welcome to Bridges!
+                //p Create a bridge between your assignments and the world
+                //p Your projects are listed below
+
+                div(style="float:left; margin-left:50px")
+                    //a(href="/assignments/"+assignments[0].assignmentID+"/"+usernames)
+                    h1(style="text-align: left") #{usernames}'s Gallery
+                    //#{user}
+                    //#{username}
+                    //#{assignments[1]}
+
+
+
 
     div(style="margin:5%")
         - for (var x = 0; x < assignments.length; x++)
@@ -28,7 +38,6 @@ block content
                     div(style="height:120px; background-color:red; border-radius:10px;")
                 else
                     div(style="height:120px; background-color:blue; border-radius:30px;")
-                //p #{assignments[x].data[0].visual}
                 a(href="/assignments/"+assignments[x].assignmentID+"/"+usernames)
                     h4(style="text-align: center") #{assignments[x].assignmentID} #{assignments[x].data[0].visual}
 
