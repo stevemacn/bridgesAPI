@@ -17,7 +17,6 @@ block content
     script(type="application/ecmascript" async="" src='/js/Blob.js')
     script(type="application/ecmascript" async="" src='/js/dropzone.js')
     
-    
     script(src='/js/snapshoot.js')
     div#assignmentCanvas(overflow="auto") 
      
@@ -39,7 +38,7 @@ block content
                                     label Resize view    
 
                         button(class="optionButton", id="reset")
-                                    label Reset view     
+                                    label Reset view
                     div
                         a.btn.btn-primary(id="saveButton" onclick="snapImage()")
                         label(for="saveButton") Snapshoot
@@ -90,7 +89,7 @@ block footerjs
         
         var assignmentID = !{JSON.stringify(assignmentID)}
     - if (vistype == "nodelink")
-        script(src = '/js/graph_multi.js')
+        script(src = '/js/graph.js')
     - else if (vistype == "tree")
         link(rel='stylesheet', href='/css/vis/tree.css')
         script(src = '/js/bst/lib/bst.js')

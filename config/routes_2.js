@@ -104,10 +104,12 @@ module.exports = function(app, passport, streamable) {
         hasAccess, assignments.updateVisibility, handleError)
     app.post('/assignments/:assignmentID/vistype/:value',
         hasAccess, assignments.updateVistype, handleError)
+    //app.delete('/assignments/:assignmentID/:username',
+    //    hasAccess, assignments.deleteAssignment, handleError)
+    
     app.get('/assignments/:assignmentID/:username',
              hasAccess, assignments.show, handleError)
-    app.get('/assignments/:assignmentID/:username',
-        assignments.show, handleError)
+
 
     //gallery routes
     var gallery = require('../app/controllers/gallery.js')

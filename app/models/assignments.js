@@ -27,3 +27,23 @@ var Assignment = new Schema ({
 })
 
 mongoose.model('Assignment', Assignment);
+
+
+/**
+ Enhanced model
+ **/
+
+function Mongoose (assignm) {
+    this.connections = [];
+    this.plugins = [];
+    this.models = 'Assignment';
+    this.modelSchemas =_Assignment;
+    // default global options
+    this.options = {
+    pluralization: true
+    };
+    var conn = this.createConnection(); // default connection
+    conn.models = this.models;
+}
+
+var mongoose2 = new mongoose.Mongoose();

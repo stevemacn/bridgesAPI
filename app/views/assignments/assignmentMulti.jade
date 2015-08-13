@@ -36,11 +36,14 @@ block content
                     
                     button(class="optionButton", id="reset")
                                 label Reset view
+
+                    button(class="optionButton", id="deleteAssignment", onclick="del_assign()")
+                                label Delete
                 
                 div
                     a.btn.btn-primary(id="saveButton" onclick="snapImage()")
                             label(for="saveButton") Snapshoot
-                    form(action="users/sessions" class="dropzone" id="my-awesome-dropzone")
+                    //form(action="users/sessions" class="dropzone" id="my-awesome-dropzone")
         -}
     
         table.full
@@ -122,7 +125,23 @@ block footerjs
                 console.log(err)    
             });    
             
-        }   
+        }
+
+        function del_assign(){
+            var assignmentID = !{JSON.stringify(assignmentID)}
+            $.ajax({
+                //url: "/assignments/"+assignmentID+"/"+name,
+                url: "/username/"+username,
+                type: "delete"
+            }).done(function() {
+                console.log("deleting assignment...")
+            }).error(function(err){
+                console.log(name+err)
+            });    
+            
+        }
+
+
         function setvis (selected) {
             var assignmentID = !{JSON.stringify(assignmentID)}
             $.ajax({
