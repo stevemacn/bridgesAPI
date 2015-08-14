@@ -9,4 +9,12 @@ block content
             .col-lg-6
                 h1 Welcome to Bridges!
                 p Create a bridge between your assignments and the world
-       
+                div
+                | <div id="force_graph_frame" width="1500" height="400"></div>
+                | <iframe id="iframe" src="http://bridges-cs.herokuapp.com/assignments/51.00/kalpathi60?apikey=486749122386" style="display:hidden;" width="1000" height="400"></iframe>
+                |    <script>var iframe = document.getElementById("iframe");
+                |    var div = document.getElementById("force_graph_frame");
+                |    div.innerHTML=iframe.contentWindow.document.getElementById("optionContainer").innerHTML;</script>
+
+
+

@@ -96,6 +96,40 @@
     font-weight: bolder;
 }
 
+.gallery_assignment_div_private{
+    height:120px;
+    border-style: solid;
+    border-style: outset;
+    border-color:red;
+    border-radius:10px;
+    background: -webkit-linear-gradient(white, #FFFAFA);
+    background: -o-linear-gradient(white, #FFFAFA);
+    background: -moz-linear-gradient(white, #FFFAFA);
+    background: linear-gradient(white, #FFFAFA);
+    box-shadow: 2px 2px 8px #888888;
+}
+
+.gallery_assignment_div_public{
+    height:120px;
+    border-style: solid;
+    border-style: outset;
+    border-color:blue;
+    border-radius:30px;
+    background:-webkit-linear-gradient(white, #F1FAFF);
+    background: -o-linear-gradient(white, #F1FAFF);
+    background: -moz-linear-gradient(white, #F1FAFF);
+    background: linear-gradient(white, #F1FAFF);
+    box-shadow: 2px 2px 8px #888888;
+}
+
+.gallery_assignment_div_public:hover, .gallery_assignment_div_private:hover{
+    box-shadow:none;
+}
+
+
+
+
+
 table.full {
     width: 90%; 
 }
