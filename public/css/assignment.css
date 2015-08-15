@@ -124,6 +124,7 @@
 
 .gallery_assignment_div_public:hover, .gallery_assignment_div_private:hover{
     box-shadow:none;
+    background:white;
 }
 
 
