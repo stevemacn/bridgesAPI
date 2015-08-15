@@ -132,8 +132,16 @@
     
 }
 
+.gallery_links{
+    text-align: center;
+    text-shadow: 1px 0px #C0C0C0;
+    color: #262626;
+}
 
-
+.gallery_links:hover{
+    text-shadow: none;
+    color:#888888;
+}
 
 
 table.full {

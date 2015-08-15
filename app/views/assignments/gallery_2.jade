@@ -48,6 +48,6 @@ block content
                             else if(assignments[x].data[0].visual=='tree')
                                 img(src="/img/tree.png")
                 //p #{assignments[x].data[0].visual}
-                a(href="/assignments/"+assignments[x].assignmentID+"/"+usernames)
-                    h4(style="text-align: center") #{assignments[x].assignmentID} #{assignments[x].data[0].visual}
+                a(style="text-decoration: none; " href="/assignments/"+assignments[x].assignmentID+"/"+usernames)
+                    h4(class='gallery_links') #{assignments[x].assignmentID} #{assignments[x].data[0].visual}
 
