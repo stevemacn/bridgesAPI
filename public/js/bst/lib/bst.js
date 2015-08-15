@@ -1,18 +1,4 @@
 
-//This code is heavily based on code from 
-//http://mbostock.github.io/d3/talk/20111018/tree.html 
-
-d3.bst = function (d3, canvasID, w, h) {  
-
-    //defaults 
-    var bst = {},
-        mw = 0, mh = 0,
-        w = w || 1280, h = h || 800,
-        i = 0,
-        tree,
-        depthStep = 75, 
-        canvasID = canvasID, //canvasID must have hash like "#vis" or "#canvas"
-        root;
 //This code is heavily based on code from
 //http://mbostock.github.io/d3/talk/20111018/tree.html
 
@@ -39,7 +25,7 @@ d3.bst = function (d3, canvasID, w, h) {
         w = w || 1280, h = h || 800,
         i = 0,
         tree,
-        depthStep = 50,
+        depthStep = 75,
         canvasID = canvasID, //canvasID must have hash like "#vis" or "#canvas"
         root;
     var svgGroup, defs;
