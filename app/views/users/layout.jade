@@ -1,12 +1,19 @@
 extends ../includes/boilerplate.jade 
-block content 
+block css
+    link(rel='stylesheet',
+            href='/css/gallery_small.css')
+
+block content
     include ../includes/header.jade 
     .container
         .col-lg-6(style = "float:left; min-height:500px;")
             h1 Welcome to Bridges!
             p Creating a bridge between your assignments and the world
+            include ../includes/gallery.jade
             div(style="margin-top:30px;")
                 block info
+                
+
 
 
         .col-lg-6(style = "float:right")

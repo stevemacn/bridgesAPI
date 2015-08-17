@@ -1,7 +1,7 @@
 div(class='container')
       div(id='data_gallery' class='carousel slide' data-ride='carousel')
 
-        ol(class='carousel-indicators')
+        ol(class='carousel-indicators hide_small_gallery')
           li(data-target='#data_gallery' data-slide-to='0' class='active'  style='background-color:red')
           li(data-target='#data_gallery' data-slide-to='1' style='background-color:red')
           li(data-target='#data_gallery' data-slide-to='2' style='background-color:red')
@@ -36,10 +36,10 @@ div(class='container')
                     h3 Tree
                     p binary tree
 
-        a(class='left carousel-control' href='#data_gallery' role='button' data-slide='prev')
+        a(class='left carousel-control hide_small_gallery' href='#data_gallery' role='button' data-slide='prev')
           span(class='glyphicon glyphicon-chevron-left' aria-hidden='true')
           span(class='sr-only') Previous
 
-        a(class='right carousel-control' href='#data_gallery' role='button' data-slide='next')
+        a(class='right carousel-control hide_small_gallery' href='#data_gallery' role='button' data-slide='next')
           span(class='glyphicon glyphicon-chevron-right' aria-hidden='true')
           span(class='sr-only') Next
