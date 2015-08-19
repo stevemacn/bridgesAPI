@@ -96,6 +96,8 @@ block footerjs
         script(src = '/js/bst/lib/bst.js')
     - else if (vistype == 'queue')
         script(src = '/js/queue.js')
+    - else if (vistype == 'AList')
+        script(src = '/js/array.js')
     - else  
         script.
             var error = !{JSON.stringify(data)}

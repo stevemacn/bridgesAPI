@@ -7,15 +7,17 @@ var mongoose = require('mongoose')
 var Assignment = new Schema ({
 
     //For tracking submissions and route creation
-    username:       {type: String, default: ''},
-    email:          { type: String, default: ''},
-    assignmentID:   {type: String, default: ''},
-    classID:        {type: String, default: ''},
-    schoolID:       {type: String, default: ''},
-    dateCreated:    {type: Date, default: Date.now()},
-    shared:         {type: Boolean, default: 'false'},//public or private
-    vistype:        {type: String, default:'nodelink'},
-    thumbnail:      {type: String, default:'nodelink'},
+    username:           {type: String, default: ''},
+    email:              {type: String, default: ''},
+    assignmentNumber:   {type: String, default: ''},    //integer portion
+    subAssignment:      {type: String, default: ''},    //fractional portion
+    assignmentID:       {type: String, default: ''},
+    classID:            {type: String, default: ''},
+    schoolID:           {type: String, default: ''},
+    dateCreated:        {type: Date, default: Date.now()},
+    shared:             {type: Boolean, default: 'false'},//public or private
+    vistype:            {type: String, default:'nodelink'},
+    thumbnail:          {type: String, default:'nodelink'},
     //use mongoose thumbnail right here....
     
     //uploaded data, nodes can be x,y as in scatteplots

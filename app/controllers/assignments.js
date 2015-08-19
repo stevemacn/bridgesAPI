@@ -3,6 +3,7 @@ var mongoose = require('mongoose')
     , Account = mongoose.model('Account')
     , Assignment = mongoose.model('Assignment')
     , treemill = require('treemill') 
+    , visTypes = require('./visTypes.js')
 
 //API route for ajax requests to change the visual 
 //representation of the data they uploaded.
@@ -52,7 +53,7 @@ exports.updateVisibility = function (req, res, next) {
 //API route for uploading assignment data. If the 
 //assignment already exists it will be replaced.
 exports.upload = function (req, res, next) {
-
+    
     // C++ version posts JSON as object, JAVA posts as plain string
     if(typeof req.body != "object") {
         //console.log("STRING: PARSING");
@@ -74,10 +75,20 @@ exports.upload = function (req, res, next) {
     
 
     var assignmentID = req.params.assignmentID;
-    var visualizationType = rawBody.visual;
     
-    if(visualizationType != "tree")
-	visualizationType = "nodelink";
+    var assignmentRaw = assignmentID.split(".");
+    var assignmentNumber = assignmentRaw[0];
+    var subAssignment = assignmentRaw[1];
+    
+    console.log(assignmentNumber, subAssignment);
+    
+    var visualizationType = rawBody.visual;
+    //visualizationType = visTypes.getVisType(visualizationType); //map vistype to display type
+    
+    
+    // set the vis to default type
+    if(visualizationType != "tree" && visualizationType != "AList")
+	   visualizationType = "nodelink";
     
     //get username from apikey 
     User.findOne({
@@ -95,28 +106,39 @@ exports.upload = function (req, res, next) {
     function replaceAssignment (res, user, assignmentID) {
         
         //if this assignment is #.0, remove all sub assignments from #
-        //console.log(((parseFloat(assignmentID)/1.0) % 1.0) == 0);
-        
         //if(assignmentID.split('.')[1] == "0") {
-        if (((parseFloat(assignmentID)/1.0) % 1.0) == 0) {
-            if(assignmentID.split('.')[1] == "0")
-                //assignmentID = assignmentID.substr(0, assignmentID.indexOf('.') + 2);
-                assignmentID += "0";
-            
-            Assignment.remove({
-                assignmentID: {$gte: Math.floor(parseFloat(assignmentID)), $lt: Math.floor(parseFloat(assignmentID) + 1) },
+//        if (((parseFloat(assignmentID)/1.0) % 1.0) == 0) {
+//            if(assignmentID.split('.')[1] == "0" || assignmentID.split('.')[1] == "00") // ?????
+//                //assignmentID = assignmentID.substr(0, assignmentID.indexOf('.') + 2);
+//                assignmentID += "0";
+//            
+//            Assignment.remove({
+//                assignmentID: {$gte: Math.floor(parseFloat(assignmentID)), $lt: Math.floor(parseFloat(assignmentID) + 1) },
+//                email: user.email        
+//            })
+//            .exec(function (err, resp) {
+//            })
+//        }
+        
+        if (subAssignment == '0' || subAssignment == '00') {
+             Assignment.remove({
+                assignmentNumber: assignmentNumber,
                 email: user.email        
             })
             .exec(function (err, resp) {
+                 console.log(err);
+                console.log("removed (" + resp + ") assignments (" + assignmentNumber + ".*) from user " + user.username);
             })
         }
         
+        //TODO: move assignment creation from this into function above; but consider old cases.
         //remove previously uploaded assignment if exists
         Assignment.remove({
             assignmentID: assignmentID,
             email: user.email        
         })
         .exec(function (err, resp) {
+            console.log(resp);
 
             //create a new assignment in the database
             assignment = new Assignment()
@@ -124,14 +146,17 @@ exports.upload = function (req, res, next) {
             assignment.vistype = visualizationType
             assignment.data = rawBody
             assignment.assignmentID = assignmentID
+            assignment.assignmentNumber = assignmentNumber
+            assignment.subAssignment = subAssignment
             assignment.schoolID = req.params.schoolID || ""
             assignment.classID = req.params.classID || ""
             assignment.save()
             
             
             //log new assignment
-            //console.log("assignment added: "+user.email+
-              //  " "+assignmentID)
+//            console.log("assignment added: "+user.email+
+//                " "+assignmentID)
+//            console.log(assignment)
             
             //report to client
             User.findOne({

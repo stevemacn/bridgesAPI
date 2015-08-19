@@ -12,6 +12,10 @@
     min-height: 350px;
 }
 
+.assignmentContainer .maximized{
+    height: 10%;
+}
+
 .optionContainer{
     border-color:steelblue;
     border-style:solid;
@@ -44,22 +48,20 @@
 
 #vis{
     width:70%;
-    height:80%;
+    height:90%;
     position:absolute;
     overflow: scroll;
     float:left;
 }
 
 .vis{
-    width:inherit;
-    height:600px;
-    position:absolute;
+    width:70%;
     overflow: scroll;
     float:left;
 }
 
 .svg {
-    
+    height: inherit;
 }
 
 #optionContainer{
