@@ -40,15 +40,34 @@ exports.updateVisibility = function (req, res, next) {
             assignmentID: req.params.assignmentID    
         })
         .exec(function (err, assignmentResult) {
+//            console.log((err) ? err : assignmentResult);
             if (err) return next(err)
             if (!assignmentResult) 
                 return next("could not find assignment")
             assignmentResult.shared=req.params.value 
             assignmentResult.save()
+//            console.log("CHANGED TO " + req.params.value + " " + assignmentResult);
             res.send("OK")
         })
 }
 
+//API route to save the position of some (or all) node positions
+exports.saveSnapshot = function(req, res, next) {
+    Assignment  
+        .findOne({
+            email:req.user.email,
+            assignmentID: req.params.assignmentID    
+        })
+        .exec(function (err, assignmentResult) {
+            if (err) return next(err)
+            if (!assignmentResult) 
+                return next("could not find assignment")
+            console.log("snapshot")
+            //Save JSON with modified positions
+            //assignmentResult.save()
+            //res.send("OK")
+    })
+}
 
 //API route for uploading assignment data. If the 
 //assignment already exists it will be replaced.
@@ -74,36 +93,59 @@ exports.upload = function (req, res, next) {
     }
     
 
-    var assignmentID = req.params.assignmentID;
+    var version = rawBody.version;
     
+    var assignmentID = req.params.assignmentID;
     var assignmentRaw = assignmentID.split(".");
     var assignmentNumber = assignmentRaw[0];
     var subAssignment = assignmentRaw[1];
+   
+    var visualizationType = rawBody.visual; //check this against possible ones
     
-    console.log(assignmentNumber, subAssignment);
+   
     
-    var visualizationType = rawBody.visual;
-    //visualizationType = visTypes.getVisType(visualizationType); //map vistype to display type
-    
-    
-    // set the vis to default type
-    if(visualizationType != "tree" && visualizationType != "AList")
-	   visualizationType = "nodelink";
-    
-    //get username from apikey 
-    User.findOne({
-        apikey:req.query.apikey
-    })    
-    .exec(function (err, user) {    
-        if (err) return next (err)    
-        if (!user) return next ("could not find user by apikey: " + 
-                        req.query.apikey)
+    if(version == "0.4.0") { //version with assignmentID as one string
+        // set the vis to default type
+        if(visualizationType != "tree" && visualizationType != "AList")
+           visualizationType = "nodelink";
 
-        //if username found, upload or replace 
-        replaceAssignment(res, user, assignmentID) 
-    })
+        //TEMP
+        visualizationType = "AList";
+        
+        //get username from apikey 
+        User.findOne({
+            apikey:req.query.apikey
+        })    
+        .exec(function (err, user) {    
+            if (err) return next (err)    
+            if (!user) return next ("could not find user by apikey: " + 
+                            req.query.apikey)
+
+            //if username found, upload or replace 
+            replaceAssignment(res, user, assignmentID) 
+        })
+
+    } else {// Add version-specific options here
+         var validTypes = [
+            "Array",
+            "Array_Stack",
+            "Array_Queue", 
+            "LinkedListStack",
+            "LinkedListQueue",
+            "BinaryTree",
+            "BinarySearchTree",
+            "SinglyLinkedList",
+            "DoublyLinkedList"
+        ];
+        
+        
+    }
+    
+    
+    
 
     function replaceAssignment (res, user, assignmentID) {
+    
         
         //if this assignment is #.0, remove all sub assignments from #
         //if(assignmentID.split('.')[1] == "0") {
@@ -126,7 +168,8 @@ exports.upload = function (req, res, next) {
                 email: user.email        
             })
             .exec(function (err, resp) {
-                 console.log(err);
+                 if(err)
+                    console.log(err);
                 console.log("removed (" + resp + ") assignments (" + assignmentNumber + ".*) from user " + user.username);
             })
         }
@@ -152,11 +195,10 @@ exports.upload = function (req, res, next) {
             assignment.classID = req.params.classID || ""
             assignment.save()
             
-            
             //log new assignment
 //            console.log("assignment added: "+user.email+
 //                " "+assignmentID)
-//            console.log(assignment)
+            console.log(assignment)
             
             //report to client
             User.findOne({
@@ -203,10 +245,60 @@ exports.show = function (req, res, next) {
 
     function getAssignment (req, res, next, email, cb) {
         assignmentID = req.params.assignmentID
+        console.log(req.params);
         next = next
         
-        //db.products.find( { qty: { $gt: 25 } }, { item: 1, qty: 1 } )
-        Assignment
+        var version = "0.4.0";
+        
+        findAssignmentNew(assignmentID)
+        
+        function findAssignmentOld(id) {
+            
+            //might need to add ".0" to assignmentID if redirecting from gallery
+            Assignment.findOne({
+                email: email, 
+                assignmentID: id
+            })
+            .exec(function(err, ass) {
+                if (err) return next(err);
+                if (!ass || ass.length == 0) {
+                    return next("Could not find assignment " + assignmentID);  
+                }
+
+                //If assignmentNumber is set, the assignment is up-to-date
+                if(ass.assignmentNumber == "")
+                    getAssignmentOld();
+                else
+                    getAssignmentNew();
+            });
+        }
+        
+        function findAssignmentNew(id) {
+            Assignment.findOne({
+                email: email, 
+                assignmentNumber: id
+            })
+            .exec(function(err, ass) {
+                if (err) return next(err);
+                if (!ass || ass.length == 0) {
+                    findAssignmentOld(id); // <-----
+                    return;
+                    //return next("Could not find assignment " + assignmentID);  
+                }
+
+                //If assignmentNumber is set, the assignment is up-to-date
+                if(ass.assignmentNumber == "")
+                    getAssignmentOld();
+                else
+                    getAssignmentNew();
+            });
+        }
+        
+        
+        //Old method for finding sub assignments
+        function getAssignmentOld() {
+            console.log("old");
+            Assignment
             .find({
                 email: email, 
                 assignmentID: {$gte: Math.floor(parseFloat(assignmentID)), $lt: Math.floor(parseFloat(assignmentID) + 1)}
@@ -225,22 +317,30 @@ exports.show = function (req, res, next) {
                 } else 
                     return renderMultiVis(res, assignments);
             });
-           // console.log(assignmentID, username);
+        }
         
-        // OLD CODE
-        // Searches for the unique ID rather than the range
-//        Assignment
-//            .findOne({
-//                email: email,
-//                assignmentID: req.params.assignmentID 
-//            })
-//            .exec(function (err, assignment) {
-//                if (err) return next(err) 
-//                if (!assignment) return next("could not find assignment") 
-//                
-//                if (assignment.shared!==true) return cb(assignment)
-//                //return renderVis(res, assignment)         
-//            })
+        //New method for finding sub assignments
+        function getAssignmentNew() {
+            assignmentNumber = assignmentID.split(".")[0];
+            Assignment
+            .find({
+                email: email, 
+                assignmentNumber: assignmentNumber
+            })
+            .sort({ 
+                assignmentID: 1 
+            })
+            .exec(function(err, assignments) {
+                if (err) return next(err);
+                if (!assignments || assignments.length == 0) {
+                         return next("Could not find assignment " + assignmentNumber);   
+                } else if (assignments.length == 1) {
+                    //console.log(assignments[0]);
+                    return renderVis(res, assignments[0]);
+                } else 
+                    return renderMultiVis(res, assignments);
+            });
+        }
     }
     
     

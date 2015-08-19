@@ -43,8 +43,9 @@ exports.view = function(req, res) {
     Assignment
         .find({
             //assignmentID: req.params.assignmentNumber,
-            $or: [{assignmentID: assignmentNumber}, {assignmentID: assignmentNumber_old} ],
-            shared: false //? should this not be true?
+            //$or: [{assignmentID: assignmentNumber}, {assignmentID: assignmentNumber_old} ],
+            subAssignment: 0,
+            shared: true //? should this not be true?
         })
         .exec(function(err, assignmentResult) {
             if (err) return next(err)

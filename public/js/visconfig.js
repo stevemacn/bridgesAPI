@@ -33,7 +33,7 @@ else if (d3.graph) {
     d3.graph(d3, "#vis0", width, height, data)
 } else {
     console.log("unknown type");  
-    d3.graph(d3, "#vis" + key, width, height, data[key]);
+    d3.graph(d3, "#vis0", width, height, data[key]);
 }
 
 function reset() {

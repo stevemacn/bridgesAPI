@@ -29,7 +29,7 @@ for (var key in data) {
         d3.queue(d3, "#vis" + key, width, height, data[key].nodes)
     }
     else if (d3.array) {
-        d3.array(d3, "#vis0", width, height, data.nodes)
+        d3.array(d3, "#vis" + key, width, height, data[key].nodes)
     }
     else if (d3.graph) {
         d3.graph(d3, "#vis" + key, width, height, data[key]);

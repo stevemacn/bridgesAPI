@@ -36,9 +36,13 @@ block content
                     
                     button(class="optionButton", id="reset")
                                 label Reset view
+                                
+                     button(class="optionButton", id="snapshotPositions", onclick="saveSnapshot()")
+                                label Save Positions
+                
                 
                 div
-                    a.btn.btn-primary(id="saveButton" onclick="snapImage()")
+                    a.btn.btn-primary(class="optionButton", id="saveButton" onclick="snapImage()")
                             label(for="saveButton") Snapshoot
                     form(action="users/sessions" class="dropzone" id="my-awesome-dropzone")
         -}
@@ -101,10 +105,12 @@ block footerjs
         script(src = '/js/bst/lib/bst.js')
     - else if (vistype == 'queue')
         script(src = '/js/queue.js')
+     - else if (vistype == 'AList')
+        script(src = '/js/array.js')
     - else  
         script.
             var error = !{JSON.stringify(data)}
-            $("#vis")
+            $("#vis0")
                 .html(error.error)
                 .css('color', '#eb6864')
                 .css('font-size', '24px')
@@ -117,7 +123,7 @@ block footerjs
                 url: "/assignments/"+assignmentID+"/share/"+selected,
                 type: "post"
             }).done(function() {
-                console.log("visibility updated")
+                //console.log("visibility updated")
             }).error(function(err){
                 console.log(err)    
             });    
@@ -135,5 +141,8 @@ block footerjs
                 errmsg = JSON.parse(err.responseText)
                 console.log("Error: "+errmsg.error) 
             });
+        }
+        function saveSnapshot() {
+            console.log("save snapshot");
         }
         

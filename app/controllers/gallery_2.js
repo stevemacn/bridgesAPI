@@ -10,14 +10,18 @@ exports.view = function(req, res) {
             var assID = assig.pop()
             Assignment
                 .findOne({
-                         "assignmentID": assID
+//                         "assignmentID": assID
+                            "assignmentNumber": assID,
+                            "subAssignment": 0
                          })
                 .exec(function(err, assID) {
                       if (err) return null;
+//                        console.log(assID);
                       if (assID) assignmentsRes.push(assID)
                       getAssignments(assig, assignmentsRes, cb)
                   })
             }
+    
 
     if (!req.params.userNameRes)
         return next("no user name provided")
@@ -39,7 +43,8 @@ exports.view = function(req, res) {
             .find({
                   //email: req.params.userNameRes,
                 email: userResult.email,
-                $or: [{assignmentID: /.00$/}, {assignmentID: /.0$/}] //Search for assignments with whole numbers
+                subAssignment: 0
+                //$or: [{assignmentID: /.00$/}, {assignmentID: /.0$/}] //Search for assignments with whole numbers
                   //shared: true
             })
 //            .limit( 5 )   //Do we want to load every single whole number assignment, or just some? Query might be time intensive. 
@@ -53,8 +58,19 @@ exports.view = function(req, res) {
                                                      "assignment " + req.params.userNameRes)
               
                 var assig = []
-                for (i = 0; i < assignmentResult.length; i++)
-                    assig.push(assignmentResult[i].assignmentID)
+                console.log(assignmentResult);
+                for (i = 0; i < assignmentResult.length; i++) {
+                    //if(assignmentResult[i].data)
+                       // assig.push(assignmentResult[i].assignmentID)
+                    assig.push(assignmentResult[i].assignmentNumber)
+                    
+                }
+                        
+//                        console.log(assignmentResult, assignmentResult.length);
+                        
+//                        if(assignmentResult[i].assignmentNumber != "")
+//                        assig.push(assignmentResult[i].assignmentNumber)
+//                    else
               
                 getAssignments(assig, [], function(assignmentsRes) {
                           

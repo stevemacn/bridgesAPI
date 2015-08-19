@@ -102,12 +102,15 @@ module.exports = function(app, passport, streamable) {
         hasAccess, assignments.upload, handleError)
     app.post('/assignments/:assignmentID/share/:value',
         hasAccess, assignments.updateVisibility, handleError)
-    app.post('/assignments/:assignmentID/vistype/:value',
-        hasAccess, assignments.updateVistype, handleError)
+//    app.post('/assignments/:assignmentID/vistype/:value',
+//        hasAccess, assignments.updateVistype, handleError)
+    app.post('assignments/:assignmentID/saveSnapshot/', //allows user to save a snapshot of the positions of a graph.
+             hasAccess, assignments.saveSnapshot, handleError)
     app.get('/assignments/:assignmentID/:username',
              hasAccess, assignments.show, handleError)
     app.get('/assignments/:assignmentID/:username',
         assignments.show, handleError)
+    
 
     //gallery routes
     var gallery = require('../app/controllers/gallery.js')
@@ -130,16 +133,15 @@ module.exports = function(app, passport, streamable) {
     //
     // -------------------------------------------------------
     
-    app.post('/search', function(req, res, next) {
+    app.post('/search/', function(req, res, next) {
         var id = req.body.assignmentID;
-//        if(id.indexOf(".") < 0) id+=".00";
         res.redirect('/assignments/'+id);
     });
     
     
-    app.get('/search/:assignmentID', function(req, res) {
-        //console.log(req.params.assignmentID);
-        res.redirect('/assignments/'+req.params.assignmentID);
+    app.get('/search/:searchTerm', function(req, res) {
+        //console.log(parseFloat(req.params.searchTerm), typeof parseFloat(req.params.searchTerm))
+        res.redirect('/assignments/'+req.params.searchTerm);
     });
     
     

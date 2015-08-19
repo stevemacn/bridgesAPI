@@ -28,10 +28,10 @@ block content
                     label Share #{shared}
                     div.switch-toggle.well
                         input#public(type="radio", name="view",
-                            onclick="toggleShare(false)")
+                            onclick="toggleShare(true)")
                         label(for="public") Public 
                         input#private(type="radio", name="view",
-                            onclick="toggleShare(true)")
+                            onclick="toggleShare(false)")
                         label(for="private") Private 
                         a.btn.btn-primary
                     div
@@ -40,8 +40,11 @@ block content
 
                         button(class="optionButton", id="reset")
                                     label Reset view     
+                                    
+                        button(class="optionButton", id="snapshotPositions", onclick="saveSnapshot()")
+                            label Save Positions
                     div
-                        a.btn.btn-primary(id="saveButton" onclick="snapImage()")
+                        a.btn.btn-primary(class="optionButton", id="saveButton" onclick="snapImage()")
                         label(for="saveButton") Snapshoot
                     div
                         form(action="users/sessions" class="dropzone" id="my-awesome-dropzone")
@@ -90,7 +93,7 @@ block footerjs
         
         var assignmentID = !{JSON.stringify(assignmentID)}
     - if (vistype == "nodelink")
-        script(src = '/js/graph_multi.js')
+        script(src = '/js/graph.js')
     - else if (vistype == "tree")
         link(rel='stylesheet', href='/css/vis/tree.css')
         script(src = '/js/bst/lib/bst.js')
@@ -101,7 +104,7 @@ block footerjs
     - else  
         script.
             var error = !{JSON.stringify(data)}
-            $("#vis")
+            $("#vis0")
                 .html(error.error)
                 .css('color', '#eb6864')
                 .css('font-size', '24px')
@@ -132,6 +135,9 @@ block footerjs
                 errmsg = JSON.parse(err.responseText)
                 console.log("Error: "+errmsg.error) 
             });
+        }
+        function saveSnapshot() {
+            console.log("save snapshot");
         }
 
 
