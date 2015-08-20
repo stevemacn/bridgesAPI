@@ -69,7 +69,7 @@
     left: 75%;
     height:300px;
     position:fixed;
-    
+
 }
 #assignmentCanvas{
     min-width:801px;
@@ -98,8 +98,56 @@
     font-weight: bolder;
 }
 
+.gallery_assignment_div_private{
+    height:120px;
+    border-style: solid;
+    border-width:4px;
+    border-style: outset;
+    border-color:red;
+    border-radius:10px;
+    background: -webkit-linear-gradient(white, #FFFAFA);
+    background: -o-linear-gradient(white, #FFFAFA);
+    background: -moz-linear-gradient(white, #FFFAFA);
+    background: linear-gradient(white, #FFFAFA);
+    box-shadow: 2px 2px 8px #888888;
+}
+
+.gallery_assignment_div_public{
+    height:120px;
+    border-style: solid;
+    border-width:4px;
+    border-style: outset;
+    border-color:blue;
+    border-radius:30px;
+    background:-webkit-linear-gradient(white, #F1FAFF);
+    background: -o-linear-gradient(white, #F1FAFF);
+    background: -moz-linear-gradient(white, #F1FAFF);
+    background: linear-gradient(white, #F1FAFF);
+    box-shadow: 2px 2px 8px #888888;
+}
+
+.gallery_assignment_div_public:hover, .gallery_assignment_div_private:hover{
+    box-shadow:none;
+    background:white;
+    border-width:4px;
+    border-style: inset;
+
+}
+
+.gallery_links{
+    text-align: center;
+    text-shadow: 1px 0px #C0C0C0;
+    color: #262626;
+}
+
+.gallery_links:hover{
+    text-shadow: none;
+    color:#888888;
+}
+
+
 table.full {
-    width: 90%; 
+    width: 90%;
 }
 
 td.left {
@@ -111,4 +159,3 @@ td.right {
     width: 97%;
     vertical-align: middle;
 }
-

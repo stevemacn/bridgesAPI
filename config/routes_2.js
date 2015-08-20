@@ -38,7 +38,7 @@ module.exports = function(app, passport, streamable) {
         }
         res.redirect("/login")
     }
-    
+
     var isLoggedInGallery = function(req, res, next) {
         if (req.isAuthenticated()){
             return res.redirect("/username/"+req.user.username)
@@ -49,18 +49,18 @@ module.exports = function(app, passport, streamable) {
     }
 
     var handleError = function(err, req, res, next) {
-       
+
         //if provided an object
-        if (err.err) return errObj(err) 
-       
+        if (err.err) return errObj(err)
+
         //else provided a string
         return res.json(503, {
             "error": err
         })
-       
+
         function errObj(err) {
-            
-            var msg = {} 
+
+            var msg = {}
 
             if (err.tip) msg.tip = err.tip
             if (err.err) msg.error = err.err
@@ -69,9 +69,15 @@ module.exports = function(app, passport, streamable) {
         }
     }
 
-    //user routes
+    // -------------------------------------------------------
+    //
+    //  User Routes
+    //
+    // -------------------------------------------------------
     var users = require('../app/controllers/users')
-    //var assignments = require('../app/controllers/assignments.js')
+
+    app.get('/', users.index);
+
     app.get('/signup', users.signup, handleError)
     app.post('/users', users.create, handleError)
 
@@ -84,40 +90,54 @@ module.exports = function(app, passport, streamable) {
     app.get('/users/apikey', users.getkey, handleError)
     app.get('/logout', users.logout)
 
-    //general routes
-    app.get('/', users.index);
-    
 
-    //stream routes
 
+
+    // -------------------------------------------------------
+    //
+    //  Stream Routes
+    //
+    // -------------------------------------------------------
     var streams = require('../app/controllers/streams.js')
+
     app.get('/streams/:domain/*',
         hasAccess, streamable, streams.getSource, handleError)
     app.get('/streams/:domain',
         hasAccess, streamable, streams.getSource, handleError)
 
-    //assignment routes
+
+
+    // -------------------------------------------------------
+    //
+    //  Assignment Routes
+    //
+    // -------------------------------------------------------
     var assignments = require('../app/controllers/assignments.js')
+
     app.post('/assignments/:assignmentID',
         hasAccess, assignments.upload, handleError)
-    app.post('/assignments/:assignmentID/share/:value',
+    app.post('/assignments/:assignmentNumber/share/:value',
         hasAccess, assignments.updateVisibility, handleError)
 //    app.post('/assignments/:assignmentID/vistype/:value',
 //        hasAccess, assignments.updateVistype, handleError)
-    app.post('assignments/:assignmentID/saveSnapshot/', //allows user to save a snapshot of the positions of a graph.
+    app.post('assignments/:assignmentNumber/saveSnapshot/', //allows user to save a snapshot of the positions of a graph.
              hasAccess, assignments.saveSnapshot, handleError)
-    app.get('/assignments/:assignmentID/:username',
+    app.get('/assignments/:assignmentNumber/:username',
              hasAccess, assignments.show, handleError)
-    app.get('/assignments/:assignmentID/:username',
+    app.get('/assignments/:assignmentNumber/:username',
         assignments.show, handleError)
-    
 
-    //gallery routes
+
+
+    // -------------------------------------------------------
+    //
+    //  Gallery Routes
+    //
+    // -------------------------------------------------------
     var gallery = require('../app/controllers/gallery.js')
-    app.get('/assignments/:assignmentNumber', gallery.view, handleError)
-    
-    //gallery routes
     var gallery_2 = require('../app/controllers/gallery_2.js')
+
+    app.get('/assignments/:assignmentNumber', gallery.view, handleError)
     app.get('/username/:userNameRes', isLoggedIn, gallery_2.view, handleError)
 
     app.post('/users/session',
@@ -126,25 +146,28 @@ module.exports = function(app, passport, streamable) {
             failureRedirect: '/login',
             failureFlash: true
         }))
-    
+
+
+
     // -------------------------------------------------------
     //
     //  Search Routes
     //
     // -------------------------------------------------------
-    
+
     app.post('/search/', function(req, res, next) {
         var id = req.body.assignmentID;
         res.redirect('/assignments/'+id);
     });
-    
-    
+
+
     app.get('/search/:searchTerm', function(req, res) {
         //console.log(parseFloat(req.params.searchTerm), typeof parseFloat(req.params.searchTerm))
         res.redirect('/assignments/'+req.params.searchTerm);
     });
-    
-    
+
+
+
     // -------------------------------------------------------
     //
     //  Authentication Routes
