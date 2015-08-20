@@ -49,7 +49,6 @@ module.exports = function(app, passport, streamable) {
     }
 
     var handleError = function(err, req, res, next) {
-
         //if provided an object
         if (err.err) return errObj(err)
 
@@ -59,7 +58,6 @@ module.exports = function(app, passport, streamable) {
         })
 
         function errObj(err) {
-
             var msg = {}
 
             if (err.tip) msg.tip = err.tip
@@ -121,11 +119,12 @@ module.exports = function(app, passport, streamable) {
 //    app.post('/assignments/:assignmentID/vistype/:value',
 //        hasAccess, assignments.updateVistype, handleError)
     app.post('assignments/:assignmentNumber/saveSnapshot/', //allows user to save a snapshot of the positions of a graph.
-             hasAccess, assignments.saveSnapshot, handleError)
+              hasAccess, assignments.saveSnapshot, handleError)
+
+    // app.get('/assignments/:assignmentNumber/:username',
+    //           hasAccess, assignments.show, handleError)
     app.get('/assignments/:assignmentNumber/:username',
-             hasAccess, assignments.show, handleError)
-    app.get('/assignments/:assignmentNumber/:username',
-        assignments.show, handleError)
+              assignments.show, handleError)
 
 
 

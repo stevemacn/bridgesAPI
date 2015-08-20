@@ -218,18 +218,20 @@ var sessionUser = null;
 exports.next = null
 
 exports.show = function (req, res, next) {
+
     //var query = Assignment.find({'username': 'test'});
-    //console.log(query);
 
     this.next = next
     var assignmentNumber = req.params.assignmentNumber
-    console.log(assignmentNumber);
-    var schoolID = req.params.schoolID
-    var classID = req.params.classID
+    // var schoolID = req.params.schoolID
+    // var classID = req.params.classID
     var username = req.params.username
-    var apikey = req.query.apikey
+  //
     sessionUser = null
     if (typeof req.user != "undefined") sessionUser = req.user
+
+    var apikey = (sessionUser) ? req.query.apikey : null;
+
 
     User
         .findOne({username: username})
@@ -241,8 +243,8 @@ exports.show = function (req, res, next) {
             getAssignment(req, res, next, usr.email, function (assign) {
 
                 //Test whether user has permission to view vis
-                testByUser(res, req, username, assign, function (){
-                    testByKey(res, apikey, username, assign, null)
+                return testByUser(res, req, username, assign, function (){
+                    return testByKey(res, apikey, username, assign, null)
                 })
             })
         })
@@ -256,9 +258,8 @@ exports.show = function (req, res, next) {
 
         findAssignmentNew(assignmentNumber)
 
+        // Finds assignments based on assignmentID
         function findAssignmentOld(id) {
-            console.log("old");
-            //might need to add ".0" to assignmentID if redirecting from gallery
             Assignment.findOne({
                 email: email,
                 assignmentID: id
@@ -277,22 +278,27 @@ exports.show = function (req, res, next) {
             });
         }
 
+        // finds assignments based on assignmentNumber
         function findAssignmentNew(id) {
-          console.log("new");
             Assignment.findOne({
                 email: email,
                 assignmentNumber: id
             })
-            .exec(function(err, ass) {
+            .exec(function(err, assignment) {
                 if (err) return next(err);
-                if (!ass || ass.length == 0) {
-                    findAssignmentOld(id); // <-----
+                if (!assignment || assignment.length == 0) {
+                    findAssignmentOld(id); // <-- Try old version too
                     return;
-                    //return next("Could not find assignment " + assignmentNumber);
+                }
+
+                // If the assignment is not public, see if user has access to private assignment
+                if(!assignment.shared) {
+                    if(!cb(assignment))
+                      return next ("the assignment data you requested is not public")
                 }
 
                 //If assignmentNumber is set, the assignment is up-to-date
-                if(ass.assignmentNumber == "")
+                if(assignment.assignmentNumber == "")
                     getAssignmentOld();
                 else
                     getAssignmentNew();
@@ -300,9 +306,8 @@ exports.show = function (req, res, next) {
         }
 
 
-        //Old method for finding sub assignments
+        //Old method for finding all sub assignments
         function getAssignmentOld() {
-            console.log("old");
             Assignment
             .find({
                 email: email,
@@ -324,7 +329,7 @@ exports.show = function (req, res, next) {
             });
         }
 
-        //New method for finding sub assignments
+        //New method for finding all sub assignments
         function getAssignmentNew() {
             assignmentNumber = assignmentNumber.split(".")[0];
 
@@ -341,10 +346,10 @@ exports.show = function (req, res, next) {
                 if (!assignments || assignments.length == 0) {
                          return next("Could not find assignment " + assignmentNumber);
                 } else if (assignments.length == 1) {
-                    //console.log(assignments[0]);
-                    return renderVis(res, assignments[0]);
-                } else
-                    return renderMultiVis(res, assignments);
+                      //console.log(assignments[0]);
+                      return renderVis(res, assignments[0]);
+                  } else
+                      return renderMultiVis(res, assignments);
             });
         }
     }
@@ -382,14 +387,20 @@ exports.show = function (req, res, next) {
 
     //compare the usernames and move on
     function testAndMoveOn (res, un1, un2, assign, nextTest) {
-        console.log(un1 + " " + un2)
-        if (un1 === un2) return renderVis (res, assign)
-
+        // console.log(un1 + " " + un2)
+        if (un1 === un2) {
+            // console.log(assign)
+            // return;
+        //  return renderVis (res, assign)
+          return true;
+        }
         if (nextTest) return nextTest()
-        else return next ("the data you requested is not public")
+        //else return next ("the assignment data you requested is not public")
+        else return false;
     }
 
     function renderVis (res, assignment) {
+
         var owner=false
         if (sessionUser) {
             if (sessionUser.email==assignment.email) owner = true;

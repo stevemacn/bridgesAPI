@@ -21,8 +21,7 @@ exports.view = function(req, res) {
     }
 
     if (!req.params.assignmentNumber) {
-      console.log(":<");
-      return next("HELP");
+      return next("No assignment number given");
 
 
     } else {
