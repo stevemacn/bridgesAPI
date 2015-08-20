@@ -134,10 +134,11 @@ module.exports = function(app, passport, streamable) {
     //  Gallery Routes
     //
     // -------------------------------------------------------
-    var gallery = require('../app/controllers/gallery.js')
-    var gallery_2 = require('../app/controllers/gallery_2.js')
+    var gallery = require('../app/controllers/gallery.js')      // Public gallery
+    var gallery_2 = require('../app/controllers/gallery_2.js')  // Private user gallery
 
     app.get('/assignments/:assignmentNumber', gallery.view, handleError)
+    app.get('/assignments/', gallery.view, handleError)
     app.get('/username/:userNameRes', isLoggedIn, gallery_2.view, handleError)
 
     app.post('/users/session',
