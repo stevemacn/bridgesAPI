@@ -11,6 +11,10 @@ var config = {
       name: 'bridgesapi'
     },
     port: 3000,
+<<<<<<< Updated upstream
+=======
+    //db: 'mongodb://heroku_app27208241:lg0jm38s5r1pbl0g6e68fcbiih@ds061228.mongolab.com:61228/heroku_app27208241'
+>>>>>>> Stashed changes
     db: 'mongodb://localhost/bridgesapi-development'
   },
 
@@ -30,7 +34,6 @@ var config = {
     },
     port: 3000,
     db: 'mongodb://localhost/bridgesapi-production'
-    
   }
 
 
