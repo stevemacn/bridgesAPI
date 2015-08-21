@@ -26,7 +26,7 @@ block content
         - for (var x = 0; x < assignments.length; x++)
             div(style="float:left;width:120px; margin-left:50px")
                 a(href='/assignments/'+assignments[x].assignmentNumber+'/'+usernames)
-                  - console.log(assignments[x].shared, assignments[x].vistype)
+                  //  - console.log(assignments[x].shared, assignments[x].vistype)
                   if (assignments[x].shared == false)
                           div(class='gallery_assignment_div_private')
                               if(assignments[x].vistype == 'graph')

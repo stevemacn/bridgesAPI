@@ -21,7 +21,7 @@ exports.index = function (req, res) {
     if (!user) var user
     if (req.user)
         user = req.user
-    else 
+    else
         var user = ""
     res.render('home/index', {
         title: 'Index',
@@ -37,13 +37,13 @@ exports.login = function (req, res) {
         var user = ""
 
     msg = req.flash('loginMessage')
-    
+
     res.render("users/login", {
         title: 'Login',
         user: user,
         message: msg
    })
-    
+
 }
 
 exports.logout = function (req, res) {
@@ -55,7 +55,7 @@ exports.logout = function (req, res) {
 exports.display = function (req, res) {
     //console.log("DISPLAY");
     if (!req.user) return res.redirect("login")
-    
+
     user = req.user
     Account
         .findOne({ email : user.email })
@@ -68,11 +68,31 @@ exports.display = function (req, res) {
                 acct: accts
             })
         })
-    
+
+}
+
+
+exports.profile = function (req, res) {
+    //console.log("DISPLAY");
+    if (!req.user) return res.redirect("login")
+
+    user = req.user
+    Account
+        .findOne({ email : user.email })
+        .exec(function (err, accts) {
+            if (err) return next(err)
+            if (!accts) accts = new Account
+            return res.render('users/profile', {
+                title: user.username + "'s Dashboard - Bridges",
+                user: user,
+                acct: accts
+            })
+        })
+
 }
 
 exports.view = function(req, res) {
-    
+
     var getAssignments = function(assig, assignmentsRes, cb) {
         if (assig.length == 0) return cb(assignmentsRes)
             var assID = assig.pop()
@@ -86,10 +106,10 @@ exports.view = function(req, res) {
                       getAssignments(assig, assignmentsRes, cb)
                 })
     }
-    
+
     if (!req.params.userNameRes)
         return next("no user name provided")
-        
+
         Assignment
             .find({
                   email: req.params.userNameRes,
@@ -100,7 +120,7 @@ exports.view = function(req, res) {
 
                 if (!assignmentResult) return next("could not find " +
                                                  "assignment " + req.params.userNameRes)
-              
+
                 var assig = []
                 for (i = 0; i < assignmentResult.length; i++)
                 assig.push(assignmentResult[i].assignmentID)
@@ -121,7 +141,7 @@ exports.deletePerson = function (req, res) {
 
     user = req.user
     console.log("Deleting user: " + user.email)
-    
+
     User
         .findOne({email: user.email})
         .exec(function (err, user) {
@@ -152,7 +172,7 @@ exports.deletePerson = function (req, res) {
 exports.getkey = function (req, res) {
     console.log("User: "+req.user.username +"("+req.user.email+")"+
         " requsted a new apikey")
-    user = req.user 
+    user = req.user
     user.generateKey()
     user.save()
     res.send(user.apikey)
@@ -181,7 +201,7 @@ exports.create = function (req, res) {
                     title: 'Sign up'
              })
         }
-  
+
         // manually login the user once successfully signed up
         req.logIn(user, function(err) {
             if (err) return next(err)

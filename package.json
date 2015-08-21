@@ -13,7 +13,7 @@
         "jade": "latest",
         "mongoose": "latest",
         "treemill":"latest",
-    "tomatoes":"latest",
+        "tomatoes":"latest",
         "twit":"latest",
         "passport": "latest",
         "passport-twitter": "latest",
@@ -26,7 +26,8 @@
         "connect-flash": "*",
         "view-helpers": "*",
         "request": "~2.22.0",
-        "bower":"*"
+        "bower":"*",
+        "jquery": "latest"
     },
     "devDependencies": {
         "phantomjs":"latest",

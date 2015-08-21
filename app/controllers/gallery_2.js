@@ -8,7 +8,7 @@ exports.view = function(req, res) {
         //console.log(assig, assignmentsRes);
         if (assig.length == 0) return cb(assignmentsRes)
             var assID = assig.pop()
-            console.log(assID)
+            // console.log(assID)
             Assignment
                 .findOne({
 //                         "assignmentID": assID
@@ -59,7 +59,7 @@ exports.view = function(req, res) {
                                                      "assignment " + req.params.userNameRes)
 
                 var assig = []
-                console.log(assignmentResult);
+                //console.log(assignmentResult);
                 for (i = 0; i < assignmentResult.length; i++) {
                     //if(assignmentResult[i].data)
                        // assig.push(assignmentResult[i].assignmentID)
