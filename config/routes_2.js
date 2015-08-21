@@ -116,7 +116,8 @@ module.exports = function(app, passport, streamable) {
         hasAccess, assignments.upload, handleError)
     app.post('/assignments/:assignmentNumber/share/:value',
         hasAccess, assignments.updateVisibility, handleError)
-//    app.post('/assignments/:assignmentID/vistype/:value',
+
+//    app.post('/assignments/:assignmentID/vistype/:value',   //Deprecated function
 //        hasAccess, assignments.updateVistype, handleError)
     app.post('assignments/:assignmentNumber/saveSnapshot/', //allows user to save a snapshot of the positions of a graph.
               hasAccess, assignments.saveSnapshot, handleError)
@@ -125,6 +126,9 @@ module.exports = function(app, passport, streamable) {
     //           hasAccess, assignments.show, handleError)
     app.get('/assignments/:assignmentNumber/:username',
               assignments.show, handleError)
+
+    //app.delete('/assignments/:assignmentID/:username',
+    //    hasAccess, assignments.deleteAssignment, handleError)
 
 
 

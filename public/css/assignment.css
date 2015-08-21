@@ -131,7 +131,6 @@
     background:white;
     border-width:4px;
     border-style: inset;
-
 }
 
 .gallery_links{
@@ -157,5 +156,5 @@ td.left {
 
 td.right {
     width: 97%;
-    vertical-align: middle;
+    vertical-align: middle ;
 }

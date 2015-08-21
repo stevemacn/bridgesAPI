@@ -1,0 +1,11 @@
+.carousel-inner > .item > img,
+.carousel-inner > .item > a > img {
+    width: 70%;
+    margin: auto;
+}
+
+.carousel-pos{
+    position: absolute;
+    left: -400px;
+    top: -10px;
+}

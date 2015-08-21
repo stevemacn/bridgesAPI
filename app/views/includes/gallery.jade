@@ -1,0 +1,45 @@
+div(class='container')
+      div(id='data_gallery' class='carousel slide' data-ride='carousel')
+
+        ol(class='carousel-indicators hide_small_gallery')
+          li(data-target='#data_gallery' data-slide-to='0' class='active'  style='background-color:red')
+          li(data-target='#data_gallery' data-slide-to='1' style='background-color:red')
+          li(data-target='#data_gallery' data-slide-to='2' style='background-color:red')
+          li(data-target='#data_gallery' data-slide-to='3' style='background-color:red')
+
+        div(class='carousel-inner' role='listbox')
+          div(class='item active')
+            a(href='http://bridges-cs.herokuapp.com')
+                img(src='img/gallery/graph.png' alt='graph' width='460' height='345')
+                div(class='carousel-caption carousel-pos' style='color: red')
+                    h3 Graph
+                    p directed graph
+
+          div(class='item')
+            a(href='http://bridges-cs.herokuapp.com')
+                img(src='img/gallery/list.png' alt='list' width='460' height='345')
+                div(class='carousel-caption carousel-pos' style='color: red')
+                    h3 List
+                    p linked list
+        
+          div(class='item')
+            a(href='http://bridges-cs.herokuapp.com')
+                img(src='img/gallery/graph2.png' alt='graph' width='460' height='345')
+                div(class='carousel-caption carousel-pos' style='color: red')
+                    h3 Graph
+                    p Dijkstra's shortest path
+
+          div(class='item')
+            a(href='http://bridges-cs.herokuapp.com')
+                img(src='img/gallery/tree.png' alt='tree' width='460' height='345')
+                div(class='carousel-caption carousel-pos' style='color: red')
+                    h3 Tree
+                    p binary tree
+
+        a(class='left carousel-control hide_small_gallery' href='#data_gallery' role='button' data-slide='prev')
+          span(class='glyphicon glyphicon-chevron-left' aria-hidden='true')
+          span(class='sr-only') Previous
+
+        a(class='right carousel-control hide_small_gallery' href='#data_gallery' role='button' data-slide='next')
+          span(class='glyphicon glyphicon-chevron-right' aria-hidden='true')
+          span(class='sr-only') Next

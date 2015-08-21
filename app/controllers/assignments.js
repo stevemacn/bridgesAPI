@@ -91,7 +91,6 @@ exports.upload = function (req, res, next) {
             } else {
                 rawBody = req.body;
             }
-
         }
     } else {
         //console.log("OBJECT ALREADY");
@@ -506,6 +505,25 @@ exports.show = function (req, res, next) {
             "owner":owner
         })
     }
+        
+
+        exports.deleteAssignment = function (req, res) {
+            console.log("here")
+            as = req.assginment
+            console.log("Deleting assignment with ID: " + as.assignmentID)
+            
+            Assignment
+                .find({assignmentID: as.assignmentID})
+                .exec(function(err, assign) {
+                          if (err) return next(err)
+                          for (i in assign) {
+                              console.log(assign[i].assignmentID)
+                              assign[i].remove()
+                          }
+                      })
+            
+            //return res.redirect("gallery_2")
+        }
 
 
 

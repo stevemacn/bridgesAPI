@@ -1,20 +1,7 @@
-
-//This code is heavily based on code from 
-//http://mbostock.github.io/d3/talk/20111018/tree.html 
-
-//d3.bst = function (d3, canvasID, w, h) {  
-//
-//    //defaults 
-//    var bst = {},
-//        mw = 0, mh = 0,
-//        w = w || 1280, h = h || 800,
-//        i = 0,
-//        tree,
-//        depthStep = 75, 
-//        canvasID = canvasID, //canvasID must have hash like "#vis" or "#canvas"
-//        root;
 //This code is heavily based on code from
 //http://mbostock.github.io/d3/talk/20111018/tree.html
+
+
 
 d3.selection.prototype.moveToFront = function() {
   return this.each(function(){
@@ -39,7 +26,7 @@ d3.bst = function (d3, canvasID, w, h) {
         w = w || 1280, h = h || 800,
         i = 0,
         tree,
-        depthStep = 50,
+        depthStep = 75,
         canvasID = canvasID, //canvasID must have hash like "#vis" or "#canvas"
         root;
     var svgGroup, defs;
@@ -50,7 +37,7 @@ d3.bst = function (d3, canvasID, w, h) {
         .on("drag", dragged)
         .on("dragend", dragended);
 
-    // error when zooming directly after pan on OSX     
+    // error when zooming directly after pan on OSX
     // https://github.com/mbostock/d3/issues/2205
     var zoom = d3.behavior.zoom()
         .scaleExtent([0.1,5])
@@ -76,20 +63,20 @@ d3.bst = function (d3, canvasID, w, h) {
             .nodeSize([50, 50]);
         diagonal = d3.svg.diagonal();
             //.projection(function(d, i) { if(i >= 0) return [d.x + 50, d.y]; else return [d.x, d.y] });
-        
+
         vis = d3.select(canvasID).append("svg:svg")
             .attr("width", w )
             .attr("height", h )
             .attr("id", "svg" + canvasID.substr(4))
             .classed("svg", true)
-            //.attr("height", h * 2) 
+            //.attr("height", h * 2)
             .call(zoom)
             .call(drag);
 
         svgGroup = vis.append("svg:g")
             .attr("transform", "translate(" + (mh + (w/2)) + "," + mw + ")")
         allSVG.push(svgGroup);
-        
+
         defs = vis.append('svg:defs')
 
 //        var marker = defs.selectAll('marker')
@@ -162,7 +149,7 @@ d3.bst = function (d3, canvasID, w, h) {
             .attr("text-anchor", "start")
             .style("display", "none")
             .text(function(d) { return d.name; })
-        
+
        if(nodes[0].key != null) {
            nodeEnter.append("svg:text")
             .attr("dy", ".35em")
@@ -172,7 +159,7 @@ d3.bst = function (d3, canvasID, w, h) {
           //  .style("display", "none")
             .text(function(d) { return d.key || ""; })
        };
-        
+
 
         // Transition nodes to their new position.
         var nodeUpdate = node.transition()
@@ -222,11 +209,11 @@ d3.bst = function (d3, canvasID, w, h) {
         link.enter().insert("svg:path", "g")
             .attr("class", "link")
             //.style("stroke", function(d,i) { return i < 250 ? "red" : "#ccc"})
-            .style("stroke", function(d,i) { 
+            .style("stroke", function(d,i) {
                 return d.color || "#ccc";
             })
             .style("opacity", function(d,i) {
-                return d.opacity || 1;  
+                return d.opacity || 1;
             })
             .style("stroke-width", function(d) {
                 return strokeWidthRange(d.weight) || 1;

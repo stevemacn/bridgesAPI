@@ -13,7 +13,7 @@ block css
 //extends assignment.jade
 block content
     include ../includes/header.jade
-    script(type="application/ecmascript" async="" src='/js/dropzone.js')
+    script(type='application/ecmascript' async='' src='/js/dropzone.js')
     .container
         .row
             .col-lg-6
@@ -21,7 +21,8 @@ block content
                     //a(href="/assignments/"+assignments[0].assignmentID+"/"+usernames)
                     h1(style="text-align: left") #{usernames}'s Gallery
 
-    div(style="margin:5%")
+
+    div(style='margin:5%')
         - for (var x = 0; x < assignments.length; x++)
             div(style="float:left;width:120px; margin-left:50px")
                 a(href='/assignments/'+assignments[x].assignmentNumber+'/'+usernames)
