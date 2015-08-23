@@ -1,3 +1,7 @@
+/**
+ * This defines the Assginments class
+ */
+
 var mongoose = require('mongoose')
     , Schema = mongoose.Schema;
 
@@ -28,6 +32,31 @@ var Assignment = new Schema ({
 
 mongoose.model('Assignment', Assignment);
 
+
+//Assignment
+Assignment.methods={
+    /**
+    * @getUsername - returns the current username
+    * @getEmail - returns the email of the current user
+    * @getAssignemnt - return the assignment number
+    * @deleteAssignment - return
+     */
+    getUsername: function(){
+        return this.username;
+    },
+    getEmail:  function(){
+        return this.email;
+    },
+    getAssignmentID:  function(){
+        return this.assignmentID;
+    },
+    deleteAssignment:  function(){
+        
+    },
+    changeVisibility:  function(){
+        this.shared=(!this.shared);
+    }
+}
 
 /**
  Enhanced model

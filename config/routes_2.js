@@ -1,24 +1,57 @@
 module.exports = function(app, passport, streamable) {
 
+    
+    
+    
+    /**
+     * isPublic - allows public access to public assignments
+     */
+    var isPublic = function(req, res, next){
+        //return res.send ("hello");
+        
+        var mongoose = require('mongoose'),
+        Assignment = mongoose.model('Assignment'),
+        User = mongoose.model('User'), user;
+        
+        User
+            .findOne({
+                        apikey: req.query.apikey
+                     })
+            .exec(function(err, user_local) {
+                      user = user_local
+                  })
+        
+        Assignment
+            .findOne({
+                     assignmentID: req.params.assignmentID,
+                     shared: true
+                     })
+            .exec(function(err, assig){
+                  if (!assig & !user)
+                      return next("there is no assignment with this id or the assignment is private")
+                  return next()
+                  })
+    }
+    
     //Allows users to by pass authentication to api requests
     //if they have a valid api key.
     var hasAccess = function(req, res, next) {
-
+        
         //authenticated
         if (req.isAuthenticated()) {
             return next()
         }
-
+        
         var mongoose = require('mongoose'),
             User = mongoose.model('User')
-
-            if (!req.query.apikey) return next(
+            var found = req.query.apikey;
+            if (!found) return next(
                 "Not logged in: you must provide" +
-                " an apikey as a query variable")
-
+               " an apikey as a query variable")
+                
             User
                 .findOne({
-                    apikey: req.query.apikey
+                    apikey: found
                 })
                 .exec(function(err, user) {
                     if (!user)
@@ -71,7 +104,6 @@ module.exports = function(app, passport, streamable) {
 
     //user routes
     var users = require('../app/controllers/users')
-    //var assignments = require('../app/controllers/assignments.js')
     app.get('/signup', users.signup, handleError)
     app.post('/users', users.create, handleError)
 
@@ -89,7 +121,6 @@ module.exports = function(app, passport, streamable) {
     
 
     //stream routes
-
     var streams = require('../app/controllers/streams.js')
     app.get('/streams/:domain/*',
         hasAccess, streamable, streams.getSource, handleError)
@@ -104,12 +135,11 @@ module.exports = function(app, passport, streamable) {
         hasAccess, assignments.updateVisibility, handleError)
     app.post('/assignments/:assignmentID/vistype/:value',
         hasAccess, assignments.updateVistype, handleError)
-    //app.delete('/assignments/:assignmentID/:username',
-    //    hasAccess, assignments.deleteAssignment, handleError)
     
     app.get('/assignments/:assignmentID/:username',
-             hasAccess, assignments.show, handleError)
-
+             isPublic, assignments.show, handleError)
+    
+    
 
     //gallery routes
     var gallery = require('../app/controllers/gallery.js')
