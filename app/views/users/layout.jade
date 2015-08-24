@@ -1,10 +1,6 @@
 extends ../includes/boilerplate.jade 
 block css
     link(rel='stylesheet',
-            href='/css/gallery_small.css')
-    link(rel='stylesheet',
-            href='/css/contact-buttons.css')
-    link(rel='stylesheet',
             href='http://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css')
 
 block content
@@ -13,12 +9,9 @@ block content
         .col-lg-6(style = "float:left; min-height:500px;")
             h1 Welcome to Bridges!
             p Creating a bridge between your assignments and the world
-            include ../includes/gallery.jade
             div(style="margin-top:30px;")
                 block info
                 
-
-
 
         .col-lg-6(style = "float:right")
             block validate
@@ -26,5 +19,3 @@ block content
             block form
         .col-lg-6(style = "float:right; margin-top: 25px;")
             block js
-    script(src='/js/jquery.contact-buttons.js')
-    script(src='/js/side-bar.js')

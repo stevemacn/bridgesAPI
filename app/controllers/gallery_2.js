@@ -1,7 +1,7 @@
 var mongoose = require('mongoose'),
-User = mongoose.model('User'),
-Account = mongoose.model('Account'),
-Assignment = mongoose.model('Assignment')
+    User = mongoose.model('User'),
+    Account = mongoose.model('Account'),
+    Assignment = mongoose.model('Assignment')
 
 exports.view = function(req, res) {
     var getAssignments = function(assig, assignmentsRes, cb) {

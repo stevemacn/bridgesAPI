@@ -1,35 +1,54 @@
 module.exports = function(app, passport, streamable) {
 
-    
-    
+ 
     
     /**
-     * isPublic - allows public access to public assignments
+     *  isPublic - allows public access to public assignments
+     *  @req - requests
+     *  @res - response
+     *  @next - passing controller to the next handler
      */
     var isPublic = function(req, res, next){
-        //return res.send ("hello");
-        
+        //return res.send("hello");
         var mongoose = require('mongoose'),
         Assignment = mongoose.model('Assignment'),
-        User = mongoose.model('User'), user;
+        User = mongoose.model('User');
+        var a_user = false;
+        
         
         User
             .findOne({
-                        apikey: req.query.apikey
+                     username: req.params.username
                      })
             .exec(function(err, user_local) {
-                      user = user_local
+                    if (err)
+                        return next()
+                    if (!user_local)
+                        return next("there is no user with the username: " + req.params.username)
+                  //authenticated
+                    if (req.isAuthenticated()) {
+                        a_user = true
+                    }
                   })
+        
+        
         
         Assignment
             .findOne({
-                     assignmentID: req.params.assignmentID,
-                     shared: true
+                     assignmentID: req.params.assignmentID
                      })
             .exec(function(err, assig){
-                  if (!assig & !user)
-                      return next("there is no assignment with this id or the assignment is private")
-                  return next()
+                  //return res.send(a_user)
+                  if (!assig)
+                      return next("there is no assignment with this id")
+                  else if (assig & a_user)
+                    return next()
+                  else if (assig.shared)
+                      return next()
+                  else if (!assig.shared & !a_user)
+                        return next("the assignment is private")
+                  else return next();
+                //res.send(assig.shared)
                   })
     }
     
@@ -138,8 +157,7 @@ module.exports = function(app, passport, streamable) {
     
     app.get('/assignments/:assignmentID/:username',
              isPublic, assignments.show, handleError)
-    
-    
+
 
     //gallery routes
     var gallery = require('../app/controllers/gallery.js')
@@ -148,6 +166,7 @@ module.exports = function(app, passport, streamable) {
     //gallery routes
     var gallery_2 = require('../app/controllers/gallery_2.js')
     app.get('/username/:userNameRes', isLoggedIn, gallery_2.view, handleError)
+
 
     app.post('/users/session',
         passport.authenticate('local-log', {
