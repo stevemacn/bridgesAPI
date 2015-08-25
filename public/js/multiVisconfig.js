@@ -1,7 +1,7 @@
 //console.log(data);
 
 var strokeWidthRange = d3.scale.linear()
-                        .domain([1,100])
+                        .domain([1,50])
                         .range([1,15])
                         .clamp(true);
 
@@ -21,7 +21,7 @@ for (var key in data) {
     , width = ele.clientWidth - 15
      height = ele.clientHeight + 15
 
-    if (d3.bst) { 
+    if (d3.bst) {
         bst = d3.bst(d3, "#vis" + key, width, height)
         bst.make(data[key])
     }
@@ -30,12 +30,12 @@ for (var key in data) {
     }
     else if (d3.graph) {
         d3.graph(d3, "#vis" + key, width, height, data[key]);
-    }  
+    }
     else {
-        console.log("unknown type");  
+        console.log("unknown type");
         d3.graph(d3, "#vis" + key, width, height, data[key]);
     }
-    
+
     visCount++;
     maximizedCount++;
   }
@@ -57,14 +57,14 @@ function reset() {
 // Toggle resizing of visualization divs (swaps between two sizes)
 function resize() {
     var sentinel = false;
-    
+
     for(var i = 0; i < visCount; i++) {
         console.log((d3.select("#vis" + i)).attr("height"));
         if ((d3.select("#vis" + i)).attr("height") < 400)
-            sentinel = true; 
+            sentinel = true;
     }
-    
-    if(sentinel) {        
+
+    if(sentinel) {
             d3.selectAll(".assignmentContainer")
                 .attr("height", height + height/2);
 
@@ -81,7 +81,7 @@ function resize() {
 
 // Toggle minimizing and maximizing visualization divs
 function minimize() {
-    
+
     //Collapse/Expand All
     if(this.id == "min") {
         if(d3.select(this).attr("minimized") == "true") {   //MAXIMIZE
@@ -94,67 +94,67 @@ function minimize() {
             d3.selectAll(".minimize")
                 .attr("minimized", false)
                 .text("-");
-            
+
             maximizedCount = visCount;
             minimizedCount = 0;
-            
+
         } else {    //MINIMIZE
             d3.selectAll(".assignmentContainer")
                 .classed("assignmentContainerMinimized", true);
 
             d3.selectAll(".svg")
                 .style("display", "none");
-            
+
             d3.selectAll(".minimize")
                 .attr("minimized", true)
                 .text("+");
-            
+
             maximizedCount = 0;
             minimizedCount = visCount;
         }
-        
+
         return;
     }
-    
-    
+
+
     if(d3.select(this).attr("minimized") == "true") {   //MAXIMIZE
         d3.select("#vis" + this.id.substr(3))
             .classed("assignmentContainerMinimized", false);
 
         d3.select("#svg" + this.id.substr(3))
             .style("display", "block");
-       
+
         d3.select(this).attr("minimized", false);
-        
+
         d3.select(this).text("-");
-        
+
         maximizedCount++;
         minimizedCount--;
-        
+
         if(maximizedCount == visCount) {//ALL vis are minimized
             d3.select("#min")
                 .attr("minimized", false)
-                .text("-");   
+                .text("-");
         }
-    
+
     } else {    //MINIMIZE
         d3.select("#vis" + this.id.substr(3))
             .classed("assignmentContainerMinimized", true);
-        
+
         d3.select("#svg" + this.id.substr(3))
             .style("display", "none");
-        
+
         d3.select(this).attr("minimized", true);
-        
+
         d3.select(this).text("+");
-        
+
         minimizedCount++;
         maximizedCount--;
-        
+
         if(minimizedCount == visCount) {//ALL vis are minimized
             d3.select("#min")
                 .attr("minimized", true)
-                .text("+");   
+                .text("+");
         }
     }
 }
