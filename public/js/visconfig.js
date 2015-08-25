@@ -1,6 +1,6 @@
 
 var strokeWidthRange = d3.scale.linear()
-                        .domain([1,50])
+                        .domain([1,10])
                         .range([1,15])
                         .clamp(true);
 
