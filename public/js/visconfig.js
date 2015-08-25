@@ -10,11 +10,6 @@ d3.select(".minimize").on("click", minimize);
 allZoom = [];
 allSVG = [];
 
-var strokeWidthRange = d3.scale.linear()
-                        .domain([1,100])
-                        .range([1,15])
-                        .clamp(true);
-
 var ele = document.getElementById("vis0"),
     width = ele.offsetWidth - 15
     height = ele.offsetHeight + 250
