@@ -1,6 +1,6 @@
 
 var strokeWidthRange = d3.scale.linear()
-                        .domain([1,100])
+                        .domain([1,10])
                         .range([1,15])
                         .clamp(true);
 
@@ -10,16 +10,12 @@ d3.select(".minimize").on("click", minimize);
 allZoom = [];
 allSVG = [];
 
-var strokeWidthRange = d3.scale.linear()
-                        .domain([1,100])
-                        .range([1,15])
-                        .clamp(true);
-
 var ele = document.getElementById("vis0"),
     width = ele.offsetWidth - 15
-    height = window.innerHeight - 160;//ele.offsetHeight + 250  
-     
-if (d3.bst) { 
+
+    height = ele.offsetHeight + 250
+
+if (d3.bst) {
     bst = d3.bst(d3, "#vis0", width, height)
     bst.make(data)
 }
@@ -32,8 +28,8 @@ else if (d3.array) {
 else if (d3.graph) {
     d3.graph(d3, "#vis0", width, height, data)
 } else {
-    console.log("unknown type");  
-    d3.graph(d3, "#vis0", width, height, data[key]);
+    console.log("unknown type");
+    d3.graph(d3, "#vis" + key, width, height, data[key]);
 }
 
 function reset() {
@@ -49,11 +45,8 @@ function reset() {
 
 // Toggle resizing of visualization divs (swaps between two sizes)
 function resize() {
-    var h = window.innerHeight - 160;
-    console.log(height,h);
-    console.log((d3.select(".assignmentContainer")[0])[0].clientHeight);
-    if((d3.select(".assignmentContainer")[0])[0].clientHeight < h) {        
-        console.log(height,h);
+
+    if((d3.select(".assignmentContainer")[0])[0].clientHeight < 400) {
             d3.selectAll(".assignmentContainer")
                 .attr("height", h);
 
@@ -72,28 +65,26 @@ function resize() {
 
 // Toggle minimizing and maximizing visualization divs
 function minimize() {
-    
+
     if(d3.select(this).attr("minimized") == "true") {
         d3.select("#vis" + this.id.substr(3))
             .classed("assignmentContainerMinimized", false);
 
         d3.select("#svg" + this.id.substr(3))
             .style("display", "block");
-       
+
         d3.select(this).attr("minimized", false);
-        
+
         d3.select(this).text("-");
     } else {
         d3.select("#vis" + this.id.substr(3))
             .classed("assignmentContainerMinimized", true);
-        
+
         d3.select("#svg" + this.id.substr(3))
             .style("display", "none");
-        
+
         d3.select(this).attr("minimized", true);
-        
+
         d3.select(this).text("+");
     }
 }
-
-

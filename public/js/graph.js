@@ -1,4 +1,4 @@
-//based loosely on bostock's example and 
+//based loosely on bostock's example and
 //http://bl.ocks.org/d3noob/5141278
 
 d3.graph = function(d3, canvasID, w, h, data) {
@@ -14,14 +14,14 @@ d3.graph = function(d3, canvasID, w, h, data) {
         canvasID = canvasID; //canvasID must have hash like "#vis" or "#canvas"
     var vis, svgGroup, defs;
     var count = 0
-    
+
 var nodes = data.nodes
 var links = data.links
 
 for (i in links) {
-   if (count<links[i].value) count = links[i].value 
+   if (count<links[i].value) count = links[i].value
 }
-   
+
 var force = d3.layout.force()
     .charge([-250])
     .linkDistance([50])
@@ -32,8 +32,8 @@ var force = d3.layout.force()
 
 var drag = force.drag();
 drag.on("dragstart",dragstart);
-    
-    // error when zooming directly after pan on OSX     
+
+    // error when zooming directly after pan on OSX
     // https://github.com/mbostock/d3/issues/2205
  var zoom = d3.behavior.zoom()
         .scaleExtent([0.1,5])
@@ -55,7 +55,7 @@ svgGroup = vis.append("g");
 
 vis.append("svg:defs").selectAll("marker")
     .data(["end"])// Different path types defined here
-    .enter().append("svg:marker")  
+    .enter().append("svg:marker")
     .attr("id", String)
     .attr("viewBox", "0 -5 10 10")
     .attr("refX", 15)
@@ -79,7 +79,7 @@ var link = svgGroup.append("svg:g").selectAll("path")
     .attr("class", "link")
     .attr("marker-end", "url(#end)")
     .style("stroke-width", function (d) {
-        return strokeWidthRange(d.weight) || 1;
+        return strokeWidthRange(d.thickness) || 1;
     })
     .style("stroke", function (d) {
         return d.color || "black"
@@ -106,7 +106,7 @@ var node = svgGroup.selectAll(".node")
     .on("dblclick", dblclick)
     .call(force.drag)
 
-//inner nodes    
+//inner nodes
 node
     .append('path')
     .attr("class", "node")
@@ -155,14 +155,14 @@ force.on("tick", function() {
             var dx = d.target.x - d.source.x,
                 dy = d.target.y - d.source.y,
                 dr = Math.sqrt(dx * dx + dy * dy);
-            return "M" + 
-                d.source.x + "," + 
-                d.source.y + "A" + 
+            return "M" +
+                d.source.x + "," +
+                d.source.y + "A" +
                 dr + "," + dr + " 0 0,1 " +
-                d.target.x + "," + 
+                d.target.x + "," +
                 d.target.y;
         });
-    
+
     node
         .attr("transform", function(d) {
             return "translate(" + d.x + "," + d.y + ")";
@@ -178,7 +178,7 @@ function mouseover() {
         .attr('d', function (d) {
             return d3.svg.symbol().type(d.shape||"circle")
                     .size(scaleSize(40))()
-        })            
+        })
 }
 
 function mouseout() {
@@ -190,7 +190,7 @@ function mouseout() {
         .attr('d', function (d) {
             return d3.svg.symbol().type(d.shape||"circle")
                     .size(scaleSize(d.size||1))()
-        })            
+        })
 }
 
 // zoom function
@@ -218,6 +218,5 @@ function dragstart(d) {
 //    //svgGroup.attr("transform", "translate(0,0)scale(1,1)");
 //    svgGroup.attr("transform", "translate(" + zoom.translate() + ")scale(" + zoom.scale() + ")");
 //}
-    
-};
 
+};

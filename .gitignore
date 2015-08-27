@@ -19,10 +19,6 @@ test/imgs/
 ###################
 config/keys.json
 
-# Don't steal our DB!! #
-###################
-config/config.js
-
 # Logs and databases #
 ######################
 *.log
@@ -39,5 +35,8 @@ config/config.js
 ehthumbs.db
 Thumbs.db
 
-
+# excluding miscellaneous files #
+################################
+.gitignore
+.*
 public/js/oldGraph.js
