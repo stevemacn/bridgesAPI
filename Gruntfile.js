@@ -12,6 +12,22 @@ module.exports = function (grunt) {
         file: 'app.js'
       }
     },
+    bower: {
+      install: {
+         options: {
+           targetDir: "public/components"
+         }
+      }
+    },
+    modernizr: {
+      dist: {
+          // [REQUIRED] Path to the build you're using for development.
+          "devFile" : "public/js/modernizr-dev.js",
+
+          // Path to save out the built file.
+          "outputFile" : "public/components/modernizr/modernizr.js"
+        }
+    },
     watch: {
       options: {
         nospawn: true,
@@ -23,9 +39,8 @@ module.exports = function (grunt) {
           'app/**/*.js',
           'app/**/**/*.js',
           'config/*.js',
-          'Gruntfile.js',
         ],
-        tasks: ['develop', 'delayed-livereload']
+        tasks: ['develop', 'bower', 'modernizr', 'delayed-livereload']
       },
       jade: {
         files: ['app/views/**/*.jade'],
@@ -33,6 +48,11 @@ module.exports = function (grunt) {
       },
     }
   });
+
+  grunt.loadNpmTasks('grunt-develop');
+  grunt.loadNpmTasks('grunt-contrib-watch');
+  grunt.loadNpmTasks('grunt-bower-task');
+  grunt.loadNpmTasks("grunt-modernizr");
 
   grunt.registerTask('test', 'run mocha', function () {
      var done = this.async();
@@ -61,8 +81,5 @@ module.exports = function (grunt) {
     }, 500);
   });
 
-  grunt.loadNpmTasks('grunt-develop');
-  grunt.loadNpmTasks('grunt-contrib-watch');
-
-  grunt.registerTask('default', ['develop', 'watch']);
+  grunt.registerTask('default', ['develop', 'bower', 'modernizr', 'watch']);
 };

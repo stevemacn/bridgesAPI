@@ -1,20 +1,25 @@
 extends ../includes/boilerplate.jade
 block css
-    link(rel='stylesheet', 
+    link(rel='stylesheet',
          href='/css/header.css')
 block content
-    include ../includes/header.jade 
-    
+    include ../includes/header.jade
+
     div(style="margin: 5%")
-        - if (assignmentID < 0)
+        - if (assignmentNumber < 0)
                 p Looks like there aren't any assignments here...    :(
-        - else 
-                p Public Gallery for assignments with id: '#{assignmentID}'
+        - else
+                p Public Gallery for assignments with number '#{assignmentNumber}'
 
     div(style="margin:5%")
-       
+
         - for (var x = 0; x < usernames.length; x++)
-            a(href="/assignments/"+assignmentID+"/"+usernames[x],
-                style="float:left;width:100px; margin-left:50px")
-                div(style="height:100px; background-color:steelblue; border-radius:100px;")
-                h4(style="text-align: center") #{usernames[x]}
+            - console.log(assignmentNumber)
+            a(href="/assignments/"+assignmentNumber+"/"+usernames[x], style="float:left;width:100px; margin-left:50px")
+              if(assignments[x].vistype == 'graph')
+                  img(src='/img/graph.png' title=assignments[x].vistype)
+              else if((assignments[x].vistype == 'tree'))
+                  img(src='/img/tree.png' title=assignments[x].vistype)
+              else
+                  img(src='/img/LList.png' title=assignments[x].vistype)
+              h4(style="text-align: center") #{usernames[x]}

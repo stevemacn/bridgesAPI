@@ -17,7 +17,7 @@ var strokeWidthRange = d3.scale.linear()
 
 var ele = document.getElementById("vis0"),
     width = ele.offsetWidth - 15
-    height = ele.offsetHeight + 250  
+    height = window.innerHeight - 160;//ele.offsetHeight + 250  
      
 if (d3.bst) { 
     bst = d3.bst(d3, "#vis0", width, height)
@@ -26,11 +26,14 @@ if (d3.bst) {
 else if (d3.queue) {
     d3.queue(d3, "#vis0", width, height, data.nodes)
 }
+else if (d3.array) {
+    d3.array(d3, "#vis0", width, height, data.nodes)
+}
 else if (d3.graph) {
     d3.graph(d3, "#vis0", width, height, data)
 } else {
     console.log("unknown type");  
-    d3.graph(d3, "#vis" + key, width, height, data[key]);
+    d3.graph(d3, "#vis0", width, height, data[key]);
 }
 
 function reset() {
@@ -46,20 +49,26 @@ function reset() {
 
 // Toggle resizing of visualization divs (swaps between two sizes)
 function resize() {
-    if((d3.select(".assignmentContainer")[0])[0].clientHeight < 400) {        
+    var h = window.innerHeight - 160;
+    console.log(height,h);
+    console.log((d3.select(".assignmentContainer")[0])[0].clientHeight);
+    if((d3.select(".assignmentContainer")[0])[0].clientHeight < h) {        
+        console.log(height,h);
             d3.selectAll(".assignmentContainer")
-                .attr("height", height);
+                .attr("height", h);
 
             d3.selectAll(".svg")
-                .attr("height", height);
+                .attr("height", h);
     } else {
         d3.selectAll(".assignmentContainer")
-                .attr("height", height - height/2);
+                .attr("height", height);
 
             d3.selectAll(".svg")
-                .attr("height", height - height/2 + 30);
+                .attr("height", height);
     }
 }
+    
+
 
 // Toggle minimizing and maximizing visualization divs
 function minimize() {

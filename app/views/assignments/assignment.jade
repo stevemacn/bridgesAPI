@@ -1,15 +1,15 @@
 extends ../includes/boilerplate.jade
-block css 
-    link(rel='stylesheet',      
+block css
+    link(rel='stylesheet',
          href='/css/header.css')
-    link(rel='stylesheet',      
+    link(rel='stylesheet',
          href='/css/assignment.css')
     link(rel='stylesheet',
         href='/css/dropzone.css')
-    link(rel='stylesheet', 
+    link(rel='stylesheet',
              href='/components/css-toggle-switch/dist/toggle-switch.css')
 
-                 
+
 block content
     include ../includes/header.jade
 
@@ -17,36 +17,40 @@ block content
     script(type="application/ecmascript" async="" src='/js/FileSaver.js')
     script(type="application/ecmascript" async="" src='/js/Blob.js')
     script(type="application/ecmascript" async="" src='/js/dropzone.js')
-    
+
     script(src='/js/snapshoot.js')
-    div#assignmentCanvas(overflow="auto") 
-     
-        -if (owner) {    
-            #optionContainer.optionContainer  
+    div#assignmentCanvas(overflow="auto")
+
+        -if (owner) {
+            #optionContainer.optionContainer
                 div(style="margin:10px 10px 10px 10px;")
-                
+
                     label Share #{shared}
                     div.switch-toggle.well
                         input#public(type="radio", name="view",
-                            onclick="toggleShare(false)")
-                        label(for="public") Public 
-                        input#private(type="radio", name="view",
                             onclick="toggleShare(true)")
-                        label(for="private") Private 
+                        label(for="public") Public
+                        input#private(type="radio", name="view",
+                            onclick="toggleShare(false)")
+                        label(for="private") Private
                         a.btn.btn-primary
                     div
                         button(class="optionButton", id="resize")
-                                    label Resize view    
+                                    label Resize view
 
                         button(class="optionButton", id="reset")
                                     label Reset view
+
+                        button(class="optionButton", id="snapshotPositions", onclick="saveSnapshot()")
+                            label Save Positions
+                            
                     div
-                        a.btn.btn-primary(id="saveButton" onclick="snapImage()")
+                        a.btn.btn-primary(class="optionButton", id="saveButton" onclick="snapImage()")
                         label(for="saveButton") Snapshoot
                     div
                         //form(action="users/sessions" class="dropzone" id="my-awesome-dropzone")
         -}
-        
+
            table.full
             tr
             td.left
@@ -54,14 +58,14 @@ block content
                     label -
             td.right
                 #vis0.assignmentContainer(display="block")
-        
+
 
 
 block footerjs
 
     script(src = '/components/d3/d3.min.js')
     script(src = '/components/jquery/dist/jquery.min.js')
-    
+
     script.
         var vistype = "#{vistype}"
         $("li").removeClass("active")
@@ -71,7 +75,7 @@ block footerjs
         else if (vistype=="queue") {
             $("#queue").addClass("active")
         }
-        else $("#nodelink").addClass("active")  
+        else $("#nodelink").addClass("active")
     script.
         var owner = "#{owner}"
         if (owner==="false") {
@@ -87,7 +91,7 @@ block footerjs
 
     script.
         var data = !{JSON.stringify(data)}
-        
+
         var assignmentID = !{JSON.stringify(assignmentID)}
     - if (vistype == "nodelink")
         script(src = '/js/graph.js')
@@ -96,10 +100,12 @@ block footerjs
         script(src = '/js/bst/lib/bst.js')
     - else if (vistype == 'queue')
         script(src = '/js/queue.js')
-    - else  
+    - else if (vistype == 'AList')
+        script(src = '/js/array.js')
+    - else
         script.
             var error = !{JSON.stringify(data)}
-            $("#vis")
+            $("#vis0")
                 .html(error.error)
                 .css('color', '#eb6864')
                 .css('font-size', '24px')
@@ -114,10 +120,10 @@ block footerjs
             }).done(function() {
                 console.log("visibility updated")
             }).error(function(err){
-                console.log(err)    
-            });    
-            
-        }   
+                console.log(err)
+            });
+
+        }
         function setvis (selected) {
             var assignmentID = !{JSON.stringify(assignmentID)}
             $.ajax({
@@ -125,16 +131,12 @@ block footerjs
                 type:"post"
             }).done(function() {
                 location.reload()
-                console.log("visualization type updated")    
+                console.log("visualization type updated")
             }).error(function(err) {
                 errmsg = JSON.parse(err.responseText)
-                console.log("Error: "+errmsg.error) 
+                console.log("Error: "+errmsg.error)
             });
         }
-
-
-        
-        
-        
-        
-        
+        function saveSnapshot() {
+            console.log("save snapshot");
+        }

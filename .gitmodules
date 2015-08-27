@@ -1,0 +1,3 @@
+[submodule "public/css/webicons"]
+	path = public/css/webicons
+    url = https://github.com/adamfairhead/webicons.git

@@ -2,12 +2,9 @@ extends ../includes/boilerplate.jade
 block css
     link(rel='stylesheet',
          href='/css/header.css')
-    link(rel='stylesheet', 
+    link(rel='stylesheet',
          href='/css/assignment.css')
-    link(rel='stylesheet', 
-             href='/components/css-toggle-switch/dist/toggle-switch.css')
-
-
+    link(rel='stylesheet', href='/components/css-toggle-switch/dist/toggle-switch.css')
 
 block scripts
     script(type='application/ecmascript' async='' src='/js/html2canvas.js')
@@ -19,60 +16,59 @@ block scripts
 
 block content
 
-    
+
     include ../includes/header.jade
-    div#assignmentCanvas(overflow='auto') 
-        
-        -if (owner) {    
+    div#assignmentCanvas(overflow='auto')
+
+        -if (owner) {
             #optionContainer.optionContainer
                 div(style='margin:10px 10px 10px 10px;')
                     label Share #{shared}
                     div.switch-toggle.well
                         input#public(type='radio', name='view',
                             onclick='toggleShare(true)')
-                        label(for='public') Public 
+                        label(for='public') Public
                         input#private(type='radio', name='view',
                             onclick='toggleShare(false)')
-                        label(for='private') Private 
+                        label(for='private') Private
                         a.btn.btn-primary
-                
+
                 div
                     button(class='optionButton', id='resize')
                                 label Resize view
-                    
+
                     button(class='optionButton', id='reset')
                                 label Reset view
-                
+
                 div
-                    a.btn.btn-primary(id='saveButton' onclick='snapImage()')
-                            label(for='saveButton') Snapshoot
-                    //form(action='users/sessions' class='dropzone' id='my-awesome-dropzone')
+                    a.btn.btn-primary(class="optionButton", id="saveButton" onclick="snapImage()")
+                            label(for="saveButton") Snapshoot
         -}
-    
+
         table.full
                 tr
                 td.left
                     button(class='minimize' id='min')
                         label -
                 td.right
-                
+
         -for (var i = 0; i < extent; i++) {
              table.full
                 tr
                 td.left
                     button(class='minimize' id='min' + i key=i)
                         label -
-           
-                td.right
-                    div(id='vis' + i,display='block').assignmentContainer
-        -}
 
+                td.right
+                    div(id="vis" + i, class="vis", display="block").assignmentContainer
+
+        -}
 
 block footerjs
 
     script(src = '/components/d3/d3.min.js')
     script(src = '/components/jquery/dist/jquery.min.js')
-    
+
     script.
         var vistype = '#{vistype}'
         $('li').removeClass('active')
@@ -82,12 +78,12 @@ block footerjs
         else if (vistype=='queue') {
             $('#queue').addClass('active')
         }
-        else $('#nodelink').addClass('active')  
+        else $('#nodelink').addClass('active')
     script.
         var owner = '#{owner}'
         if (owner==='false') {
-             $('#vis').css('width','90%') 
-        } 
+             $('.vis').css('width','90%') //!!
+        }
         var shared = '#{shared}'
         $('#private').prop('checked',false)
         $('#public').prop('checked',false)
@@ -98,19 +94,22 @@ block footerjs
 
     script.
         var data = !{JSON.stringify(data)}
-        
-        var assignmentID = !{JSON.stringify(assignmentID)}
-    - if (vistype == 'nodelink')
+        //var assignmentNumber = !{JSON.stringify(assignmentNumber)}
+
+        //TODO fix this up in controller prior
+    - if (vistype == "nodelink")
         script(src = '/js/graph.js')
     - else if (vistype == 'tree')
         link(rel='stylesheet', href='/css/vis/tree.css')
         script(src = '/js/bst/lib/bst.js')
     - else if (vistype == 'queue')
         script(src = '/js/queue.js')
-    - else  
+     - else if (vistype == 'AList')
+        script(src = '/js/array.js')
+    - else
         script.
             var error = !{JSON.stringify(data)}
-            $('#vis')
+            $("#vis0")
                 .html(error.error)
                 .css('color', '#eb6864')
                 .css('font-size', '24px')
@@ -119,31 +118,31 @@ block footerjs
 
     script.
         function toggleShare (selected) {
-            var assignmentID = !{JSON.stringify(assignmentID)}
+            var assignmentNumber = !{JSON.stringify(assignmentNumber)}
             $.ajax({
-                url: '/assignments/'+assignmentID+'/share/'+selected,
-                type: 'post'
+                url: "/assignments/"+assignmentNumber+"/share/"+selected,
+                type: "post"
             }).done(function() {
                 console.log('visibility updated')
             }).error(function(err){
-                console.log(err)    
-            });    
-            
+                console.log(err)
+            });
+
         }
 
         function setvis (selected) {
-            var assignmentID = !{JSON.stringify(assignmentID)}
+            var assignmentNumber = !{JSON.stringify(assignmentNumber)}
             $.ajax({
-                url: '/assignments/'+assignmentID+'/vistype/'+selected,
-                type:'post'
+                url: "/assignments/"+assignmentNumber+"/vistype/"+selected,
+                type:"post"
             }).done(function() {
                 location.reload()
-                console.log('visualization type updated')    
+                console.log("visualization type updated")
             }).error(function(err) {
                 errmsg = JSON.parse(err.responseText)
-                console.log('Error: '+errmsg.error) 
+                console.log("Error: "+errmsg.error)
             });
         }
-
-
-
+        function saveSnapshot() {
+            console.log("save snapshot");
+        }

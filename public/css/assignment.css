@@ -12,6 +12,10 @@
     min-height: 350px;
 }
 
+.assignmentContainer .maximized{
+    height: 10%;
+}
+
 .optionContainer{
     border-color:steelblue;
     border-style:solid;
@@ -44,22 +48,20 @@
 
 #vis{
     width:70%;
-    height:80%;
+    height:90%;
     position:absolute;
     overflow: scroll;
     float:left;
 }
 
 .vis{
-    width:inherit;
-    height:600px;
-    position:absolute;
+    width:70%;
     overflow: scroll;
     float:left;
 }
 
 .svg {
-    
+    height: inherit;
 }
 
 #optionContainer{
@@ -67,7 +69,7 @@
     left: 75%;
     height:300px;
     position:fixed;
-    
+
 }
 #assignmentCanvas{
     min-width:801px;
@@ -129,7 +131,6 @@
     background:white;
     border-width:4px;
     border-style: inset;
-    
 }
 
 .gallery_links{
@@ -145,7 +146,7 @@
 
 
 table.full {
-    width: 90%; 
+    width: 90%;
 }
 
 td.left {
@@ -157,6 +158,3 @@ td.right {
     width: 97%;
     vertical-align: middle ;
 }
-
-
-

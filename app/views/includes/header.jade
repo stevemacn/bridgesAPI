@@ -1,48 +1,45 @@
 .navbar.navbar-default
     .container
-        .navbar-header 
+        .navbar-header
             a(href="/").navbar-brand Bridges
-        .navbar-header 
+        .navbar-header
             a(href="http://bridgesuncc.github.io").navbar-brand Documentation
-        .navbar-header 
-            div
-            div
+
         .navbar-collapse.collapse
             ul.nav.navbar-nav.navbar-right
-             if (!user)
-                li 
-                    a(href="/login") Log In 
-             if (user)
-                li.centerForm
-                   
-                    form(action='/search/', method='post').form-horizontal
-                        ul.nav.navbar-nav
-                            li
-                                .fieldset
-                                    div.col-lg-25
-                                        legend.padRight Public Projects
-                                        input(type="hidden", name="_csrf", value=csrftoken)
-                            li
-                                .form-group
-                                    div.col-lg-11
-                                        input#assignments.form-control(
-                                            type='number',
-                                            min='0.00',
-                                            name='assignmentID',
-                                            placeholder='Assignment ID',
-                                            required)
-                            li
-                                .form-group
-                                    div.col-lg-10
-                                        input#submit(type='submit', value='Search').btn.btn-primary
-                                    //a(href="/assignments/"+assignments.value()+"/"+user.username) Search
-                li
-                    a(href="/username/"+user.username) My Projects
-                li
-                    //a(href="/home")=user.username
-                    a(href="/home") Profile
-                li
-                    a#log(href="/logout") Log Out
+               if (!user)
+                  li
+                      a(href="/login") Log In
+               if (user)
+                 li.centerForm
+                   form(action='/search/', method='post').form-horizontal
+                     ul.nav.navbar-nav
+                       li
+                           .fieldset
+                               div.col-lg-25
+                                   legend.padRight Public Projects
+                                   input(type="hidden", name="_csrf", value=csrftoken)
+                       li
+                           .form-group
+                               div.col-lg-11
+                                   input#assignments.form-control(
+                                       type='number',
+                                       min='0.00',
+                                       name='assignmentID',
+                                       placeholder='Assignment ID',
+                                       required)
+                       li
+                           .form-group
+                               div.col-lg-10
+                                   input#submit(type='submit', value='Search').btn.btn-primary
+                               //a(href="/assignments/"+assignments.value()+"/"+user.username) Search
+                  li
+                      a(href="/username/"+user.username) My Projects
+                  li
+                      //a(href="/home")=user.username
+                      a(href="/profile") Profile
+                  li
+                      a#log(href="/logout") Log Out
 
 
 

@@ -1,10 +1,10 @@
 //extends ../users/layout.jade
 
 extends ../includes/boilerplate.jade
-block css 
-    link(rel='stylesheet', 
+block css
+    link(rel='stylesheet',
          href='/css/header.css')
-    link(rel='stylesheet', 
+    link(rel='stylesheet',
          href='/css/assignment.css')
     link(rel='stylesheet',
         href='/css/dropzone.css')
@@ -17,31 +17,32 @@ block content
     .container
         .row
             .col-lg-6
-                div(style='float:left; margin-left:50px')
-                    //a(href='/assignments/'+assignments[0].assignmentID+'/'+usernames)
-                    h1(style='text-align: left' class='gallery_links') #{usernames}'s Gallery
+
+                div(style="float:left; margin-left:50px")
+                    //a(href="/assignments/"+assignments[0].assignmentID+"/"+usernames)
+                    h1(style="text-align: left") #{usernames}'s Gallery
 
     div(style='margin:5%')
         - for (var x = 0; x < assignments.length; x++)
-            div(style='float:left;width:120px; margin-left:50px')
-                a(href='/assignments/'+assignments[x].assignmentID+'/'+usernames)
-                    if (assignments[x].shared == false)
-                        div(class='gallery_assignment_div_private')
-                            if((assignments[x].data[0].visual=='AList') || (assignments[x].data[0].visual=='list') || (assignments[x].data[0].visual=='llist'))
-                                img(src='/img/LList.png' title='Visual type: '+ assignments[x].data[0].visual + ' date created: '+ assignments[x].dateCreated + ' shared: '+ assignments[x].shared)
-                            else if(assignments[x].data[0].visual=='graph')
-                                img(src='/img/graph.png' title='Visual type: '+ assignments[x].data[0].visual + ' date created: '+ assignments[x].dateCreated + ' shared: '+ assignments[x].shared)
-                            else if((assignments[x].data[0].visual=='tree'))
-                                img(src='/img/tree.png' title='Visual type: '+ assignments[x].data[0].visual + ' date created: '+ assignments[x].dateCreated + ' shared: '+ assignments[x].shared)
-                    else
-                        div(class='gallery_assignment_div_public')
-                            if(assignments[x].data[0].visual=='AList' || (assignments[x].data[0].visual=='list'))
-                                img(src='/img/LList.png' title='Visual type: '+ assignments[x].data[0].visual + ' date created: '+ assignments[x].dateCreated + ' shared: '+ assignments[x].shared)
-                            else if(assignments[x].data[0].visual=='graph')
-                                img(src='/img/graph.png' title='Visual type: '+ assignments[x].data[0].visual + ' date created: '+ assignments[x].dateCreated + ' shared: '+ assignments[x].shared)
-                            else if(assignments[x].data[0].visual=='tree')
-                                img(src='/img/tree.png' title='Visual type: '+ assignments[x].data[0].visual + ' date created: '+ assignments[x].dateCreated + ' shared: '+ assignments[x].shared)
-                //p #{assignments[x].data[0].visual}
-                a(style='text-decoration: none; ' href='/assignments/'+assignments[x].assignmentID+'/'+usernames)
-                    h4(class='gallery_links') #{assignments[x].assignmentID} #{assignments[x].data[0].visual}
+            div(style="float:left;width:120px; margin-left:50px")
+                a(href='/assignments/'+assignments[x].assignmentNumber+'/'+usernames)
+                  //  - console.log(assignments[x].shared, assignments[x].vistype)
+                  if (assignments[x].shared == false)
+                          div(class='gallery_assignment_div_private')
+                              if(assignments[x].vistype == 'graph')
+                                  img(src='/img/graph.png' title=assignments[x].vistype)
+                              else if((assignments[x].vistype == 'tree'))
+                                  img(src='/img/tree.png' title=assignments[x].vistype)
+                              else
+                                  img(src='/img/LList.png' title=assignments[x].vistype)
+                      else
+                          div(class='gallery_assignment_div_public')
+                              if(assignments[x].data[0].visual=='graph')
+                                  img(src='/img/graph.png' title=assignments[x].vistype)
+                              else if(assignments[x].data[0].visual=='tree')
+                                  img(src='/img/tree.png' title=assignments[x].vistype)
+                              else
+                                  img(src='/img/LList.png' title=assignments[x].vistype)
 
+                  a(style='text-decoration: none; ' href='/assignments/'+assignments[x].assignmentNumber+'/'+usernames)
+                      h4(class='gallery_links') #{assignments[x].assignmentNumber} #{assignments[x].data[0].visual}

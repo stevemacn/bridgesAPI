@@ -1,23 +1,12 @@
-// REPLACED BY PROFILE.JADE
-
-
 extends layout
 
 block css
     link(rel="stylesheet", href="/css/webicons/webicons.css")
     link(rel="stylesheet", href="/css/inactive.css")
-    link(rel='stylesheet',
-         href='/css/header.css')
+    link(rel='stylesheet', href='/css/header.css')
 
- h1 Welcome to Bridges!
- p Creating a bridge between your assignments and the world
- div(style="margin-top:30px;")
-     block info
-
-
-block js
-  //  script(src="/components/modernizr/modernizr.js")
-  //  script(src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js")
+ block js
+    script(src="components/modernizr/modernizr.js")
     script(src="js/main.js")
     script.
         name="#{user.username}";
@@ -31,25 +20,29 @@ block js
             }
         }
 
-  block info
-      if (user)
+ block info
+    h1 #{user.username}'s Profile
 
-          legend Add additional datasources
-          -if (!(acct.domainProvider=="twitter.com"))
-              a(href="/connect/twitter").webicon.twitter.large
-          div.webicon.facebook.large.inactive
-          div.webicon.foursquare.large.inactive
-          div.webicon.yelp.large.inactive
-          div.webicon.linkedin.large.inactive
-          div.webicon.flickr.large.inactive
-          div.webicon.google.large.inactive
 
-          -if (acct.domainProvider)
-              legend Remove authenticated datasources
-              -if (acct.domainProvider=="twitter.com")
-                  a(href="/disconnect/twitter").webicon.twitter.large
+ block datasources
 
-block form
+    if (user)
+        legend Add additional datasources
+        -if (!(acct.domainProvider=="twitter.com"))
+            a(href="/connect/twitter").webicon.twitter.large
+        div.webicon.facebook.large.inactive
+        div.webicon.foursquare.large.inactive
+        div.webicon.yelp.large.inactive
+        div.webicon.linkedin.large.inactive
+        div.webicon.flickr.large.inactive
+        div.webicon.google.large.inactive
+
+        -if (acct.domainProvider)
+            legend Remove authenticated datasources
+            -if (acct.domainProvider=="twitter.com")
+                a(href="/disconnect/twitter").webicon.twitter.large
+
+ block form
   if (user)
     .panel.panel-info
         .panel-heading
