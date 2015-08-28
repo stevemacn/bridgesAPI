@@ -53,13 +53,13 @@ exports.try = function(req, res) {
 
 exports.test = function(req, res) {
 
-  return next({"err":"Testing"});
-
   Assignment
       .find({
       })
       .exec(function(err, assignmentResult) {
         if(err) return next(err);
+
+        var numUpdated = 0;
 
         for(assignment in assignmentResult) {
           if(assignmentResult[assignment].assignmentNumber == "" || assignmentResult[assignment].subAssignment == "") {
@@ -70,17 +70,17 @@ exports.test = function(req, res) {
 
               // Update assignments, deleting any with erroneous assignmentID
 
-              if(subAssignment.length > 2) {
-                 //remove all assignments with ridiculous decimal subAssignment
-                Assignment
-                  .remove({
-                    assignmentID: assignmentID
-                  })
-                  .exec(function(err, result){
-                      if(err) console.log(err)
-                      console.log("deleted ", result, " assignments with ID ", assignmentID)
-                  })
-                } else {
+              // if(subAssignment.length > 2) {
+              //    //remove all assignments with ridiculous decimal subAssignment
+              //   Assignment
+              //     .remove({
+              //       assignmentID: assignmentID
+              //     })
+              //     .exec(function(err, result){
+              //         if(err) console.log(err)
+              //         console.log("deleted ", result, " assignments with ID ", assignmentID)
+              //     })
+              //   } else {
 
 
                 // Update assignments to all use assignmentNumber and subAssignment number! (Won't delete anything)
@@ -94,15 +94,18 @@ exports.test = function(req, res) {
                         $set: {assignmentNumber: assignmentNumber, subAssignment: subAssignment}
                       }
                     ).exec(function(err, result) {
-                      if(err) console.log(err)
-                      console.log("updated assignment ", assignmentID)
+                      if(err) return next(err)
+                      //console.log("updated assignment ", assignmentID)
+                      numUpdated++;
 
                     })
 
-                }
+                // }
 
           }
         }
+
+        return next("Number updated " + numUpdated)
       });
 
 }
