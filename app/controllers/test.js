@@ -53,7 +53,7 @@ exports.try = function(req, res) {
 
 exports.test = function(req, res) {
 
-  return next("Reaching test area");
+  return next({"err":"Testing"});
 
   Assignment
       .find({
