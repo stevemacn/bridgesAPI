@@ -53,7 +53,7 @@ exports.try = function(req, res) {
 
 exports.test = function(req, res) {
 
-  console.log("Modify controllers/test.js to delete or update problematic assignments")
+  return next("Stuff");
 
   Assignment
       .find({
