@@ -4,7 +4,7 @@ var mongoose = require('mongoose'),
     Assignment = mongoose.model('Assignment')
 
 exports.view = function(req, res) {
-  return next("err": "Hello");
+  return next({"err": "Hello"});
 
     var getAssignments = function(assig, assignmentsRes, cb) {
         //console.log(assig, assignmentsRes);
