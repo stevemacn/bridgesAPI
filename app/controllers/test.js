@@ -53,7 +53,7 @@ exports.try = function(req, res) {
 
 exports.test = function(req, res, next) {
 
-  Assignment.count({}).exec(function(err, num) {return next(err, num)});
+  Assignment.count({}).exec(function(err, num) {return next(num)});
 
   Assignment
       .find({
