@@ -39,4 +39,7 @@ Thumbs.db
 ################################
 .gitignore
 .*
+config/config.js
+
+
 public/js/oldGraph.js
