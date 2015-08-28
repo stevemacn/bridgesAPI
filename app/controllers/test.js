@@ -70,36 +70,36 @@ exports.test = function(req, res) {
 
               // Update assignments, deleting any with erroneous assignmentID
 
-              // if(subAssignment.length > 2) {
-              //  //remove all assignments with ridiculous decimal subAssignment
-              // Assignment
-              //   .remove({
-              //     assignmentID: assignmentID
-              //   })
-              //   .exec(function(err, result){
-              //       if(err) console.log(err)
-              //       console.log("deleted ", result, " assignments with ID ", assignmentID)
-              //   })
-              //}
+              if(subAssignment.length > 2) {
+                 //remove all assignments with ridiculous decimal subAssignment
+                Assignment
+                  .remove({
+                    assignmentID: assignmentID
+                  })
+                  .exec(function(err, result){
+                      if(err) console.log(err)
+                      console.log("deleted ", result, " assignments with ID ", assignmentID)
+                  })
+                } else {
 
 
-              // Update assignments to all use assignmentNumber and subAssignment number! (Won't delete anything)
+                // Update assignments to all use assignmentNumber and subAssignment number! (Won't delete anything)
 
-              // Assignment
-              //   .update(
-              //       {
-              //         assignmentID: assignmentID
-              //       },
-              //       {
-              //         $set: {assignmentNumber: assignmentNumber, subAssignment: subAssignment}
-              //       }
-              //     ).exec(function(err, result) {
-              //       if(err) console.log(err)
-              //       console.log("updated assignment ", assignmentID)
-              //
-              //     })
+                Assignment
+                  .update(
+                      {
+                        assignmentID: assignmentID
+                      },
+                      {
+                        $set: {assignmentNumber: assignmentNumber, subAssignment: subAssignment}
+                      }
+                    ).exec(function(err, result) {
+                      if(err) console.log(err)
+                      console.log("updated assignment ", assignmentID)
 
+                    })
 
+                }
 
           }
         }

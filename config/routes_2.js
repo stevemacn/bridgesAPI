@@ -1,7 +1,7 @@
 module.exports = function(app, passport, streamable) {
 
- 
-    
+
+
     /**
      *  isPublic - allows public access to public assignments
      *  @req - requests
@@ -14,8 +14,8 @@ module.exports = function(app, passport, streamable) {
         Assignment = mongoose.model('Assignment'),
         User = mongoose.model('User');
         var a_user = false;
-        
-        
+
+
         User
             .findOne({
                      username: req.params.username
@@ -30,9 +30,9 @@ module.exports = function(app, passport, streamable) {
                         a_user = true
                     }
                   })
-        
-        
-        
+
+
+
         Assignment
             .findOne({
                      assignmentID: req.params.assignmentID
@@ -51,23 +51,23 @@ module.exports = function(app, passport, streamable) {
                 //res.send(assig.shared)
                   })
     }
-    
+
     //Allows users to by pass authentication to api requests
     //if they have a valid api key.
     var hasAccess = function(req, res, next) {
-        
+
         //authenticated
         if (req.isAuthenticated()) {
             return next()
         }
-        
+
         var mongoose = require('mongoose'),
             User = mongoose.model('User')
             var found = req.query.apikey;
             if (!found) return next(
                 "Not logged in: you must provide" +
                " an apikey as a query variable")
-                
+
             User
                 .findOne({
                     apikey: found
@@ -134,7 +134,7 @@ module.exports = function(app, passport, streamable) {
     app.get('/login', users.login, handleError)
     app.get('/home', isLoggedIn, users.display, handleError)
     app.get('/profile', isLoggedIn, users.profile, handleError)
-    app.get('/username', isLoggedInGallery, users.display, handleError)   //Login 
+    app.get('/username', isLoggedInGallery, users.display, handleError)   //Login
     app.get('/home/:username', isLoggedIn, users.display, handleError)
 
     app.delete('/users/:id', isLoggedIn, users.deletePerson)
@@ -169,7 +169,7 @@ module.exports = function(app, passport, streamable) {
     app.post('/assignments/:assignmentNumber/share/:value',
         hasAccess, assignments.updateVisibility, handleError)
 
-    
+
     //app.get('/assignments/:assignmentID/:username',
     //         isPublic, assignments.show, handleError)
 
@@ -257,6 +257,6 @@ module.exports = function(app, passport, streamable) {
     // -------------------------------------------------------
     var test = require('../app/controllers/test.js')      // Mongo Tests
 
-    //app.get('/test', test.test, handleError)
+    app.get('/test', test.test, handleError)
 
 }
