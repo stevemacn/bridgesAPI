@@ -60,52 +60,53 @@ exports.test = function(req, res) {
         if(err) return next(err);
 
         var numUpdated = 0;
+        return next(assignmentResult.length)
 
-        for(assignment in assignmentResult) {
-          if(assignmentResult[assignment].assignmentNumber == "" || assignmentResult[assignment].subAssignment == "") {
-            var assignmentID = assignmentResult[assignment].assignmentID;
-            var assignmentRaw = assignmentID.split(".");
-            var assignmentNumber = assignmentRaw[0];
-            var subAssignment = assignmentRaw[1];
-
-              // Update assignments, deleting any with erroneous assignmentID
-
-              // if(subAssignment.length > 2) {
-              //    //remove all assignments with ridiculous decimal subAssignment
-              //   Assignment
-              //     .remove({
-              //       assignmentID: assignmentID
-              //     })
-              //     .exec(function(err, result){
-              //         if(err) console.log(err)
-              //         console.log("deleted ", result, " assignments with ID ", assignmentID)
-              //     })
-              //   } else {
-
-
-                // Update assignments to all use assignmentNumber and subAssignment number! (Won't delete anything)
-
-                Assignment
-                  .update(
-                      {
-                        assignmentID: assignmentID
-                      },
-                      {
-                        $set: {assignmentNumber: assignmentNumber, subAssignment: subAssignment}
-                      }
-                    ).exec(function(err, result) {
-                      if(err) return next(err)
-                      //console.log("updated assignment ", assignmentID)
-                      numUpdated++;
-
-                    })
-
-                // }
-
-          }
-        }
-
-        return next("Number updated " + numUpdated)
+        // for(assignment in assignmentResult) {
+        //   if(assignmentResult[assignment].assignmentNumber == "" || assignmentResult[assignment].subAssignment == "") {
+        //     var assignmentID = assignmentResult[assignment].assignmentID;
+        //     var assignmentRaw = assignmentID.split(".");
+        //     var assignmentNumber = assignmentRaw[0];
+        //     var subAssignment = assignmentRaw[1];
+        //
+        //       // Update assignments, deleting any with erroneous assignmentID
+        //
+        //       // if(subAssignment.length > 2) {
+        //       //    //remove all assignments with ridiculous decimal subAssignment
+        //       //   Assignment
+        //       //     .remove({
+        //       //       assignmentID: assignmentID
+        //       //     })
+        //       //     .exec(function(err, result){
+        //       //         if(err) console.log(err)
+        //       //         console.log("deleted ", result, " assignments with ID ", assignmentID)
+        //       //     })
+        //       //   } else {
+        //
+        //
+        //         // Update assignments to all use assignmentNumber and subAssignment number! (Won't delete anything)
+        //
+        //         // Assignment
+        //         //   .update(
+        //         //       {
+        //         //         assignmentID: assignmentID
+        //         //       },
+        //         //       {
+        //         //         $set: {assignmentNumber: assignmentNumber, subAssignment: subAssignment}
+        //         //       }
+        //         //     ).exec(function(err, result) {
+        //         //       if(err) return next(err)
+        //         //       //console.log("updated assignment ", assignmentID)
+        //         //       numUpdated++;
+        //         //
+        //         //     })
+        //
+        //         // }
+        //
+        //   }
+        // }
+        //
+        // return next("Number updated " + numUpdated)
       });
 
 }
