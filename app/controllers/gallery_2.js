@@ -3,8 +3,7 @@ var mongoose = require('mongoose'),
     Account = mongoose.model('Account'),
     Assignment = mongoose.model('Assignment')
 
-exports.view = function(req, res) {
-  return next({"err": "Hello"});
+exports.view = function(req, res, next) {
 
     var getAssignments = function(assig, assignmentsRes, cb) {
         //console.log(assig, assignmentsRes);
