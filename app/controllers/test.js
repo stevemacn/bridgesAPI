@@ -51,9 +51,9 @@ exports.try = function(req, res) {
       })
 }
 
-exports.test = function(req, res) {
+exports.test = function(req, res, next) {
 
-  return next("HELLO" + Assignment
+  return next(Assignment
       .count({})
     )
 
