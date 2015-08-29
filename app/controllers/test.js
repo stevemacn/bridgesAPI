@@ -51,7 +51,7 @@ exports.try = function(req, res) {
       })
 }
 
-exports.test = function(req, res, next) {
+exports.testing = function(req, res, next) {
 
   Assignment
       .find({

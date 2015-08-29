@@ -256,6 +256,6 @@ module.exports = function(app, passport, streamable) {
     //
     // -------------------------------------------------------
     var test = require('../app/controllers/test.js')      // Mongo Tests
-    app.get('/testing', test.test, handleError)
+    app.get('/testing', test.testing, handleError)
 
 }
