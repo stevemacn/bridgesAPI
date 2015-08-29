@@ -155,6 +155,7 @@ exports.frustrated = function(req, res, next) {
         var numShouldUpdate = 0;
         var numSkipped = 0;
 var county = 0;
+var county1 = 0;
         var ids = "";
         var id = [];
 
@@ -178,6 +179,7 @@ var county = 0;
         }
 
         for(x in id) {
+          county1++;
           var assignmentRaw = id[x];
           var num = assignmentRaw[0];
           var sub = assignmentRaw[1];
@@ -201,7 +203,7 @@ var county = 0;
               })
         }
 
-        return next(county + " updated");
+        return next(county + "/" + county1 +" updated");
 
       });
 
