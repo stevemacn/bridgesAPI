@@ -114,15 +114,14 @@ exports.testing = function(req, res, next) {
                       {
                         $set:
                         {
-                          "assignmentNumber": assignmentNumber,
-                          "subAssignment": subAssignment
+                          assignmentNumber: assignmentNumber,
+                          subAssignment: subAssignment
                         }
                       }
                     ).exec(function(err, result) {
                       if(err) return next(err)
                       //console.log("updated assignment ", assignmentID)
                       numUpdated++;
-                      return next("HELLO");
 
                     })
 
