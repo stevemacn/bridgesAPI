@@ -55,13 +55,13 @@ exports.test = function(req, res, next) {
 
   Assignment
       .find({
-        "assignmentNumber": {$exists: false}
-        "subAssignment": {$exists: false}
+        assignmentNumber: {$exists: false}
+        subAssignment: {$exists: false}
       })
       .exec(function(err, assignmentResult) {
         if(err) return next(err);
 
-        //return next("total: " + assignmentResult.length);
+        return next("total: " + assignmentResult.length);
 
         var numUpdated = 0;
         var numDeleted = 0;
