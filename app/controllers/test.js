@@ -61,7 +61,7 @@ exports.test = function(req, res, next) {
       .exec(function(err, assignmentResult) {
         if(err) return next(err);
 
-        return next(assignmentResult.length);
+        return next("total: " + assignmentResult.length);
 
         var numUpdated = 0;
         var numDeleted = 0;
