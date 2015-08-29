@@ -87,7 +87,7 @@ exports.testing = function(req, res, next) {
             var assignmentNumber = assignmentRaw[0];
             var subAssignment = assignmentRaw[1];
 
-            return next("(num skipped for having no decimal:) " + numSkipped +" "+ assignmentResult[assignment] +" "+ assignmentID +" "+ assignmentNumber +" "+ subAssignment)
+            return next("(num skipped:) " + numSkipped +" "+ assignmentResult[assignment] +" "+ assignmentID +" "+ assignmentNumber +" "+ subAssignment)
 
               // Update assignments, deleting any with erroneous assignmentID
 
@@ -131,6 +131,51 @@ exports.testing = function(req, res, next) {
         }
 
         return next("Num skipped: " + numSkipped + ", Num to modify: " + numToModify + ", Num should delete: " + numShouldDelete + ", Num deleted " + numDeleted + ", Number should Update: " + numShouldUpdate + ", Number updated " + numUpdated)
+      });
+
+}
+
+exports.frustrated = function(req, res, next) {
+
+  Assignment
+      .find({
+        "assignmentNumber": {$exists: false},
+        "subAssignment": {$exists: false},
+        // "assignmentID": /./
+      })
+      .limit(100)
+      .exec(function(err, assignmentResult) {
+        if(err) return next(err);
+
+        var numUpdated = 0;
+        var numDeleted = 0;
+        var numTotal = assignmentResult.length;
+        var numToModify = 0;
+        var numShouldDelete = 0;
+        var numShouldUpdate = 0;
+        var numSkipped = 0;
+
+        var ids = "";
+
+        for(assignment in assignmentResult) {
+          if(assignmentResult[assignment].assignmentNumber == "" || assignmentResult[assignment].subAssignment == "") {
+            numToModify++;
+            var assignmentID = assignmentResult[assignment].assignmentID;
+            var assignmentRaw = assignmentID.split(".");
+
+            if(assignmentRaw.length < 2) {
+              numSkipped++;
+              continue;
+            }
+
+            var assignmentNumber = assignmentRaw[0];
+            var subAssignment = assignmentRaw[1];
+
+            ids += assignmentID + " ";
+          }
+        }
+
+        return next(ids);
       });
 
 }
