@@ -112,19 +112,24 @@ exports.testing = function(req, res, next) {
                         "assignmentID": assignmentID
                       },
                       {
-                        $set: {"assignmentNumber": assignmentNumber, "subAssignment": subAssignment}
+                        $set:
+                        {
+                          "assignmentNumber": assignmentNumber,
+                          "subAssignment": subAssignment
+                        }
                       }
                     ).exec(function(err, result) {
                       if(err) return next(err)
                       //console.log("updated assignment ", assignmentID)
                       numUpdated++;
+                      return next("HELLO");
 
                     })
 
                 }
         }
 
-        return next("Num to modify: " + numToModify + ", Num should delete: " + numShouldDelete + ", Num deleted " + numDeleted + ", Number should Update: " + numShouldUpdate + ", Number updated " + numUpdated)
+        return next("Num skipped: " + numSkipped + ", Num to modify: " + numToModify + ", Num should delete: " + numShouldDelete + ", Num deleted " + numDeleted + ", Number should Update: " + numShouldUpdate + ", Number updated " + numUpdated)
       });
 
 }
