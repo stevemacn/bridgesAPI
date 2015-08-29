@@ -238,7 +238,7 @@ exports.trial = function(req, res, next) {
 
             Assignment
                 .find({
-                  email: "dburlins@uncc.edu"
+                  email: "dburlins@uncc.edu",
                   assignmentID: "2.03"
                 })
                 .exec(function(err, result) {
