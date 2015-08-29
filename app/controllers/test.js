@@ -221,13 +221,13 @@ exports.trial = function(req, res, next) {
             .update(
               {
                 email: "dburlins@uncc.edu",
-                assignmentID: "2.03"
+                assignmentID: "2.0"
               },
               {
                 $set:
                 {
                   assignmentNumber: "2",
-                  subAssignment: "03"
+                  subAssignment: "00"
                 }
               }
             )
@@ -235,7 +235,7 @@ exports.trial = function(req, res, next) {
                 Assignment
                   .find({
                     email: "dburlins@uncc.edu",
-                    assignmentID: "2.03"
+                    assignmentID: "2.0"
                   })
                   .exec(function(err, result) {
                     return next(result);
