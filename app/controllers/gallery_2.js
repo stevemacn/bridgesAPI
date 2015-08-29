@@ -45,7 +45,7 @@ exports.view = function(req, res, next) {
             .find({
                   //email: req.params.userNameRes,
                 email: userResult.email,
-                subAssignment: 00
+                subAssignment: "00"
                 //$or: [{assignmentID: /.00$/}, {assignmentID: /.0$/}] //Search for assignments with whole numbers
                   //shared: true
             })
