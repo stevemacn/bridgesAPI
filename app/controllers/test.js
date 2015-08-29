@@ -211,13 +211,37 @@ var county1 = 0;
 
 exports.trial = function(req, res, next) {
 
-  Assignment
-      .find({
-        "email": "dburlins@uncc.edu"
-      })
-      .limit(1)
-      .exec(function(err, result){
-        return next(result);
+  // Assignment
+  //     .find({
+  //       "email": "dburlins@uncc.edu"
+  //     })
+  //     .limit(1)
+  //     .exec(function(err, result){
+        Assignment
+            .update(
+              {
+                "email": "dburlins@uncc.edu",
+                "assignmentID": "2.03"
+              },
+              {
+                $set:
+                {
+                  assignmentNumber: 2,
+                  subAssignment: 03
+                }
+              }
+            )
+            // .exec(function(err, result) {
+            //   //return next(result);
+            // })
 
-      })
+
+            Assignment
+                .find({
+                  "email": "dburlins@uncc.edu"
+                  "assignmentID": "2.03"
+                })
+                .exec(function(err, result) {
+                  return next(result);
+                })
     }
