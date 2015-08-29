@@ -156,6 +156,7 @@ exports.frustrated = function(req, res, next) {
         var numSkipped = 0;
 
         var ids = "";
+        var id = [];
 
         for(assignment in assignmentResult) {
           if(assignmentResult[assignment].assignmentNumber == "" || assignmentResult[assignment].subAssignment == "") {
@@ -172,10 +173,34 @@ exports.frustrated = function(req, res, next) {
             var subAssignment = assignmentRaw[1];
 
             ids += assignmentID + " ";
+            id.push(assignmentID);
           }
         }
 
-        return next(ids);
+        for(x in id) {
+          var assignmentRaw = id[x];
+          var num = assignmentRaw[0];
+          var sub = assignmentRaw[1];
+
+          Assignment
+            .update(
+                {
+                  assignmentID: assignmentRaw
+                },
+                {
+                  $set:
+                  {
+                    assignmentNumber: num,
+                    subAssignment: sub
+                  }
+                }
+              )
+              .exec(function(err, result) {
+                if(err) return next(err)
+                  return next("uh");
+              })
+        }
+
       });
 
 }
