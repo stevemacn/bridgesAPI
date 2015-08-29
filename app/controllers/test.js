@@ -74,7 +74,7 @@ exports.testing = function(req, res, next) {
         var numSkipped = 0;
 
         for(assignment in assignmentResult) {
-          // if(assignmentResult[assignment].assignmentNumber == "" || assignmentResult[assignment].subAssignment == "") {
+          if(assignmentResult[assignment].assignmentNumber == "" || assignmentResult[assignment].subAssignment == "") {
             numToModify++;
             var assignmentID = assignmentResult[assignment].assignmentID;
             var assignmentRaw = assignmentID.split(".");
@@ -127,6 +127,7 @@ exports.testing = function(req, res, next) {
                     })
 
                 }
+              }
         }
 
         return next("Num skipped: " + numSkipped + ", Num to modify: " + numToModify + ", Num should delete: " + numShouldDelete + ", Num deleted " + numDeleted + ", Number should Update: " + numShouldUpdate + ", Number updated " + numUpdated)
