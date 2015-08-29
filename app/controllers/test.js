@@ -80,6 +80,7 @@ exports.testing = function(req, res, next) {
             var assignmentNumber = assignmentRaw[0];
             var subAssignment = assignmentRaw[1] || "";
 
+            return next(assignmentID +" "+ assignmentNumber +" "+ subAssignment)
 
               // Update assignments, deleting any with erroneous assignmentID
 
