@@ -56,7 +56,8 @@ exports.testing = function(req, res, next) {
   Assignment
       .find({
         "assignmentNumber": {$exists: false},
-        "subAssignment": {$exists: false}
+        "subAssignment": {$exists: false},
+        // "assignmentID": /./
       })
       .limit(100)
       .exec(function(err, assignmentResult) {
@@ -86,7 +87,7 @@ exports.testing = function(req, res, next) {
             var assignmentNumber = assignmentRaw[0];
             var subAssignment = assignmentRaw[1];
 
-            //return next("(num skipped for having no decimal:) " + numSkipped +" "+ assignment +" "+ assignmentResult[assignment] +" "+ assignmentID +" "+ assignmentNumber +" "+ subAssignment)
+            return next("(num skipped for having no decimal:) " + numSkipped +" "+ assignmentResult[assignment] +" "+ assignmentID +" "+ assignmentNumber +" "+ subAssignment)
 
               // Update assignments, deleting any with erroneous assignmentID
 
