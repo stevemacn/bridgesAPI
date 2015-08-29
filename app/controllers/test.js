@@ -61,7 +61,7 @@ exports.testing = function(req, res, next) {
       .exec(function(err, assignmentResult) {
         if(err) return next(err);
 
-        return next("total: " + assignmentResult.length);
+        // return next("total: " + assignmentResult.length);
 
         var numUpdated = 0;
         var numDeleted = 0;
@@ -69,7 +69,7 @@ exports.testing = function(req, res, next) {
         var numToModify = 0;
 
         for(assignment in assignmentResult) {
-          if(assignmentResult[assignment].assignmentNumber == "" || assignmentResult[assignment].subAssignment == "") {
+          // if(assignmentResult[assignment].assignmentNumber == "" || assignmentResult[assignment].subAssignment == "") {
             numToModify++;
             var assignmentID = assignmentResult[assignment].assignmentID;
             var assignmentRaw = assignmentID.split(".");
@@ -92,7 +92,6 @@ exports.testing = function(req, res, next) {
 
 
                 //Update assignments to all use assignmentNumber and subAssignment number! (Won't delete anything)
-
                 Assignment
                   .update(
                       {
@@ -109,8 +108,6 @@ exports.testing = function(req, res, next) {
                     })
 
                 }
-
-          }
         }
 
         return next("Started with " + numTotal + ", Num to modify: " + numToModify + ", Num deleted " + numDeleted + ", Number updated " + numUpdated)
