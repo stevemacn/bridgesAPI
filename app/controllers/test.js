@@ -69,6 +69,8 @@ exports.testing = function(req, res, next) {
         var numDeleted = 0;
         var numTotal = assignmentResult.length;
         var numToModify = 0;
+        var numShouldDelete = 0;
+        var numShouldUpdate = 0;
 
         for(assignment in assignmentResult) {
           // if(assignmentResult[assignment].assignmentNumber == "" || assignmentResult[assignment].subAssignment == "") {
@@ -78,9 +80,11 @@ exports.testing = function(req, res, next) {
             var assignmentNumber = assignmentRaw[0];
             var subAssignment = assignmentRaw[1] || "";
 
+
               // Update assignments, deleting any with erroneous assignmentID
 
               if(subAssignment.length > 2) {
+                numShouldDelete++;
                  //remove all assignments with ridiculous decimal subAssignment
                 Assignment
                   .remove({
@@ -92,7 +96,7 @@ exports.testing = function(req, res, next) {
                   })
                 } else {
 
-
+                numShouldUpdate++;
                 //Update assignments to all use assignmentNumber and subAssignment number! (Won't delete anything)
                 Assignment
                   .update(
@@ -112,7 +116,7 @@ exports.testing = function(req, res, next) {
                 }
         }
 
-        return next("Started with " + numTotal + ", Num to modify: " + numToModify + ", Num deleted " + numDeleted + ", Number updated " + numUpdated)
+        return next("Num to modify: " + numToModify + ", Num should delete: " + numShouldDelete + ", Num deleted " + numDeleted + ", Number should Update: " + numShouldUpdate + ", Number updated " + numUpdated)
       });
 
 }
