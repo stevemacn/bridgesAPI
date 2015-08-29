@@ -208,3 +208,16 @@ var county1 = 0;
       });
 
 }
+
+exports.trial = function(req, res, next) {
+
+  Assignment
+      .find({
+        "email": "dburlins@uncc.edu"
+      })
+      .limit(1)
+      .exec(function(err, result){
+        return next(result);
+
+      })
+    }
