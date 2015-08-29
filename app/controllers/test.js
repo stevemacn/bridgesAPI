@@ -231,17 +231,15 @@ exports.trial = function(req, res, next) {
                 }
               }
             )
-            // .exec(function(err, result) {
-            //   //return next(result);
-            // })
+            .exec(function(err, result) {
+                Assignment
+                  .find({
+                    email: "dburlins@uncc.edu",
+                    assignmentID: "2.03"
+                  })
+                  .exec(function(err, result) {
+                    return next(result);
+                  })
 
-
-            Assignment
-                .find({
-                  email: "dburlins@uncc.edu",
-                  assignmentID: "2.03"
-                })
-                .exec(function(err, result) {
-                  return next(result);
-                })
+              })
     }
