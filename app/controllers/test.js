@@ -87,7 +87,7 @@ exports.testing = function(req, res, next) {
             var assignmentNumber = assignmentRaw[0];
             var subAssignment = assignmentRaw[1];
 
-            return next("(num skipped for having no decimal:) " + numSkipped +" "+ assignment +" "+ assignmentResult[assignment] +" "+ assignmentID +" "+ assignmentNumber +" "+ subAssignment)
+            //return next("(num skipped for having no decimal:) " + numSkipped +" "+ assignment +" "+ assignmentResult[assignment] +" "+ assignmentID +" "+ assignmentNumber +" "+ subAssignment)
 
               // Update assignments, deleting any with erroneous assignmentID
 
