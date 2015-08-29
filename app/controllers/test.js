@@ -56,8 +56,7 @@ exports.testing = function(req, res, next) {
   Assignment
       .find({
         "assignmentNumber": {$exists: false},
-        "subAssignment": {$exists: false},
-        "assignmentID": /./
+        "subAssignment": {$exists: false}
       })
       .limit(100)
       .exec(function(err, assignmentResult) {
