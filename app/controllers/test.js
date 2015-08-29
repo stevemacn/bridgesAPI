@@ -58,6 +58,7 @@ exports.testing = function(req, res, next) {
         "assignmentNumber": {$exists: false},
         "subAssignment": {$exists: false}
       })
+      .limit(100)
       .exec(function(err, assignmentResult) {
         if(err) return next(err);
 
