@@ -154,7 +154,7 @@ exports.frustrated = function(req, res, next) {
         var numShouldDelete = 0;
         var numShouldUpdate = 0;
         var numSkipped = 0;
-
+var county = 0;
         var ids = "";
         var id = [];
 
@@ -197,9 +197,11 @@ exports.frustrated = function(req, res, next) {
               )
               .exec(function(err, result) {
                 if(err) return next(err)
-                  return next("uh");
+                county++;
               })
         }
+
+        return next(county + " updated");
 
       });
 
