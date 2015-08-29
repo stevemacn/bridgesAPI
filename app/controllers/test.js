@@ -71,16 +71,23 @@ exports.testing = function(req, res, next) {
         var numToModify = 0;
         var numShouldDelete = 0;
         var numShouldUpdate = 0;
+        var numSkipped = 0;
 
         for(assignment in assignmentResult) {
           // if(assignmentResult[assignment].assignmentNumber == "" || assignmentResult[assignment].subAssignment == "") {
             numToModify++;
             var assignmentID = assignmentResult[assignment].assignmentID;
             var assignmentRaw = assignmentID.split(".");
-            var assignmentNumber = assignmentRaw[0];
-            var subAssignment = assignmentRaw[1] || "";
 
-            return next(assignment +" "+ assignmentResult[assignment] +" "+ assignmentID +" "+ assignmentNumber +" "+ subAssignment)
+            if(assignmentRaw.length < 2) {
+              numSkipped++;
+              continue;
+            }
+
+            var assignmentNumber = assignmentRaw[0];
+            var subAssignment = assignmentRaw[1];
+
+            return next("(num skipped for having no decimal:) " + numSkipped +" "+ assignment +" "+ assignmentResult[assignment] +" "+ assignmentID +" "+ assignmentNumber +" "+ subAssignment)
 
               // Update assignments, deleting any with erroneous assignmentID
 
