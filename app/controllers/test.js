@@ -55,7 +55,7 @@ exports.testing = function(req, res, next) {
 
   Assignment
       .find({
-        "assignmentNumber": {$exists: false}
+        "assignmentNumber": {$exists: false},
         "subAssignment": {$exists: false}
       })
       .exec(function(err, assignmentResult) {
