@@ -56,13 +56,14 @@ exports.testing = function(req, res, next) {
   Assignment
       .find({
         "assignmentNumber": {$exists: false},
-        "subAssignment": {$exists: false}
+        "subAssignment": {$exists: false},
+        "assignmentID": /./
       })
       .limit(100)
       .exec(function(err, assignmentResult) {
         if(err) return next(err);
 
-        // return next("total: " + assignmentResult.length);
+        return next(assignmentResult.length);
 
         var numUpdated = 0;
         var numDeleted = 0;
@@ -75,7 +76,7 @@ exports.testing = function(req, res, next) {
             var assignmentID = assignmentResult[assignment].assignmentID;
             var assignmentRaw = assignmentID.split(".");
             var assignmentNumber = assignmentRaw[0];
-            var subAssignment = assignmentRaw[1];
+            var subAssignment = assignmentRaw[1] || "";
 
               // Update assignments, deleting any with erroneous assignmentID
 
