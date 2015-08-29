@@ -55,8 +55,8 @@ exports.testing = function(req, res, next) {
 
   Assignment
       .find({
-        assignmentNumber: {$exists: false}
-        subAssignment: {$exists: false}
+        "assignmentNumber": {$exists: false}
+        "subAssignment": {$exists: false}
       })
       .exec(function(err, assignmentResult) {
         if(err) return next(err);
@@ -82,7 +82,7 @@ exports.testing = function(req, res, next) {
                  //remove all assignments with ridiculous decimal subAssignment
                 Assignment
                   .remove({
-                    assignmentID: assignmentID
+                    "assignmentID": assignmentID
                   })
                   .exec(function(err, result){
                       if(err) return next(err)
@@ -96,10 +96,10 @@ exports.testing = function(req, res, next) {
                 Assignment
                   .update(
                       {
-                        assignmentID: assignmentID
+                        "assignmentID": assignmentID
                       },
                       {
-                        $set: {assignmentNumber: assignmentNumber, subAssignment: subAssignment}
+                        $set: {"assignmentNumber": assignmentNumber, "subAssignment": subAssignment}
                       }
                     ).exec(function(err, result) {
                       if(err) return next(err)
