@@ -55,8 +55,8 @@ exports.test = function(req, res, next) {
 
   Assignment
       .find({
-        subAssignment: "",
-        assignmentNumber: ""
+        "subAssignment": "",
+        "assignmentNumber": ""
       })
       .exec(function(err, assignmentResult) {
         if(err) return next(err);
