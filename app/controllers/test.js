@@ -109,7 +109,7 @@ exports.testing = function(req, res, next) {
                 Assignment
                   .update(
                       {
-                        "assignmentID": assignmentID
+                        assignmentID: assignmentID
                       },
                       {
                         $set:
@@ -118,7 +118,8 @@ exports.testing = function(req, res, next) {
                           subAssignment: subAssignment
                         }
                       }
-                    ).exec(function(err, result) {
+                    )
+                    .exec(function(err, result) {
                       if(err) return next(err)
                       //console.log("updated assignment ", assignmentID)
                       numUpdated++;
