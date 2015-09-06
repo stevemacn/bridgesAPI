@@ -105,6 +105,8 @@ exports.upload = function (req, res, next) {
     var assignmentNumber = assignmentRaw[0];
     var subAssignment = assignmentRaw[1];
 
+    if (subAssignment == "0") subAssignment = "00";
+
     var visualizationType = rawBody.visual; //check this against possible ones
 
 
@@ -510,7 +512,7 @@ exports.show = function (req, res, next) {
             console.log("here")
             as = req.assginment
             console.log("Deleting assignment with ID: " + as.assignmentID)
-            
+
             Assignment
                 .find({assignmentID: as.assignmentID})
                 .exec(function(err, assign) {
@@ -520,7 +522,7 @@ exports.show = function (req, res, next) {
                               assign[i].remove()
                           }
                       })
-            
+
             //return res.redirect("gallery_2")
         }
 

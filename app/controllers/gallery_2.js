@@ -8,7 +8,7 @@ exports.view = function(req, res, next) {
     var getAssignments = function(assig, assignmentsRes, cb) {
         //console.log(assig, assignmentsRes);
         if (assig.length == 0)  {
-          var testString = ":: no assignments found"
+          var testString = "<for testing purposes>"
           return cb(assignmentsRes, testString)
         }
             var assID = assig.pop()
