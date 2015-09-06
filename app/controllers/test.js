@@ -139,8 +139,8 @@ exports.frustrated = function(req, res, next) {
 
   Assignment
       .find({
-        "assignmentNumber": {$exists: false},
-        "subAssignment": {$exists: false},
+        // "assignmentNumber": {$exists: false},
+        // "subAssignment": {$exists: false},
         "email": "dburlins@uncc.edu"
       })
       //.limit(100)
@@ -170,10 +170,10 @@ var county1 = 0;
               continue;
             }
 
-            var assignmentNumber = assignmentRaw[0];
-            var subAssignment = assignmentRaw[1];
-
-            if(subAssignment == "0") subAssignment = "00";
+            // var assignmentNumber = assignmentRaw[0];
+            // var subAssignment = assignmentRaw[1];
+            //
+            // if(subAssignment == "0") subAssignment = "00";
 
             ids += assignmentID + " ";
             id.push(assignmentID);
@@ -182,6 +182,7 @@ var county1 = 0;
         var stuff = "";
         for(x in id) {
           var assignmentRaw = id[x];
+          var assignmentSplit = assignmentRaw.split(".");
           var num = assignmentRaw[0];
           var sub = assignmentRaw[1];
           if(sub == "0") sub = "00";
