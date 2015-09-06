@@ -190,7 +190,7 @@ var county1 = 0;
           Assignment
             .update(
                 {
-                  "email": "dburlins@uncc.edu",
+                  "email": "mmehedin@uncc.edu",
                   "assignmentID": assignmentRaw
                 },
                 {
