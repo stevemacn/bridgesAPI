@@ -136,14 +136,14 @@ exports.testing = function(req, res, next) {
 }
 
 exports.frustrated = function(req, res, next) {
-  // "assignmentNumber": {$exists: false},
-  // "subAssignment": {$exists: false},
+
   Assignment
       .find({
-        "email": "dburlins@uncc.edu",
-        "subAssignment": "."
+        "assignmentNumber": {$exists: false},
+        "subAssignment": {$exists: false},
+        "email": "mmehedin@uncc.edu"
       })
-      // .limit(100)
+      .limit(10)
       .exec(function(err, assignmentResult) {
         if(err) return next(err);
 
