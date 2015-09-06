@@ -206,7 +206,8 @@ var county1 = 0;
         // }
 
         //return next(county + "/" + county1 +" updated");
-        return next("to modify: (", id.length, ") ", ids);
+        var stuff = "to modify: (" + id.length + ") " + ids;
+        return next(stuff);
 
       });
 
