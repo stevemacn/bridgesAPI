@@ -179,34 +179,35 @@ var county1 = 0;
             id.push(assignmentID);
         //  }
         }
+        var stuff = "";
+        for(x in id) {
+          var assignmentRaw = id[x];
+          var num = assignmentRaw[0];
+          var sub = assignmentRaw[1];
+          if(sub == "0") sub = "00";
 
-        // for(x in id) {
-        //   county1++;
-        //   var assignmentRaw = id[x];
-        //   var num = assignmentRaw[0];
-        //   var sub = assignmentRaw[1];
-        //
-        //   Assignment
-        //     .update(
-        //         {
-        //           assignmentID: assignmentRaw
-        //         },
-        //         {
-        //           $set:
-        //           {
-        //             assignmentNumber: num,
-        //             subAssignment: sub
-        //           }
-        //         }
-        //       )
-        //       .exec(function(err, result) {
-        //         if(err) return next(err)
-        //         county++;
-        //       })
-        // }
+          Assignment
+            .update(
+                {
+                  "email": "dburlins@uncc.edu",
+                  "assignmentID": assignmentRaw
+                },
+                {
+                  $set:
+                  {
+                    "assignmentNumber": num,
+                    "subAssignment": sub
+                  }
+                }
+              )
+              .exec(function(err, result) {
+                if(err) return next(err)
+                stuff += assignmentRaw + ", ";
+              })
+        }
 
         //return next(county + "/" + county1 +" updated");
-        var stuff = "to modify: (" + id.length + ") " + ids;
+        //var stuff = "to modify: (" + id.length + ") " + ids;
         return next(stuff);
 
       });
