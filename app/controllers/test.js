@@ -143,9 +143,12 @@ exports.frustrated = function(req, res, next) {
         "subAssignment": {$exists: false},
         "email": "mmehedin@uncc.edu"
       })
-      .limit(10)
+      .limit(100)
       .exec(function(err, assignmentResult) {
-        if(err) return next(err);
+        if(err){
+          return next(err);
+          console.log(err);
+        }
 
         var numUpdated = 0;
         var numDeleted = 0;
@@ -202,14 +205,17 @@ var county1 = 0;
                 }
               )
               .exec(function(err, result) {
-                if(err) return next(err)
+                if(err) {
+                  return next(err)
+                  console.log(err)
+                }
                 stuff += assignmentRaw + ", ";
               })
         }
-
+        console.log("I DID A THING: ", stuff);
         //return next(county + "/" + county1 +" updated");
         //var stuff = "to modify: (" + id.length + ") " + ids;
-        return next(stuff);
+        res.sendStatus(200);
 
       });
 

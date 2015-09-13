@@ -8,8 +8,7 @@ exports.view = function(req, res, next) {
     var getAssignments = function(assig, assignmentsRes, cb) {
         //console.log(assig, assignmentsRes);
         if (assig.length == 0)  {
-          var testString = "<for testing purposes>"
-          return cb(assignmentsRes, testString)
+          return cb(assignmentsRes)
         }
             var assID = assig.pop()
 
@@ -73,14 +72,13 @@ exports.view = function(req, res, next) {
         //                        assig.push(assignmentResult[i].assignmentNumber)
         //                    else
 
-                        getAssignments(assig, [], function(assignmentsRes, testString) {
+                        getAssignments(assig, [], function(assignmentsRes) {
 
                                   return res.render('assignments/gallery_2', {
                                                     "title": "Assignment gallery",
                                                     "user":req.user,
                                                     "usernames": req.params.userNameRes,
-                                                    "assignments":assignmentsRes,
-                                                    "test":testString
+                                                    "assignments":assignmentsRes
                                                   })
                         })
                     })
