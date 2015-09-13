@@ -141,7 +141,7 @@ exports.frustrated = function(req, res, next) {
   // "subAssignment": {$exists: false},
   Assignment
       .find({
-        "email": "mmehedin@uncc.edu"
+        "email": "krs@uncc.edu"
       })
       .exec(function(err, assignmentResult) {
         if(err){
@@ -192,7 +192,7 @@ var county1 = 0;
           Assignment
             .update(
                 {
-                  "email": "mmehedin@uncc.edu",
+                  "email": "krs@uncc.edu",
                   "assignmentID": assignmentRaw
                 },
                 {
