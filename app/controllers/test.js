@@ -137,13 +137,12 @@ exports.testing = function(req, res, next) {
 
 exports.frustrated = function(req, res, next) {
   res.send(200);
+  // "assignmentNumber": {$exists: false},
+  // "subAssignment": {$exists: false},
   Assignment
       .find({
-        "assignmentNumber": {$exists: false},
-        "subAssignment": {$exists: false},
         "email": "mmehedin@uncc.edu"
       })
-      .limit(100)
       .exec(function(err, assignmentResult) {
         if(err){
           return next(err);
@@ -186,9 +185,9 @@ var county1 = 0;
         for(x in id) {
           var assignmentRaw = id[x];
           var assignmentSplit = assignmentRaw.split(".");
-          var num = assignmentRaw[0];
-          var sub = assignmentRaw[1];
-          if(sub == "0") sub = "00";
+          var num = assignmentSplit[0];
+          var sub = assignmentSplit[1];
+          if(sub == "0" || sub == "") sub = "00";
 
           Assignment
             .update(
