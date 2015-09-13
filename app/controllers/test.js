@@ -136,7 +136,7 @@ exports.testing = function(req, res, next) {
 }
 
 exports.frustrated = function(req, res, next) {
-
+  res.send(200);
   Assignment
       .find({
         "assignmentNumber": {$exists: false},
@@ -215,7 +215,7 @@ var county1 = 0;
         console.log("I DID A THING: ", stuff);
         //return next(county + "/" + county1 +" updated");
         //var stuff = "to modify: (" + id.length + ") " + ids;
-        res.sendStatus(200);
+
 
       });
 
