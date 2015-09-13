@@ -211,7 +211,7 @@ var county1 = 0;
                 stuff += assignmentRaw + ", ";
               })
         }
-        console.log("I DID A THING: ", stuff);
+        console.log("I DID A THING: ", ids);
         //return next(county + "/" + county1 +" updated");
         //var stuff = "to modify: (" + id.length + ") " + ids;
 
@@ -219,59 +219,3 @@ var county1 = 0;
       });
 
 }
-
-// exports.trial = function(req, res, next) {
-//
-//   Assignment
-//       .find({
-//         "email": "dburlins@uncc.edu",
-//         "assignmentNumber": {$exists: false},
-//         "subAssignment": {$exists: false}
-//       })
-//       .limit(100)
-//       .exec(function(err, result){
-//
-//         for(a in result) {
-//           var tmp = result[a];
-//           var assignmentID = tmp.assignmentID;
-//           var assignmentRaw = assignmentID.split(".");
-//
-//           // skips
-//           if(assignmentRaw.length < 2) {
-//             numSkipped++;
-//             continue;
-//           }
-//
-//           var assignmentNumber = assignmentRaw[0];
-//           var subAssignment = assignmentRaw[1];
-//
-//           ids += assignmentID + " ";
-//           id.push(assignmentID);
-//           }
-//           }
-//
-//           for(x in id) {
-//           county1++;
-//           var assignmentRaw = id[x];
-//           var num = assignmentRaw[0];
-//           var sub = assignmentRaw[1];
-//
-//           Assignment
-//           .update(
-//               {
-//                 assignmentID: assignmentRaw
-//               },
-//               {
-//                 $set:
-//                 {
-//                   assignmentNumber: num,
-//                   subAssignment: sub
-//                 }
-//               }
-//             )
-//             .exec(function(err, result) {
-//               if(err) return next(err)
-//               county++;
-//             })
-//           }
-//     }
