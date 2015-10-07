@@ -86,7 +86,7 @@ exports.upload = function (req, res, next) {
         catch (e) {
 
             if(typeof req.body != 'object') {
-                console.log(e)
+                // console.log(e)
                 return next(e + " invalid syntax for raw body of request")
             } else {
                 rawBody = req.body;
@@ -173,7 +173,7 @@ exports.upload = function (req, res, next) {
             .exec(function (err, resp) {
                  if(err)
                     console.log(err);
-                console.log("replaceAssignment() removed (" + resp + ") assignments (" + assignmentNumber + ".*) from user " + user.username);
+                console.log("replaceAssignment() removed (" + resp + ") assignments (" + assignmentNumber + ".*) from user: " + user.username);
             })
         }
 
@@ -201,7 +201,6 @@ exports.upload = function (req, res, next) {
             //log new assignment
 //            console.log("assignment added: "+user.email+
 //                " "+assignmentID)
-            console.log(assignment)
 
             //report to client
             User.findOne({
@@ -250,8 +249,7 @@ exports.show = function (req, res, next) {
         })
 
     function getAssignment (req, res, next, email, cb) {
-        assignmentNumber = req.params.assignmentNumber
-        // console.log(req.params);
+        assignmentNumber = req.params.assignmentNumber;
         next = next
 
         var version = "0.4.0";
@@ -286,9 +284,10 @@ exports.show = function (req, res, next) {
             })
             .exec(function(err, assignment) {
                 if (err) return next(err);
+                // console.log(assignment);
                 if (!assignment || assignment.length == 0) {
-                    findAssignmentOld(id); // <-- Try old version too
-                    return;
+                    //findAssignmentOld(id); // <-- Try old version too
+                    return next ("the assignment was not found");
                 }
 
                 // If the assignment is not public, see if user has access to private assignment
@@ -331,7 +330,7 @@ exports.show = function (req, res, next) {
 
         //New method for finding all sub assignments
         function getAssignmentNew() {
-            assignmentNumber = assignmentNumber.split(".")[0];
+            // assignmentNumber = assignmentNumber.split(".")[0];
 
             Assignment
             .find({
@@ -339,14 +338,13 @@ exports.show = function (req, res, next) {
                 assignmentNumber: assignmentNumber
             })
             .sort({
-                subAssignment: 1
+                subAssignment: 1  // TODO: only sorts based on strings since we don't store numbers as integers...
             })
             .exec(function(err, assignments) {
                 if (err) return next(err);
                 if (!assignments || assignments.length == 0) {
                          return next("Could not find assignment " + assignmentNumber);
                 } else if (assignments.length == 1) {
-                      //console.log(assignments[0]);
                       return renderVis(res, assignments[0]);
                   } else
                       return renderMultiVis(res, assignments);
@@ -425,8 +423,6 @@ exports.show = function (req, res, next) {
             tree = tm.flatten(data)
             return tree
         }
-
-        //for(var i = 0; i < assignment.length(); i++)
         data = assignment.data.toObject()
         data = data[0]
 
