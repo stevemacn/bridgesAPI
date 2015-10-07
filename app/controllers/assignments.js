@@ -5,32 +5,6 @@
     , treemill = require('treemill')
     , visTypes = require('./visTypes.js')
 
-//API route for ajax requests to change the visual
-//representation of the data they uploaded.
-// exports.updateVistype = function (req, res, next) {
-//
-//     console.log('update vistype for ' + req.user.email +
-//         ' '+req.params.assignmentID)
-//
-//     Assignment
-//         .findOne({
-//             email:req.user.email,
-//             assignmentID: req.params.assignmentID
-//         })
-//         .exec(function (err, assignmentResult) {
-//             if (err) return next(err)
-//             if (!assignmentResult)
-//                 return next("could not find assignment")
-//             //validate the vis type is implemented..
-//             vistypes = ["nodelink", "tree", "queue"]
-//             if (vistypes.indexOf(req.params.value) == -1)
-//                 return next("specified vistype is not implemented")
-//             assignmentResult.vistype=req.params.value
-//             assignmentResult.save()
-//             res.send("OK")
-//         })
-// }
-
 //API route to toggle the visibility of an assignment
 //between private and public.
 exports.updateVisibility = function (req, res, next) {
@@ -111,7 +85,7 @@ exports.upload = function (req, res, next) {
 
 
 
-    if(version == "0.4.0") { //version with assignmentID as one string
+    if(version == '0.4.0') { //version with assignmentID as one string
         // set the vis to default type
         if(visualizationType != "tree" && visualizationType != "AList")
            visualizationType = "nodelink";
@@ -173,43 +147,51 @@ exports.upload = function (req, res, next) {
             .exec(function (err, resp) {
                  if(err)
                     console.log(err);
-                console.log("replaceAssignment() removed (" + resp + ") assignments (" + assignmentNumber + ".*) from user: " + user.username);
+                console.log("replaceAssignment() removed assignments (" + assignmentNumber + ".*) from user: \"" + user.username + "\"");
+
+                // have to put this code to create/save assignment in both cases
+                // since the removal happens asynchronously for new assignments
+                assignment = new Assignment()
+                assignment.email = user.email
+                assignment.vistype = visualizationType
+                assignment.data = rawBody
+                assignment.assignmentID = assignmentID
+                assignment.assignmentNumber = assignmentNumber
+                assignment.subAssignment = subAssignment
+                assignment.schoolID = req.params.schoolID || ""
+                assignment.classID = req.params.classID || ""
+                assignment.save();
+
+                User.findOne({
+                    email: user.email
+                }).exec(function (err, resp) {
+                    res.json({"msg":assignmentID+"/"+resp.username})
+                })
+
+                //log new assignment
+                console.log("assignment added: "+user.email+
+                      " "+assignment)
             })
+        } else {
+          // have to put this code to create/save assignment in both cases
+          // since the removal happens asynchronously for new assignments
+          assignment = new Assignment()
+          assignment.email = user.email
+          assignment.vistype = visualizationType
+          assignment.data = rawBody
+          assignment.assignmentID = assignmentID
+          assignment.assignmentNumber = assignmentNumber
+          assignment.subAssignment = subAssignment
+          assignment.schoolID = req.params.schoolID || ""
+          assignment.classID = req.params.classID || ""
+          assignment.save();
+
+          User.findOne({
+              email: user.email
+          }).exec(function (err, resp) {
+              res.json({"msg":assignmentID+"/"+resp.username})
+          })
         }
-
-        //TODO: move assignment creation from this into function above; but consider old cases.
-        //remove previously uploaded assignment if exists
-        // Assignment.remove({
-        //     assignmentID: assignmentID,
-        //     email: user.email
-        // })
-        // .exec(function (err, resp) {
-        //     console.log(resp);
-
-            //create a new assignment in the database
-            assignment = new Assignment()
-            assignment.email = user.email
-            assignment.vistype = visualizationType
-            assignment.data = rawBody
-            assignment.assignmentID = assignmentID
-            assignment.assignmentNumber = assignmentNumber
-            assignment.subAssignment = subAssignment
-            assignment.schoolID = req.params.schoolID || ""
-            assignment.classID = req.params.classID || ""
-            assignment.save()
-
-            //log new assignment
-//            console.log("assignment added: "+user.email+
-//                " "+assignmentID)
-
-            //report to client
-            User.findOne({
-                email: user.email
-            }).exec(function (err, resp) {
-                console.log(user.email, resp.username, assignment);
-                res.json({"msg":assignmentID+"/"+resp.username})
-            })
-        //})
     }
 }
 
