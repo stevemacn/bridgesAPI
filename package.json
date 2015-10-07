@@ -37,6 +37,7 @@
     "grunt-contrib-watch": "~0.4.4",
     "grunt-develop": "~0.1.1",
     "grunt-modernizr": "^0.6.0",
+    "grunt-update-submodules": "^0.4.1",
     "jquerygo": "latest",
     "mocha": "latest",
     "phantomjs": "latest",

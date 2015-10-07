@@ -12,6 +12,13 @@ module.exports = function (grunt) {
         file: 'app.js'
       }
     },
+    update_submodules: {
+       default: {
+           options: {
+               // default command line parameters will be used: --init --recursive
+           }
+       }
+    },
     bower: {
       install: {
          options: {
@@ -53,6 +60,7 @@ module.exports = function (grunt) {
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-bower-task');
   grunt.loadNpmTasks("grunt-modernizr");
+  grunt.loadNpmTasks( "grunt-update-submodules" );
 
   grunt.registerTask('test', 'run mocha', function () {
      var done = this.async();
@@ -81,5 +89,5 @@ module.exports = function (grunt) {
     }, 500);
   });
 
-  grunt.registerTask('default', ['develop', 'bower', 'modernizr', 'watch']);
+  grunt.registerTask('default', ['develop', 'update_submodules', 'bower', 'modernizr', 'watch']);
 };
