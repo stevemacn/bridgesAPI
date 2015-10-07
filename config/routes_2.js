@@ -82,7 +82,7 @@ module.exports = function(app, passport, streamable) {
     app.get('/login', users.login, handleError)
     app.get('/home', isLoggedIn, users.display, handleError)
     app.get('/profile', isLoggedIn, users.profile, handleError)
-    app.get('/username', isLoggedInGallery, users.display, handleError)   //Login 
+    app.get('/username', isLoggedInGallery, users.display, handleError)   //Login
     app.get('/home/:username', isLoggedIn, users.display, handleError)
 
     app.delete('/users/:id', isLoggedIn, users.deletePerson)
@@ -207,7 +207,7 @@ module.exports = function(app, passport, streamable) {
     //  Test Routes
     //
     // -------------------------------------------------------
-    var test = require('../app/controllers/test.js')      // Mongo Tests
+    //var test = require('../app/controllers/test.js')      // Mongo Tests
 
     //app.get('/test', test.test, handleError)
 

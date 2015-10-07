@@ -17,9 +17,9 @@ var strokeWidthRange = d3.scale.linear()
 
 var ele = document.getElementById("vis0"),
     width = ele.offsetWidth - 15
-    height = window.innerHeight - 160;//ele.offsetHeight + 250  
-     
-if (d3.bst) { 
+    height = window.innerHeight - 160;//ele.offsetHeight + 250
+
+if (d3.bst) {
     bst = d3.bst(d3, "#vis0", width, height)
     bst.make(data)
 }
@@ -32,7 +32,7 @@ else if (d3.array) {
 else if (d3.graph) {
     d3.graph(d3, "#vis0", width, height, data)
 } else {
-    console.log("unknown type");  
+    console.log("unknown type");
     d3.graph(d3, "#vis0", width, height, data[key]);
 }
 
@@ -52,7 +52,7 @@ function resize() {
     var h = window.innerHeight - 160;
     console.log(height,h);
     console.log((d3.select(".assignmentContainer")[0])[0].clientHeight);
-    if((d3.select(".assignmentContainer")[0])[0].clientHeight < h) {        
+    if((d3.select(".assignmentContainer")[0])[0].clientHeight < h) {
         console.log(height,h);
             d3.selectAll(".assignmentContainer")
                 .attr("height", h);
@@ -67,33 +67,31 @@ function resize() {
                 .attr("height", height);
     }
 }
-    
+
 
 
 // Toggle minimizing and maximizing visualization divs
 function minimize() {
-    
+
     if(d3.select(this).attr("minimized") == "true") {
         d3.select("#vis" + this.id.substr(3))
             .classed("assignmentContainerMinimized", false);
 
         d3.select("#svg" + this.id.substr(3))
             .style("display", "block");
-       
+
         d3.select(this).attr("minimized", false);
-        
+
         d3.select(this).text("-");
     } else {
         d3.select("#vis" + this.id.substr(3))
             .classed("assignmentContainerMinimized", true);
-        
+
         d3.select("#svg" + this.id.substr(3))
             .style("display", "none");
-        
+
         d3.select(this).attr("minimized", true);
-        
+
         d3.select(this).text("+");
     }
 }
-
-
