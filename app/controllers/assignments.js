@@ -206,6 +206,7 @@ exports.upload = function (req, res, next) {
             User.findOne({
                 email: user.email
             }).exec(function (err, resp) {
+                console.log(user.email, resp.username, assignment);
                 res.json({"msg":assignmentID+"/"+resp.username})
             })
         //})
@@ -278,13 +279,14 @@ exports.show = function (req, res, next) {
 
         // finds assignments based on assignmentNumber
         function findAssignmentNew(id) {
+          console.log(email, id);
             Assignment.findOne({
                 email: email,
                 assignmentNumber: id
             })
             .exec(function(err, assignment) {
                 if (err) return next(err);
-                // console.log(assignment);
+                 console.log(assignment);
                 if (!assignment || assignment.length == 0) {
                     //findAssignmentOld(id); // <-- Try old version too
                     return next ("the assignment was not found");
