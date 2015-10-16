@@ -31,8 +31,8 @@ exports.view = function(req, res) {
       Assignment
           .find({
               assignmentNumber: assignmentNumber,
-              subAssignment: 0,
-              shared: true //? should this not be true?
+              subAssignment: "00",
+              shared: true
           })
           .exec(function(err, assignmentResult) {
 

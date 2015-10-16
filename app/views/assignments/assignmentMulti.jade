@@ -40,16 +40,9 @@ block content
                     button(class='optionButton', id='reset')
                                 label Reset view
 
-                    //button(class="optionButton", id="snapshotPositions", onclick="saveSnapshot()")
-                    //            label Save Positions
-
-                    //button(class='optionButton', id='deleteAssignment', onclick='del_assign()')
-                    //            label Delete
-
                 div
                     a.btn.btn-primary(class="optionButton", id="saveButton" onclick="snapImage()")
                             label(for="saveButton") Snapshoot
-                    //form(action="users/sessions" class="dropzone" id="my-awesome-dropzone")
         -}
 
         table.full
@@ -135,20 +128,6 @@ block footerjs
                 console.log(err)
             });
 
-        }
-
-        function del_assign(){
-        //TODO
-          //  var assignmentNumber = !{JSON.stringify(assignmentNumber)}
-            //$.ajax({
-                //url: '/assignments/'+assignmentNumber+'/'+name,
-              //  url: '/username/'+username,
-              //  type: 'delete'
-            //}).done(function() {
-              //  console.log('deleting assignment...')
-            //}).error(function(err){
-              //  console.log(name+err)
-            //});
         }
 
         function setvis (selected) {

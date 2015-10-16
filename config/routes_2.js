@@ -1,5 +1,57 @@
 module.exports = function(app, passport, streamable) {
 
+
+
+    /**
+     *  isPublic - allows public access to public assignments
+     *  @req - requests
+     *  @res - response
+     *  @next - passing controller to the next handler
+     */
+    var isPublic = function(req, res, next){
+        //return res.send("hello");
+        var mongoose = require('mongoose'),
+        Assignment = mongoose.model('Assignment'),
+        User = mongoose.model('User');
+        var a_user = false;
+
+
+        User
+            .findOne({
+                     username: req.params.username
+                     })
+            .exec(function(err, user_local) {
+                    if (err)
+                        return next()
+                    if (!user_local)
+                        return next("there is no user with the username: " + req.params.username)
+                  //authenticated
+                    if (req.isAuthenticated()) {
+                        a_user = true
+                    }
+                  })
+
+
+
+        Assignment
+            .findOne({
+                     assignmentID: req.params.assignmentID
+                     })
+            .exec(function(err, assig){
+                  //return res.send(a_user)
+                  if (!assig)
+                      return next("there is no assignment with this id")
+                  else if (assig & a_user)
+                    return next()
+                  else if (assig.shared)
+                      return next()
+                  else if (!assig.shared & !a_user)
+                        return next("the assignment is private")
+                  else return next();
+                //res.send(assig.shared)
+                  })
+    }
+
     //Allows users to by pass authentication to api requests
     //if they have a valid api key.
     var hasAccess = function(req, res, next) {
@@ -11,14 +63,14 @@ module.exports = function(app, passport, streamable) {
 
         var mongoose = require('mongoose'),
             User = mongoose.model('User')
-
-            if (!req.query.apikey) return next(
+            var found = req.query.apikey;
+            if (!found) return next(
                 "Not logged in: you must provide" +
-                " an apikey as a query variable")
+               " an apikey as a query variable")
 
             User
                 .findOne({
-                    apikey: req.query.apikey
+                    apikey: found
                 })
                 .exec(function(err, user) {
                     if (!user)
@@ -91,7 +143,6 @@ module.exports = function(app, passport, streamable) {
 
 
 
-
     // -------------------------------------------------------
     //
     //  Stream Routes
@@ -118,19 +169,15 @@ module.exports = function(app, passport, streamable) {
     app.post('/assignments/:assignmentNumber/share/:value',
         hasAccess, assignments.updateVisibility, handleError)
 
-//    app.post('/assignments/:assignmentID/vistype/:value',   //Deprecated function
-//        hasAccess, assignments.updateVistype, handleError)
+
+    //app.get('/assignments/:assignmentID/:username',
+    //         isPublic, assignments.show, handleError)
+
     app.post('assignments/:assignmentNumber/saveSnapshot/', //allows user to save a snapshot of the positions of a graph.
               hasAccess, assignments.saveSnapshot, handleError)
 
-    // app.get('/assignments/:assignmentNumber/:username',
-    //           hasAccess, assignments.show, handleError)
     app.get('/assignments/:assignmentNumber/:username',
               assignments.show, handleError)
-
-    //app.delete('/assignments/:assignmentID/:username',
-    //    hasAccess, assignments.deleteAssignment, handleError)
-
 
 
     // -------------------------------------------------------
@@ -144,6 +191,7 @@ module.exports = function(app, passport, streamable) {
     app.get('/assignments/:assignmentNumber', gallery.view, handleError)
     app.get('/assignments/', gallery.view, handleError)
     app.get('/username/:userNameRes', isLoggedIn, gallery_2.view, handleError)
+
 
     app.post('/users/session',
         passport.authenticate('local-log', {
@@ -207,8 +255,7 @@ module.exports = function(app, passport, streamable) {
     //  Test Routes
     //
     // -------------------------------------------------------
-    //var test = require('../app/controllers/test.js')      // Mongo Tests
-
-    //app.get('/test', test.test, handleError)
+    var test = require('../app/controllers/test.js')      // Mongo Tests
+    app.get('/tests', test.frustrated, handleError)
 
 }
