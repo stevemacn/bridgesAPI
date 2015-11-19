@@ -150,7 +150,7 @@ exports.upload = function (req, res, next) {
                 console.log("replaceAssignment() removed assignments (" + assignmentNumber + ".*) from user: \"" + user.username + "\"");
 
                 // have to put this code to create/save assignment in both cases
-                // since the removal happens asynchronously for new assignments
+                // since the removal happens asynchronously for assignments
                 assignment = new Assignment()
                 assignment.email = user.email
                 assignment.vistype = visualizationType
@@ -489,7 +489,7 @@ exports.show = function (req, res, next) {
 
 
         exports.deleteAssignment = function (req, res) {
-            console.log("here")
+            // console.log("here")
             as = req.assginment
             console.log("Deleting assignment with ID: " + as.assignmentID)
 

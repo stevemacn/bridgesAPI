@@ -189,7 +189,6 @@ module.exports = function(app, passport, streamable) {
     var gallery_2 = require('../app/controllers/gallery_2.js')  // Private user gallery
 
     app.get('/assignments/:assignmentNumber', gallery.view, handleError)
-    app.get('/assignments/', gallery.view, handleError)
     app.get('/username/:userNameRes', isLoggedIn, gallery_2.view, handleError)
 
 
@@ -255,7 +254,7 @@ module.exports = function(app, passport, streamable) {
     //  Test Routes
     //
     // -------------------------------------------------------
-    var test = require('../app/controllers/test.js')      // Mongo Tests
-    app.get('/tests', test.frustrated, handleError)
+    // var test = require('../app/controllers/test.js')      // Mongo Tests
+    // app.get('/tests', test.frustrated, handleError)
 
 }
