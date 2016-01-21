@@ -27,20 +27,21 @@ block content
                   //  - console.log(assignments[x].shared, assignments[x].vistype)
                   if (assignments[x].shared == false)
                           div(class='gallery_assignment_div_private')
-                              if(assignments[x].vistype == 'graph')
-                                  img(src='/img/graph.png' title=assignments[x].vistype)
-                              else if((assignments[x].vistype == 'tree'))
-                                  img(src='/img/tree.png' title=assignments[x].vistype)
+                              if(assignments[x].visual == 'graph')
+                                  img(src='/img/graph.png' title=assignments[x])
+                              else if((assignments[x].visual == 'tree'))
+                                  img(src='/img/tree.png' title=assignments[x])
                               else
-                                  img(src='/img/LList.png' title=assignments[x].vistype)
+                                  img(src='/img/LList.png' title=assignments[x])
                       else
                           div(class='gallery_assignment_div_public')
                               if(assignments[x].data[0].visual=='graph')
-                                  img(src='/img/graph.png' title=assignments[x].vistype)
+                                  //img(src='/img/graph.png' title=assignments[x])
+                                  img(src='/img/graph.png' title=assignments[x])
                               else if(assignments[x].data[0].visual=='tree')
-                                  img(src='/img/tree.png' title=assignments[x].vistype)
+                                  img(src='/img/tree.png' title=assignments[x])
                               else
-                                  img(src='/img/LList.png' title=assignments[x].vistype)
+                                  img(src='/img/LList.png' title=assignments[x])
 
                   a(style='text-decoration: none; ' href='/assignments/'+assignments[x].assignmentNumber+'/'+usernames)
                       h4(class='gallery_links') #{assignments[x].assignmentNumber} #{assignments[x].data[0].visual}
