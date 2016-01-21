@@ -43,7 +43,7 @@ block content
 
                         button(class="optionButton", id="snapshotPositions", onclick="saveSnapshot()")
                             label Save Positions
-                            
+
                     div
                         a.btn.btn-primary(class="optionButton", id="saveButton" onclick="snapImage()")
                         label(for="saveButton") Snapshoot
@@ -92,7 +92,7 @@ block footerjs
     script.
         var data = !{JSON.stringify(data)}
 
-        var assignmentID = !{JSON.stringify(assignmentID)}
+        var assignmentID = !{JSON.stringify(assignmentNumber)}
     - if (vistype == "nodelink")
         script(src = '/js/graph.js')
     - else if (vistype == "tree")
