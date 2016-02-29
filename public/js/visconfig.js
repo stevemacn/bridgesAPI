@@ -4,6 +4,9 @@ var strokeWidthRange = d3.scale.linear()
                         .range([1,15])
                         .clamp(true);
 
+if(map)
+  map(data);
+
 d3.select("#reset").on("click", reset);
 d3.select("#resize").on("click", resize);
 d3.select(".minimize").on("click", minimize);
@@ -11,22 +14,21 @@ allZoom = [];
 allSVG = [];
 
 var ele = document.getElementById("vis0"),
-    width = ele.offsetWidth - 15
-
-    height = ele.offsetHeight + 250
+    width = ele.offsetWidth - 15,
+    height = ele.offsetHeight + 250;
 
 if (d3.bst) {
-    bst = d3.bst(d3, "#vis0", width, height)
-    bst.make(data)
+    bst = d3.bst(d3, "#vis0", width, height);
+    bst.make(data);
 }
 else if (d3.queue) {
-    d3.queue(d3, "#vis0", width, height, data.nodes)
+    d3.queue(d3, "#vis0", width, height, data.nodes);
 }
 else if (d3.array) {
-    d3.array(d3, "#vis0", width, height, data.nodes)
+    d3.array(d3, "#vis0", width, height, data.nodes);
 }
 else if (d3.graph) {
-    d3.graph(d3, "#vis0", width, height, data)
+    d3.graph(d3, "#vis0", width, height, data);
 } else {
     console.log("unknown type");
     d3.graph(d3, "#vis" + key, width, height, data[key]);
@@ -60,8 +62,6 @@ function resize() {
                 .attr("height", height);
     }
 }
-    
-
 
 // Toggle minimizing and maximizing visualization divs
 function minimize() {

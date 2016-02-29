@@ -21,6 +21,10 @@
   vector-effect: non-scaling-stroke;
 }
 
+.loc {
+  vector-effect: non-scaling-stroke;
+}
+
 
 .overlay {
   fill: none;
