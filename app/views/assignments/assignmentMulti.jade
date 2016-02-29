@@ -41,8 +41,8 @@ block content
                                 label Reset view
 
                 div
-                    a.btn.btn-primary(class="optionButton", id="saveButton" onclick="snapImage()")
-                            label(for="saveButton") Snapshoot
+                    //a.btn.btn-primary(class="optionButton", id="saveButton" onclick="snapImage()")
+                    //        label(for="saveButton") Snapshoot
         -}
 
         table.full
@@ -95,6 +95,12 @@ block footerjs
     script.
         var data = !{JSON.stringify(data)}
         var assignmentNumber = !{JSON.stringify(assignmentNumber)}
+
+    - if ( map )
+        #mapContainer.mapContainer
+        link(rel='stylesheet', href='/css/map.css')
+        script( src = '//d3js.org/topojson.v1.min.js' )
+        script( src = '/js/map.js' )
 
         //TODO fix this up in controller prior
     - if (vistype == "nodelink")

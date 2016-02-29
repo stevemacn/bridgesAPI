@@ -41,12 +41,12 @@ block content
                         button(class="optionButton", id="reset")
                                     label Reset view
 
-                        button(class="optionButton", id="snapshotPositions", onclick="saveSnapshot()")
-                            label Save Positions
+                        //button(class="optionButton", id="snapshotPositions", onclick="saveSnapshot()")
+                        //    label Save Positions
 
                     div
-                        a.btn.btn-primary(class="optionButton", id="saveButton" onclick="snapImage()")
-                        label(for="saveButton") Snapshoot
+                        // a.btn.btn-primary(class="optionButton", id="saveButton" onclick="snapImage()")
+                        // label(for="saveButton") Snapshoot
                     div
                         //form(action="users/sessions" class="dropzone" id="my-awesome-dropzone")
         -}
@@ -93,6 +93,13 @@ block footerjs
         var data = !{JSON.stringify(data)}
 
         var assignmentID = !{JSON.stringify(assignmentNumber)}
+
+    - if ( map )
+        #mapContainer.mapContainer
+        link(rel='stylesheet', href='/css/map.css')
+        script( src = '//d3js.org/topojson.v1.min.js' )
+        script( src = '/js/map.js' )
+
     - if (vistype == "nodelink")
         script(src = '/js/graph.js')
     - else if (vistype == "tree")
@@ -113,7 +120,7 @@ block footerjs
     script(src = '/js/visconfig.js')
     script.
         function toggleShare (selected) {
-            var assignmentID = !{JSON.stringify(assignmentID)}
+            var assignmentID = !{JSON.stringify(assignmentNumber)}
             $.ajax({
                 url: "/assignments/"+assignmentID+"/share/"+selected,
                 type: "post"

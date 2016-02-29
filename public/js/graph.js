@@ -13,13 +13,13 @@ d3.graph = function(d3, canvasID, w, h, data) {
         i = 0,
         canvasID = canvasID; //canvasID must have hash like "#vis" or "#canvas"
     var vis, svgGroup, defs;
-    var count = 0
+    var count = 0;
 
-var nodes = data.nodes
-var links = data.links
+var nodes = data.nodes;
+var links = data.links;
 
 for (i in links) {
-   if (count<links[i].value) count = links[i].value
+   if (count<links[i].value) count = links[i].value;
 }
 
 var force = d3.layout.force()
@@ -62,10 +62,10 @@ vis.append("svg:defs").selectAll("marker")
     .attr("refY", 0)
     .attr("markerUnits", "userSpaceOnUse")
     .style("fill", function (d) {
-        return d.color || "black"
+        return d.color || "black";
     })
     .style("opacity", function(d) {
-        return d.opacity || 1
+        return d.opacity || 1;
     })
     .attr("markerWidth", 10)
     .attr("markerHeight", 10)
@@ -82,15 +82,15 @@ var link = svgGroup.append("svg:g").selectAll("path")
         return strokeWidthRange(d.thickness) || 1;
     })
     .style("stroke", function (d) {
-        return d.color || "black"
+        return d.color || "black";
     })
     .style("opacity", function(d) {
-        return d.opacity || 1
+        return d.opacity || 1;
     })
     .style("stroke-dasharray", function(d) {
-        return d.dasharray || ""
+        return d.dasharray || "";
     })
-    .style("fill", "none")
+    .style("fill", "none");
 
 //scale values between 1 and 100 to a reasonable range
 var scaleSize = d3.scale.linear()
@@ -104,7 +104,7 @@ var node = svgGroup.selectAll(".node")
     .on("mouseover", mouseover)
     .on("mouseout", mouseout)
     .on("dblclick", dblclick)
-    .call(force.drag)
+    .call(force.drag);
 
 //inner nodes
 node
@@ -118,8 +118,8 @@ node
         return d.color || defaultColors(i);
     })
     .style("opacity", function(d) {
-        return d.opacity || 1
-    })
+        return d.opacity || 1;
+    });
 
 //inner nodes
 node
@@ -143,10 +143,12 @@ var insertLineBreaks = function(d) {
 	    if (i > 0)
 		tspan.attr('x',0).attr('dy','15');
 	}
-}
+};
 
 // Add line breaks to node labels
 svgGroup.selectAll('text').each(insertLineBreaks);
+
+
 
 
 force.on("tick", function() {
@@ -167,30 +169,30 @@ force.on("tick", function() {
         .attr("transform", function(d) {
             return "translate(" + d.x + "," + d.y + ")";
         });
-})
+});
 
 function mouseover() {
     d3.select(this).select("text").transition()
         .duration(750)
-        .style("display","block")
+        .style("display","block");
     d3.select(this).select("path").transition()
         .duration(750)
         .attr('d', function (d) {
             return d3.svg.symbol().type(d.shape||"circle")
-                    .size(scaleSize(40))()
-        })
+                    .size(scaleSize(40))();
+        });
 }
 
 function mouseout() {
     d3.select(this).select("text").transition()
         .duration(750)
-        .style("display","none")
+        .style("display","none");
     d3.select(this).select("path").transition()
         .duration(750)
         .attr('d', function (d) {
             return d3.svg.symbol().type(d.shape||"circle")
-                    .size(scaleSize(d.size||1))()
-        })
+                    .size(scaleSize(d.size||1))();
+        });
 }
 
 // zoom function

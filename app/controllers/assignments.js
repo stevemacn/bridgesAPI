@@ -425,7 +425,8 @@ exports.show = function (req, res, next) {
             "classID":assignment.classID,
             "vistype":vistype,
             "shared":assignment.shared,
-            "owner":owner
+            "owner":owner,
+            "map": true
         })
     }
 
@@ -483,7 +484,8 @@ exports.show = function (req, res, next) {
             "classID":assignments[0].classID,
             "vistype":vistype,
             "shared":assignments[0].shared,
-            "owner":owner
+            "owner":owner,
+            "map": true
         })
     }
 
