@@ -15,7 +15,7 @@
 
 .boundary {
   fill: none;
-  stroke: #fff;
+  stroke: #000;
   stroke-linejoin: round;
   stroke-linecap: round;
   vector-effect: non-scaling-stroke;

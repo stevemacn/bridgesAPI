@@ -56,11 +56,12 @@ console.log(data);
   dataLayer.selectAll(".loc")
       .data(data.nodes)
         .enter().append("svg:circle")
-        .attr("r", 2)
+        .attr("r", 1)
         .style("fill", "red")
         .style("stroke", "yellow")
         .classed("loc", true)
-        .attr("transform", function(d) {return "translate(" + projection([-75,43]) + ")";});
+        .attr("transform", function( d ) { return "translate(" + projection([-75,43]) + ")"; } )
+        .on('mouseover', function(d, i) {  } );
 
 
 
