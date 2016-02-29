@@ -1,6 +1,8 @@
-map = function(data) {
+var map = function(data) {
   if( !data )
     return;
+
+    console.log(data);
 
   var width = d3.select("#mapContainer").style("width").substr(0, d3.select("#mapContainer").style("width").indexOf('p')) - 20,
       height = d3.select("#mapContainer").style("width").substr(0, d3.select("#mapContainer").style("height").indexOf('p')),
@@ -11,7 +13,7 @@ map = function(data) {
     .scale((width - 1) / 2 / Math.PI);
 
   var zoom = d3.behavior.zoom()
-      .scaleExtent([1, 8])
+      .scaleExtent([0, 10])
       .on("zoom", zoomed);
 
   var path = d3.geo.path()
@@ -60,7 +62,7 @@ map = function(data) {
         .style("fill", "red")
         .style("stroke", "yellow")
         .classed("loc", true)
-        .attr("transform", function( d ) { return "translate(" + projection([-75,43]) + ")"; } )
+        .attr("transform", function( d ) { return "translate(" + projection([d.long,d.lat]) + ")"; } )
         .on('mouseover', function(d, i) {  } );
 
   svg

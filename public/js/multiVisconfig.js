@@ -15,7 +15,9 @@ var visCount = 0,
     minimizedCount = 0,
     maximizedCount = 0;
 
-map( mapData );
+var map = map || null;
+if( map )
+  map( mapData );
 
 /* create new assignments  */
 for (var key in data) {

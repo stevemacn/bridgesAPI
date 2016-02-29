@@ -23,6 +23,7 @@
 
 .loc {
   vector-effect: non-scaling-stroke;
+  pointer-events: none;
 }
 
 .overlay {

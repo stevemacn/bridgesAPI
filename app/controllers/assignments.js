@@ -300,7 +300,8 @@ exports.show = function (req, res, next) {
     function renderMultiVis (res, assignments) {
         var owner=false,
             allAssigns = {},
-            mapData = [];
+            mapData = [],
+            map;
 
         if (sessionUser) {
             if (sessionUser.email==assignments[0].email) owner = true;
@@ -330,6 +331,16 @@ exports.show = function (req, res, next) {
         for(var i = 0; i < assignments.length; i++) {
             data = assignments[i].data.toObject()[0];
 
+            // pull out all coordinates from JSON
+            data.nodes.forEach(function(d) {
+              if( !d.hasOwnProperty("location") ) {
+                console.log(d);
+                if(d.location)
+                  mapData.push( { "lat": d.location[0], "long": d.location[0] } );
+              }
+            });
+
+
             if (assignments[i].vistype == "tree") data = unflatten(data);
             else data = flatten(data);
 
@@ -338,6 +349,9 @@ exports.show = function (req, res, next) {
 
             allAssigns[i] = data;
         }
+
+        mapData.push({"lat": 40, "long": -74});
+        mapData.push({"lat": 38, "long": -76});
 
         return res.render ('assignments/assignmentMulti', {
             "title":"assignmentMulti",
@@ -350,8 +364,8 @@ exports.show = function (req, res, next) {
             "vistype":vistype,
             "shared":assignments[0].shared,
             "owner":owner,
-            "map": true,
-            "mapData": [0, 1]
+            "createMap": function() { return (mapData.length) ? true : false; },
+            "mapData": mapData
         });
     }
 
