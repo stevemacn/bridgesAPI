@@ -1,9 +1,9 @@
-    var mongoose = require('mongoose')
-    , User = mongoose.model('User')
-    , Account = mongoose.model('Account')
-    , Assignment = mongoose.model('Assignment')
-    , treemill = require('treemill')
-    , visTypes = require('./visTypes.js')
+var mongoose = require('mongoose'),
+    User = mongoose.model('User'),
+    Account = mongoose.model('Account'),
+    Assignment = mongoose.model('Assignment'),
+    treemill = require('treemill'),
+    visTypes = require('./visTypes.js');
 
 //API route to toggle the visibility of an assignment
 //between private and public.
@@ -18,19 +18,17 @@ exports.updateVisibility = function (req, res, next) {
             if(err) console.log(err);
 
             for(var i = 0; i < assignmentResult.length; i++) {
-              // console.log((err) ? err : assignmentResult);
-              if (err) return next(err)
+              if (err) return next(err);
               if (!assignmentResult[i])
-                  return next("could not find assignment")
-              assignmentResult[i].shared=req.params.value
-              assignmentResult[i].save()
+                  return next("could not find assignment");
+              assignmentResult[i].shared=req.params.value;
+              assignmentResult[i].save();
               //console.log("CHANGED TO " + req.params.value + " " + assignmentResult[i]);
-
             }
-            res.send("OK")
+            res.send("OK");
 
-        })
-}
+        });
+};
 
 //API route to save the position of some (or all) node positions
 exports.saveSnapshot = function(req, res, next) {
