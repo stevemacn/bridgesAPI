@@ -70,19 +70,9 @@ block footerjs
     script(src = '/components/jquery/dist/jquery.min.js')
 
     script.
-        var vistype = '#{vistype}'
-        $('li').removeClass('active')
-        if (vistype=='tree') {
-            $('#tree').addClass('active')
-        }
-        else if (vistype=='queue') {
-            $('#queue').addClass('active')
-        }
-        else $('#nodelink').addClass('active')
-    script.
         var owner = '#{owner}'
-        if (owner==='false') {
-             $('.vis').css('width','90%') //!!
+        if ( owner === 'false' ) {
+             $('.vis').css('width','90%') // adjust assignment width for public assignments
         }
         var shared = '#{shared}'
         $('#private').prop('checked',false)
@@ -95,14 +85,17 @@ block footerjs
     script.
         var data = !{JSON.stringify(data)}
         var assignmentNumber = !{JSON.stringify(assignmentNumber)}
+        var vistype = "#{vistype}"
+        var mapData =  !{JSON.stringify(mapData)};
 
+    // Map demonstrating locations in the assignment
     - if ( map )
         #mapContainer.mapContainer
         link(rel='stylesheet', href='/css/map.css')
         script( src = '//d3js.org/topojson.v1.min.js' )
         script( src = '/js/map.js' )
 
-        //TODO fix this up in controller prior
+        //TODO
     - if (vistype == "nodelink")
         script(src = '/js/graph.js')
     - else if (vistype == 'tree')
@@ -123,6 +116,7 @@ block footerjs
     script(src = '/js/multiVisconfig.js')
 
     script.
+        // Asynchronously update the assignment visibility
         function toggleShare (selected) {
             var assignmentNumber = !{JSON.stringify(assignmentNumber)}
             $.ajax({
@@ -133,22 +127,9 @@ block footerjs
             }).error(function(err){
                 console.log(err)
             });
-
         }
 
-        function setvis (selected) {
-            var assignmentNumber = !{JSON.stringify(assignmentNumber)}
-            $.ajax({
-                url: "/assignments/"+assignmentNumber+"/vistype/"+selected,
-                type:"post"
-            }).done(function() {
-                location.reload()
-                console.log("visualization type updated")
-            }).error(function(err) {
-                errmsg = JSON.parse(err.responseText)
-                console.log("Error: "+errmsg.error)
-            });
-        }
+        // TODO: Save snapshot of a particular assignment
         function saveSnapshot() {
             console.log("save snapshot");
         }

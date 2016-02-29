@@ -75,6 +75,7 @@ exports.upload = function (req, res, next) {
     var version = rawBody.version;
 
     var assignmentID = req.params.assignmentID;
+    console.log("->", assignmentID);
     var assignmentRaw = assignmentID.split(".");
     var assignmentNumber = assignmentRaw[0];
     var subAssignment = assignmentRaw[1];
@@ -124,21 +125,6 @@ exports.upload = function (req, res, next) {
 
     function replaceAssignment (res, user, assignmentID) {
 
-        //if this assignment is #.0, remove all sub assignments from #
-        //if(assignmentID.split('.')[1] == "0") {
-//        if (((parseFloat(assignmentID)/1.0) % 1.0) == 0) {
-//            if(assignmentID.split('.')[1] == "0" || assignmentID.split('.')[1] == "00") // ?????
-//                //assignmentID = assignmentID.substr(0, assignmentID.indexOf('.') + 2);
-//                assignmentID += "0";
-//
-//            Assignment.remove({
-//                assignmentID: {$gte: Math.floor(parseFloat(assignmentID)), $lt: Math.floor(parseFloat(assignmentID) + 1) },
-//                email: user.email
-//            })
-//            .exec(function (err, resp) {
-//            })
-//        }
-
         if (subAssignment == '0' || subAssignment == '00') {
              Assignment.remove({
                 assignmentNumber: assignmentNumber,
@@ -151,116 +137,87 @@ exports.upload = function (req, res, next) {
 
                 // have to put this code to create/save assignment in both cases
                 // since the removal happens asynchronously for assignments
-                assignment = new Assignment()
-                assignment.email = user.email
-                assignment.vistype = visualizationType
-                assignment.data = rawBody
-                assignment.assignmentID = assignmentID
-                assignment.assignmentNumber = assignmentNumber
-                assignment.subAssignment = subAssignment
-                assignment.schoolID = req.params.schoolID || ""
-                assignment.classID = req.params.classID || ""
+                assignment = new Assignment();
+                assignment.email = user.email;
+                assignment.vistype = visualizationType;
+                assignment.data = rawBody;
+                assignment.assignmentID = assignmentID;
+                assignment.assignmentNumber = assignmentNumber;
+                assignment.subAssignment = subAssignment;
+                assignment.schoolID = req.params.schoolID || "";
+                assignment.classID = req.params.classID || "";
                 assignment.save();
 
                 User.findOne({
                     email: user.email
                 }).exec(function (err, resp) {
-                    res.json({"msg":assignmentID+"/"+resp.username})
-                })
+                    res.json( { "msg":assignmentID+"/"+resp.username } );
+                });
 
                 //log new assignment
-                console.log("assignment added: "+user.email+
-                      " "+assignment)
-            })
+                console.log( "assignment added: " + user.email + " " + assignment );
+            });
         } else {
           // have to put this code to create/save assignment in both cases
           // since the removal happens asynchronously for new assignments
-          assignment = new Assignment()
-          assignment.email = user.email
-          assignment.vistype = visualizationType
-          assignment.data = rawBody
-          assignment.assignmentID = assignmentID
-          assignment.assignmentNumber = assignmentNumber
-          assignment.subAssignment = subAssignment
-          assignment.schoolID = req.params.schoolID || ""
-          assignment.classID = req.params.classID || ""
+          assignment = new Assignment();
+          assignment.email = user.email;
+          assignment.vistype = visualizationType;
+          assignment.data = rawBody;
+          assignment.assignmentID = assignmentID;
+          assignment.assignmentNumber = assignmentNumber;
+          assignment.subAssignment = subAssignment;
+          assignment.schoolID = req.params.schoolID || "";
+          assignment.classID = req.params.classID || "";
           assignment.save();
 
           User.findOne({
               email: user.email
           }).exec(function (err, resp) {
-              res.json({"msg":assignmentID+"/"+resp.username})
-          })
+              res.json( { "msg":assignmentID + "/" + resp.username } );
+          });
         }
     }
-}
+};
 
-var sessionUser = null;
-
-exports.next = null
+exports.next = null;
 
 exports.show = function (req, res, next) {
 
-    //var query = Assignment.find({'username': 'test'});
+    this.next = next;
+    var assignmentNumber = req.params.assignmentNumber,
+        username = req.params.username,
+        sessionUser = null;
 
-    this.next = next
-    var assignmentNumber = req.params.assignmentNumber
-    // var schoolID = req.params.schoolID
-    // var classID = req.params.classID
-    var username = req.params.username
-  //
-    sessionUser = null
-    if (typeof req.user != "undefined") sessionUser = req.user
+    if (typeof req.user != "undefined") sessionUser = req.user;
 
     var apikey = (sessionUser) ? req.query.apikey : null;
 
-
     User
-        .findOne({username: username})
-        .exec(function(err, usr){
-            if (err) return next(err)
+        .findOne( { username: username } )
+        .exec( function( err, usr ){
+            if (err) return next(err);
             if (!usr)
-                return next("couldn't find the username "+username)
+                return next("couldn't find the username " + username);
 
             getAssignment(req, res, next, usr.email, function (assign) {
-
                 //Test whether user has permission to view vis
                 return testByUser(res, req, username, assign, function (){
-                    return testByKey(res, apikey, username, assign, null)
-                })
-            })
-        })
+                    return testByKey(res, apikey, username, assign, null);
+                });
+            });
+        });
 
     function getAssignment (req, res, next, email, cb) {
         assignmentNumber = req.params.assignmentNumber;
-        next = next
+        next = next;
 
         var version = "0.4.0";
 
-        findAssignmentNew(assignmentNumber)
+        // findAssignmentNew(assignmentNumber)
+        findAssignment(assignmentNumber);
 
-        // Finds assignments based on assignmentID
-        function findAssignmentOld(id) {
-            Assignment.findOne({
-                email: email,
-                assignmentID: id
-            })
-            .exec(function(err, ass) {
-                if (err) return next(err);
-                if (!ass || ass.length == 0) {
-                    return next("Could not find assignment " + id);
-                }
-
-                //If assignmentNumber is set, the assignment is up-to-date
-                if(ass.assignmentNumber == "")
-                    getAssignmentOld();
-                else
-                    getAssignmentNew();
-            });
-        }
-
-        // finds assignments based on assignmentNumber
-        function findAssignmentNew(id) {
+        function findAssignment( id ) {
           console.log(email, id);
             Assignment.findOne({
                 email: email,
@@ -268,84 +225,45 @@ exports.show = function (req, res, next) {
             })
             .exec(function(err, assignment) {
                 if (err) return next(err);
-                 console.log(assignment);
-                if (!assignment || assignment.length == 0) {
-                    //findAssignmentOld(id); // <-- Try old version too
+
+                console.log(assignment);
+                if (!assignment || assignment.length === 0) {
                     return next ("the assignment was not found");
                 }
 
                 // If the assignment is not public, see if user has access to private assignment
                 if(!assignment.shared) {
                     if(!cb(assignment))
-                      return next ("the assignment data you requested is not public")
+                      return next ("the assignment data you requested is not public");
                 }
 
-                //If assignmentNumber is set, the assignment is up-to-date
-                if(assignment.assignmentNumber == "")
-                    getAssignmentOld();
-                else
-                    getAssignmentNew();
-            });
-        }
-
-
-        //Old method for finding all sub assignments
-        function getAssignmentOld() {
-            Assignment
-            .find({
-                email: email,
-                assignmentID: {$gte: Math.floor(parseFloat(assignmentID)), $lt: Math.floor(parseFloat(assignmentID) + 1)}
-
-            })
-            .sort({
-                assignmentID: 1
-            })
-            .exec(function(err, assignments) {
-                if (err) return next(err);
-                if (!assignments || assignments.length == 0) {
-                         return next("Could not find assignment " + assignmentID);
-                } else if (assignments.length == 1) {
-                    //console.log(assignments[0]);
-                    return renderVis(res, assignments[0]);
-                } else
-                    return renderMultiVis(res, assignments);
-            });
-        }
-
-        //New method for finding all sub assignments
-        function getAssignmentNew() {
-            // assignmentNumber = assignmentNumber.split(".")[0];
-
-            Assignment
-            .find({
-                email: email,
-                assignmentNumber: assignmentNumber
-            })
-            .sort({
-                subAssignment: 1  // TODO: only sorts based on strings since we don't store numbers as integers...
-            })
-            .exec(function(err, assignments) {
-                if (err) return next(err);
-                if (!assignments || assignments.length == 0) {
-                         return next("Could not find assignment " + assignmentNumber);
-                } else if (assignments.length == 1) {
-                      return renderVis(res, assignments[0]);
-                  } else
-                      return renderMultiVis(res, assignments);
+                Assignment
+                .find({
+                    email: email,
+                    assignmentNumber: assignmentNumber
+                })
+                .sort({
+                    subAssignment: 1  // TODO: only sorts based on strings since we don't store numbers as integers...
+                })
+                .exec(function(err, assignments) {
+                    if (err) return next(err);
+                    if (!assignments || assignments.length === 0)
+                      return next("Could not find assignment " + assignmentNumber);
+                    return renderMultiVis( res, assignments );
+                });
             });
         }
     }
-
 
     //find whether there is a session, then test
     function testByUser (res, req, username, assign, nextTest) {
         if (sessionUser) {
             return testAndMoveOn(
-                res, sessionUser.username, username, assign, nextTest)
+                res, sessionUser.username, username, assign, nextTest);
         } else {
-            if (nextTest) return nextTest()
+            if (nextTest) return nextTest();
             else
-                return testAndMoveOn(res, true, false, assign, null)
+                return testAndMoveOn(res, true, false, assign, null);
         }
     }
 
@@ -353,17 +271,17 @@ exports.show = function (req, res, next) {
     function testByKey (res, apikey, username, assign, nextTest) {
         if (apikey) {
             User
-                .findOne({apikey:apikey})
-                .exec(function (err, n){
-                    if (err) return next (err)
-                    if (!n) return next ("Invalid apikey: "+apikey)
-                    return testAndMoveOn(
-                        res, n.username, username, assign, null)
-                })
+              .findOne({apikey:apikey})
+              .exec(function (err, n){
+                  if (err) return next (err);
+                  if (!n) return next ("Invalid apikey: "+apikey);
+                  return testAndMoveOn(
+                      res, n.username, username, assign, null);
+              });
         } else {
-            if (nextTest) return nextTest()
+            if (nextTest) return nextTest();
             else
-                return testAndMoveOn(res, true, false, assign, null)
+                return testAndMoveOn(res, true, false, assign, null);
         }
     }
 
@@ -376,63 +294,16 @@ exports.show = function (req, res, next) {
         //  return renderVis (res, assign)
           return true;
         }
-        if (nextTest) return nextTest()
+        if (nextTest) return nextTest();
         //else return next ("the assignment data you requested is not public")
         else return false;
     }
 
-    function renderVis (res, assignment) {
-
-        var owner=false
-        if (sessionUser) {
-            if (sessionUser.email==assignment.email) owner = true;
-        }
-
-        //default visualization
-        if (!assignment.vistype) assignment.vistype = "nodelink"
-        //check data for flat vs unflattened representation
-
-        var unflatten = function (data) {
-            //check whether the data is already hierachical
-            if ("children" in data) return data
-            tm = treemill()
-            tree = tm.unflatten(data)
-            return tree
-        }
-
-        var flatten = function (data) {
-            //check whether the data is already flat
-            if ("nodes" in data) return data
-            tm = treemill()
-            tree = tm.flatten(data)
-            return tree
-        }
-        data = assignment.data.toObject()
-        data = data[0]
-
-        if (assignment.vistype == "tree") data = unflatten(data)
-        else data = flatten(data)
-
-        vistype = assignment.vistype
-        if ("error" in data) vistype = "error"
-
-        return res.render ('assignments/assignment', {
-            "title":"assignment",
-            "user":sessionUser,
-            "data":data,
-            "assignmentNumber":assignmentNumber,
-            "schoolID":assignment.schoolID,
-            "classID":assignment.classID,
-            "vistype":vistype,
-            "shared":assignment.shared,
-            "owner":owner,
-            "map": true
-        })
-    }
-
     function renderMultiVis (res, assignments) {
-        var owner=false
-        var allAssigns = {};
+        var owner=false,
+            allAssigns = {},
+            mapData = [];
+
         if (sessionUser) {
             if (sessionUser.email==assignments[0].email) owner = true;
         }
@@ -443,35 +314,31 @@ exports.show = function (req, res, next) {
 
         var unflatten = function (data) {
             //check whether the data is already hierachical
-            if ("children" in data) return data
-            tm = treemill()
-            tree = tm.unflatten(data)
-            return tree
-        }
+            if ("children" in data) return data;
+            tm = treemill();
+            tree = tm.unflatten(data);
+            return tree;
+        };
 
         var flatten = function (data) {
             //check whether the data is already flat
-            if ("nodes" in data) return data
-            tm = treemill()
-            tree = tm.flatten(data)
-            return tree
-        }
+            if ("nodes" in data) return data;
+            tm = treemill();
+            tree = tm.flatten(data);
+            return tree;
+        };
 
+        /* parse and store all subassignments */
         for(var i = 0; i < assignments.length; i++) {
-            data = assignments[i].data.toObject()[0]
-            //console.log("----DATA", data);
-            //data = data[0]
+            data = assignments[i].data.toObject()[0];
 
-            if (assignments[i].vistype == "tree") data = unflatten(data)
-            else data = flatten(data)
+            if (assignments[i].vistype == "tree") data = unflatten(data);
+            else data = flatten(data);
 
-            vistype = assignments[i].vistype
-            if ("error" in data) vistype = "error"
+            vistype = assignments[i].vistype;
+            if ("error" in data) vistype = "error";
 
             allAssigns[i] = data;
-
-            //console.log("reading ", i);
-
         }
 
         return res.render ('assignments/assignmentMulti', {
@@ -485,29 +352,29 @@ exports.show = function (req, res, next) {
             "vistype":vistype,
             "shared":assignments[0].shared,
             "owner":owner,
-            "map": true
-        })
+            "map": true,
+            "mapData": [0, 1]
+        });
     }
 
+  // TODO: implement interface and logic for deletion
+  exports.deleteAssignment = function (req, res) {
+      as = req.assginment
+      console.log("Deleting assignment with ID: " + as.assignmentID)
 
-        exports.deleteAssignment = function (req, res) {
-            // console.log("here")
-            as = req.assginment
-            console.log("Deleting assignment with ID: " + as.assignmentID)
+      Assignment
+          .find({assignmentID: as.assignmentID})
+          .exec(function(err, assign) {
+                    if (err) return next(err)
+                    for (i in assign) {
+                        console.log(assign[i].assignmentID)
+                        assign[i].remove()
+                    }
+                })
 
-            Assignment
-                .find({assignmentID: as.assignmentID})
-                .exec(function(err, assign) {
-                          if (err) return next(err)
-                          for (i in assign) {
-                              console.log(assign[i].assignmentID)
-                              assign[i].remove()
-                          }
-                      })
-
-            //return res.redirect("gallery_2")
-        }
-
+      //return res.redirect("gallery_2")
+  };
 
 
-}
+
+};

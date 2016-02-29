@@ -1,5 +1,6 @@
 map = function(data) {
-  data = data ? data : null;
+  if( !data )
+    return;
 
   var width = d3.select("#mapContainer").style("width").substr(0, d3.select("#mapContainer").style("width").indexOf('p')) - 20,
       height = d3.select("#mapContainer").style("width").substr(0, d3.select("#mapContainer").style("height").indexOf('p')),
@@ -52,9 +53,8 @@ map = function(data) {
       .attr("id", "mapLayer")
       .append("g");
 
-console.log(data);
   dataLayer.selectAll(".loc")
-      .data(data.nodes)
+      .data(data)
         .enter().append("svg:circle")
         .attr("r", 1)
         .style("fill", "red")
@@ -62,8 +62,6 @@ console.log(data);
         .classed("loc", true)
         .attr("transform", function( d ) { return "translate(" + projection([-75,43]) + ")"; } )
         .on('mouseover', function(d, i) {  } );
-
-
 
   svg
       .call(zoom)

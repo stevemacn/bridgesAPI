@@ -216,7 +216,7 @@ d3.bst = function (d3, canvasID, w, h) {
                 return d.opacity || 1;
             })
             .style("stroke-width", function(d) {
-                return strokeWidthRange(d.thickness) || 1;
+                return d3.strokeWidthRange(d.thickness) || 1;
             })
             .attr("d", function(d) {
               var o = {x: source.x0, y: source.y0};

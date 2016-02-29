@@ -1,41 +1,44 @@
-//console.log(data);
-
-var strokeWidthRange = d3.scale.linear()
+d3.strokeWidthRange = d3.scale.linear()
                         .domain([1,10])
                         .range([1,15])
                         .clamp(true);
 
+// bind event handlers for ui
 d3.selectAll(".minimize").on("click", minimize);
 d3.select("#reset").on("click", reset);
 d3.select("#resize").on("click", resize);
+
 allZoom = [];
 allSVG = [];
 
-var visCount = 0;
-var minimizedCount = 0;
-var maximizedCount = 0;
+var visCount = 0,
+    minimizedCount = 0,
+    maximizedCount = 0;
 
+map( mapData );
+
+/* create new assignments  */
 for (var key in data) {
   if (data.hasOwnProperty(key)) {
-    var ele = document.getElementById("vis" + key)  
-    , width = ele.clientWidth - 15
-    , height = ele.clientHeight + 15
+    var ele = document.getElementById("vis" + key),
+    width = ele.clientWidth - 15,
+    height = ele.clientHeight + 15;
 
     if (d3.bst) {
-        bst = d3.bst(d3, "#vis" + key, width, height)
-        bst.make(data[key])
+        bst = d3.bst(d3, "#vis" + key, width, height);
+        bst.make(data[key]);
     }
     else if (d3.queue) {
-        d3.queue(d3, "#vis" + key, width, height, data[key].nodes)
+        d3.queue(d3, "#vis" + key, width, height, data[key].nodes);
     }
     else if (d3.array) {
-        d3.array(d3, "#vis" + key, width, height, data[key].nodes)
+        d3.array(d3, "#vis" + key, width, height, data[key].nodes);
     }
     else if (d3.graph) {
         d3.graph(d3, "#vis" + key, width, height, data[key]);
     }
     else {
-        console.log("unknown type");
+        console.log("unknown data type");
         d3.graph(d3, "#vis" + key, width, height, data[key]);
     }
 
@@ -52,7 +55,6 @@ function reset() {
         var svgGroup = allSVG[i];
         zoom.scale(1);
         zoom.translate([0, 0]);
-        //svgGroup.attr("transform", "translate(0,0)scale(1,1)");
         svgGroup.attr("transform", "translate(" + zoom.translate() + ")scale(" + zoom.scale() + ")");
     }
 }
@@ -62,21 +64,21 @@ function resize() {
     var sentinel = false;
 
     for(var i = 0; i < visCount; i++) {
-        console.log((d3.select("#vis" + i)).attr("height"));
         if ((d3.select("#vis" + i)).attr("height") < 400)
             sentinel = true;
     }
-
     if(sentinel) {
-            d3.selectAll(".assignmentContainer")
-                .attr("height", h);
+        height *= 2;
 
-            d3.selectAll(".svg")
-                .attr("height", h);
+        d3.selectAll(".assignmentContainer")
+            .attr( "height", height );
+        d3.selectAll(".svg")
+            .attr( "height", height );
     } else {
-         d3.selectAll(".assignmentContainer")
-            .attr("height", height);    
+        height /= 2;
 
+        d3.selectAll(".assignmentContainer")
+            .attr("height", height);
         d3.selectAll(".svg")
             .attr("height", height);
     }
@@ -84,7 +86,6 @@ function resize() {
 
 // Toggle minimizing and maximizing visualization divs
 function minimize() {
-
     //Collapse/Expand All
     if(this.id == "min") {
         if(d3.select(this).attr("minimized") == "true") {   //MAXIMIZE
@@ -118,7 +119,6 @@ function minimize() {
 
         return;
     }
-
 
     if(d3.select(this).attr("minimized") == "true") {   //MAXIMIZE
         d3.select("#vis" + this.id.substr(3))

@@ -2,8 +2,8 @@
  * This defines the Assginments class
  */
 
-var mongoose = require('mongoose')
-    , Schema = mongoose.Schema;
+var mongoose = require('mongoose'),
+    Schema = mongoose.Schema;
 
 //Schema for data that has been manipulated by students
             //(output from client)
@@ -16,7 +16,7 @@ var Assignment = new Schema ({
     assignmentName:     {type: String, default: ''},
     assignmentNumber:   {type: String, default: ''},    //integer portion
     subAssignment:      {type: String, default: ''},    //fractional portion
-    assignmentID:       {type: String, default: ''},
+    assignmentID:       {type: Number, default: ''},   // integer representation of an assignment
     classID:            {type: String, default: ''},
     schoolID:           {type: String, default: ''},
     dateCreated:        {type: Date, default: Date.now()},
@@ -31,6 +31,6 @@ var Assignment = new Schema ({
     //links: [Schema.Types.Mixed]
     data: [Schema.Types.Mixed]
     //add a before and after so that student can see changes
-})
+});
 
 mongoose.model('Assignment', Assignment);
