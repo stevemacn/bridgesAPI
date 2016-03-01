@@ -181,9 +181,8 @@ exports.upload = function (req, res, next) {
 exports.next = null;
 
 exports.show = function (req, res, next) {
-
     this.next = next;
-    var assignmentNumber = req.params.assignmentNumber,
+    var assignmentNumber = req.params.assignmentNumber.split('.')[0],
         username = req.params.username,
         sessionUser = null;
 
@@ -207,50 +206,44 @@ exports.show = function (req, res, next) {
         });
 
     function getAssignment (req, res, next, email, cb) {
-        assignmentNumber = req.params.assignmentNumber;
         next = next;
 
         var version = "0.4.0";
 
-        // findAssignmentNew(assignmentNumber)
-        findAssignment(assignmentNumber);
+        Assignment.findOne({
+            email: email,
+            assignmentNumber: assignmentNumber
+        })
+        .exec(function(err, assignment) {
+            if (err) return next(err);
 
-        function findAssignment( id ) {
-          console.log(email, id);
-            Assignment.findOne({
+            if (!assignment || assignment.length === 0) {
+                return next ("the assignment was not found");
+            }
+
+            console.log(assignment);
+
+            // If the assignment is not public, see if user has access to private assignment
+            if(!assignment.shared) {
+                if(!cb(assignment))
+                  return next ("the assignment data you requested is not public");
+            }
+
+            Assignment
+            .find({
                 email: email,
-                assignmentNumber: id
+                assignmentNumber: assignmentNumber
             })
-            .exec(function(err, assignment) {
+            .sort({
+                subAssignment: 1  // TODO: only sorts based on strings since we don't store numbers as integers...
+            })
+            .exec(function(err, assignments) {
                 if (err) return next(err);
-
-                console.log(assignment);
-                if (!assignment || assignment.length === 0) {
-                    return next ("the assignment was not found");
-                }
-
-                // If the assignment is not public, see if user has access to private assignment
-                if(!assignment.shared) {
-                    if(!cb(assignment))
-                      return next ("the assignment data you requested is not public");
-                }
-
-                Assignment
-                .find({
-                    email: email,
-                    assignmentNumber: assignmentNumber
-                })
-                .sort({
-                    subAssignment: 1  // TODO: only sorts based on strings since we don't store numbers as integers...
-                })
-                .exec(function(err, assignments) {
-                    if (err) return next(err);
-                    if (!assignments || assignments.length === 0)
-                      return next("Could not find assignment " + assignmentNumber);
-                    return renderMultiVis( res, assignments );
-                });
+                if (!assignments || assignments.length === 0)
+                  return next("Could not find assignment " + assignmentNumber);
+                return renderMultiVis( res, assignments );
             });
-        }
+        });
     }
 
     //find whether there is a session, then test
@@ -333,11 +326,8 @@ exports.show = function (req, res, next) {
 
             // pull out all coordinates from JSON
             data.nodes.forEach(function(d) {
-              if( !d.hasOwnProperty("location") ) {
-                console.log(d);
-                if(d.location)
-                  mapData.push( { "lat": d.location[0], "long": d.location[0] } );
-              }
+              if(d.location && d.location[0] !== 0 && d.location[1] !== 0)
+                mapData.push( { "lat": d.location[0], "long": d.location[1] } );
             });
 
 
@@ -350,9 +340,6 @@ exports.show = function (req, res, next) {
             allAssigns[i] = data;
         }
 
-        mapData.push({"lat": 40, "long": -74});
-        mapData.push({"lat": 38, "long": -76});
-
         return res.render ('assignments/assignmentMulti', {
             "title":"assignmentMulti",
             "user":sessionUser,
@@ -364,7 +351,7 @@ exports.show = function (req, res, next) {
             "vistype":vistype,
             "shared":assignments[0].shared,
             "owner":owner,
-            "createMap": function() { return (mapData.length) ? true : false; },
+            "createMap": (function() { return (mapData.length > 0) ? true : false; })(),
             "mapData": mapData
         });
     }

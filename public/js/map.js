@@ -1,9 +1,7 @@
 var map = function(data) {
   if( !data )
     return;
-
-    console.log(data);
-
+    
   var width = d3.select("#mapContainer").style("width").substr(0, d3.select("#mapContainer").style("width").indexOf('p')) - 20,
       height = d3.select("#mapContainer").style("width").substr(0, d3.select("#mapContainer").style("height").indexOf('p')),
       scale0 = (width - 1) / 2 / Math.PI;

@@ -19,7 +19,6 @@ block content
 
     include ../includes/header.jade
     div#assignmentCanvas(overflow='auto')
-
         -if (owner) {
             #optionContainer.optionContainer
                 div(style='margin:10px 10px 10px 10px;')
@@ -87,6 +86,8 @@ block footerjs
         var assignmentNumber = !{JSON.stringify(assignmentNumber)}
         var vistype = "#{vistype}"
         var mapData =  !{JSON.stringify(mapData)};
+        var createMap =  !{JSON.stringify(createMap)};
+
 
     // Map demonstrating locations in the assignment
     - if ( createMap )
