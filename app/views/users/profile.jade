@@ -6,7 +6,9 @@ block css
     link(rel='stylesheet', href='/css/header.css')
 
  block js
-    script(src="components/modernizr/modernizr.js")
+    //script(src="components/modernizr/modernizr.js")
+    script(src="build/modernizr-custom.js")
+
     script(src="js/main.js")
     script.
         name="#{user.username}";
