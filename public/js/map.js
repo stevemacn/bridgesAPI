@@ -1,10 +1,12 @@
 var map = function(data) {
   if( !data )
     return;
-    
+
   var width = d3.select("#mapContainer").style("width").substr(0, d3.select("#mapContainer").style("width").indexOf('p')) - 20,
       height = d3.select("#mapContainer").style("width").substr(0, d3.select("#mapContainer").style("height").indexOf('p')),
       scale0 = (width - 1) / 2 / Math.PI;
+
+  height = ( height > 230 ) ? 230 : height;
 
   var projection = d3.geo.mercator()
     .translate([width / 2, height / 2])
