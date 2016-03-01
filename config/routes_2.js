@@ -249,12 +249,4 @@ module.exports = function(app, passport, streamable) {
         }
     )
 
-    // -------------------------------------------------------
-    //
-    //  Test Routes
-    //
-    // -------------------------------------------------------
-    var test = require('../app/controllers/test.js')      // Mongo Tests
-    app.get('/tests', test.frustrated, handleError)
-
 }
