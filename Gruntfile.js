@@ -32,7 +32,7 @@ module.exports = function (grunt) {
           "devFile" : "public/js/modernizr-dev.js",
 
           // Path to save out the built file.
-          "outputFile" : "public/components/modernizr/modernizr.js"
+          "outputFile" : "public/js/modernizr/modernizr.js"
         }
     },
     watch: {
