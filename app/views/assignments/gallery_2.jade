@@ -1,6 +1,5 @@
-//extends ../users/layout.jade
-
 extends ../includes/boilerplate.jade
+
 block css
     link(rel='stylesheet',
          href='/css/header.css')
@@ -8,10 +7,9 @@ block css
          href='/css/assignment.css')
     link(rel='stylesheet',
              href='/components/css-toggle-switch/dist/toggle-switch.css')
-//extends assignment.jade
+
 block content
     include ../includes/header.jade
-    script(type='application/ecmascript' async='' src='/js/dropzone.js')
     .container
         .row
             .col-lg-6
@@ -19,13 +17,12 @@ block content
                 div(style="float:left; margin-left:50px")
                     //a(href="/assignments/"+assignments[0].assignmentID+"/"+usernames)
                     h1(style="text-align: left") #{usernames}'s Gallery
-                    
+
     div(style='margin:5%')
         - for (var x = 0; x < assignments.length; x++)
             div(style="float:left;width:120px; margin-left:50px")
                 a(href='/assignments/'+assignments[x].assignmentNumber+'/'+usernames)
-                  //  - console.log(assignments[x].shared, assignments[x].vistype)
-                  if (assignments[x].shared == false)
+                  - if (assignments[x].shared == false)
                           div(class='gallery_assignment_div_private')
                               if(assignments[x].vistype == 'graph')
                                   img(src='/img/graph.png' title=assignments[x].vistype)
@@ -33,7 +30,7 @@ block content
                                   img(src='/img/tree.png' title=assignments[x].vistype)
                               else
                                   img(src='/img/LList.png' title=assignments[x].vistype)
-                      else
+                   - else
                           div(class='gallery_assignment_div_public')
                               if(assignments[x].data[0].visual=='graph')
                                   img(src='/img/graph.png' title=assignments[x].vistype)
