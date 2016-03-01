@@ -28,11 +28,16 @@ module.exports = function (grunt) {
     },
     modernizr: {
       dist: {
-          // [REQUIRED] Path to the build you're using for development.
-          "devFile" : "public/js/modernizr-dev.js",
+        "dest" : "build/modernizr-custom.js",
+        "parseFiles": true,
 
-          // Path to save out the built file.
-          "outputFile" : "public/js/modernizr/modernizr.js"
+        // [REQUIRED] Path to the build you're using for development.
+        "devFile" : "public/js/modernizr-dev.js",
+
+        // Path to save out the built file.
+        "outputFile" : "public/components/modernizr/modernizr.js",
+
+        "uglify": true
         }
     },
     watch: {
