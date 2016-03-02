@@ -9,6 +9,10 @@ d3.selection.prototype.moveToFront = function() {
   });
 };
 
+var scaleSize = d3.scale.linear()
+    .domain([1,100])
+    .range([80,4000]);
+
 //var markers = [
 //    { id: 0, name: 'circle', path: 'M 0, 0  m -5, 0  a 5,5 0 1,0 10,0  a 5,5 0 1,0 -10,0', viewbox: '-6 -6 12 12' }
 //  , { id: 1, name: 'square', path: 'M 0,0 m -5,-5 L 5,-5 L 5,5 L -5,5 Z', viewbox: '-5 -5 10 10' }
@@ -134,6 +138,10 @@ d3.bst = function (d3, canvasID, w, h) {
         // Enter any new nodes at the parent's previous position.
         var nodeEnter = node.enter().append("svg:g")
             .attr("class", "node")
+            .attr("d", d3.svg.symbol()
+                .type(function(d) { return d.shape || "circle"; })
+                .size(function(d) {return  1; })
+            )
             .attr("transform", function(d) {
                 return "translate(" + source.x0 + "," + source.y0 + ")";
             })
@@ -141,7 +149,14 @@ d3.bst = function (d3, canvasID, w, h) {
             .on("mouseover", mouseover)
             .on("mouseout", mouseout);
 
-        nodeEnter.append("svg:rect")
+        nodeEnter.append('path')
+            .attr("d", d3.svg.symbol()
+                .type(function(d) { return d.shape || "circle"; })
+                .size(function(d) {return scaleSize(d.size) || 1; })
+            )
+            .style("fill", function(d) {
+                return d.color || "#fff";
+            })
         nodeEnter.append("svg:text")
             .attr("dy", ".35em")
             .attr("x", "35px")
@@ -156,7 +171,7 @@ d3.bst = function (d3, canvasID, w, h) {
             .attr("x", "-8px")
             .attr("y",  "-15px")
             .attr("text-anchor", "start")
-          //  .style("display", "none")
+           .style("display", "none")
             .text(function(d) { return d.key || ""; })
        };
 
@@ -165,11 +180,12 @@ d3.bst = function (d3, canvasID, w, h) {
         var nodeUpdate = node.transition()
             .duration(duration)
             .attr("transform", function(d) {
-                var dx = d.x-15;
+                // var dx = d.x-15;
+                var dx = d.x;
                 return "translate(" + dx + "," + d.y + ")";
             })
 
-        nodeUpdate.select("rect")
+        nodeUpdate.select("node")
             .attr("width",30)
             .attr("height",10)
             .style("fill", function(d) {
@@ -177,8 +193,7 @@ d3.bst = function (d3, canvasID, w, h) {
                 //return d._children ? "lightsteelblue" : "#fff";
             })
             .style("opacity", function(d) {
-                return d.opacity || 1
-                //return d._children ? 1 : 0.5;
+                return d.opacity || 1;
             })
             .style("stroke", function(d) {
                 return "black";
@@ -215,15 +230,12 @@ d3.bst = function (d3, canvasID, w, h) {
             .style("opacity", function(d,i) {
                 return d.opacity || 1;
             })
-            .style("stroke-width", function(d) {
-                return d3.strokeWidthRange(d.thickness) || 1;
-            })
             .attr("d", function(d) {
               var o = {x: source.x0, y: source.y0};
               return diagonal({source: o, target: o});
             })
-            .attr('marker-start', function(d,i){ return 'url(#marker_circle)' })
-            .attr('marker-end', function(d,i){ return 'url(#marker_square)' })
+            .attr('marker-start', function(d,i){ return 'url(#marker_circle)'; })
+            .attr('marker-end', function(d,i){ return 'url(#marker_square)'; })
             .transition()
             .duration(duration)
             .attr("d", diagonal);

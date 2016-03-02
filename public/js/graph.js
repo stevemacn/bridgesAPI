@@ -79,7 +79,7 @@ var link = svgGroup.append("svg:g").selectAll("path")
     .attr("class", "link")
     .attr("marker-end", "url(#end)")
     .style("stroke-width", function (d) {
-        return d3.strokeWidthRange(d.thickness) || 1;
+        return d3.strokeWidthRange(d.width) || 1;
     })
     .style("stroke", function (d) {
         return d.color || "black";
