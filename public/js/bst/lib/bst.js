@@ -139,7 +139,7 @@ d3.bst = function (d3, canvasID, w, h) {
         var nodeEnter = node.enter().append("svg:g")
             .attr("class", "node")
             .attr("d", d3.svg.symbol()
-                .type(function(d) { return d.shape || "circle"; })
+                .type(function(d) { return d.shape || "rect"; })
                 .size(function(d) {return  1; })
             )
             .attr("transform", function(d) {
