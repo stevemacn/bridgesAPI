@@ -14,12 +14,22 @@ allZoom = [];
 allSVG = [];
 
 var ele = document.getElementById("vis0"),
+<<<<<<< HEAD
+    width = ele.offsetWidth - 15
+
+    height = ele.offsetHeight + 250
+
+if (d3.bst) {
+    bst = d3.bst(d3, "#vis0", width, height)
+    bst.make(data)
+=======
     width = ele.offsetWidth - 15,
     height = ele.offsetHeight + 250;
 
 if (d3.bst) {
     bst = d3.bst(d3, "#vis0", width, height);
     bst.make(data);
+>>>>>>> 3a5337d6ec8aec65da6daadb1a7e85aefe66fbf0
 }
 else if (d3.queue) {
     d3.queue(d3, "#vis0", width, height, data.nodes);

@@ -2,8 +2,13 @@
  * This defines the Assginments class
  */
 
+<<<<<<< HEAD
+var mongoose = require('mongoose')
+    , Schema = mongoose.Schema;
+=======
 var mongoose = require('mongoose'),
     Schema = mongoose.Schema;
+>>>>>>> 3a5337d6ec8aec65da6daadb1a7e85aefe66fbf0
 
 //Schema for data that has been manipulated by students
             //(output from client)

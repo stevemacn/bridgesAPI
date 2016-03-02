@@ -1,11 +1,11 @@
-//based loosely on bostock's example and 
+//based loosely on bostock's example and
 //http://bl.ocks.org/d3noob/5141278
 
 var nodes = data.nodes
 var links = data.links
 var count = 0
 for (i in links) {
-   if (count<links[i].value) count = links[i].value 
+   if (count<links[i].value) count = links[i].value
 }
 
 var ele = document.getElementById("vis")
@@ -28,7 +28,7 @@ var svg = d3.select("#vis").append("svg")
 
 svg.append("svg:defs").selectAll("marker")
     .data(["end"])// Different path types defined here
-    .enter().append("svg:marker")  
+    .enter().append("svg:marker")
     .attr("id", String)
     .attr("viewBox", "0 -5 10 10")
     .attr("refX", 15)
@@ -78,7 +78,7 @@ var node = svg.selectAll(".node")
     .on("mouseout", mouseout)
     .call(force.drag)
 
-//inner nodes    
+//inner nodes
 node
     .append('path')
     .attr("class", "node")
@@ -108,16 +108,17 @@ force.on("tick", function() {
     link
         .attr("d", function(d) {
             var dx = d.target.x - d.source.x,
-                dy = d.target.y - d.source.y,
+            // dy = d.target.y - d.source.y,
+                dy = 0,
                 dr = Math.sqrt(dx * dx + dy * dy);
-            return "M" + 
-                d.source.x + "," + 
-                d.source.y + "A" + 
+            return "M" +
+                d.source.x + "," +
+                d.source.y + "A" +
                 dr + "," + dr + " 0 0,1 " +
-                d.target.x + "," + 
+                d.target.x + "," +
                 d.target.y;
         });
-    
+
     node
         .attr("transform", function(d) {
             return "translate(" + d.x + "," + d.y + ")";
@@ -134,11 +135,11 @@ function mouseover() {
         .attr('d', function (d) {
             return d3.svg.symbol().type(d.shape||"circle")
                     .size(scaleSize(40))()
-        })            
+        })
 }
 
 function mouseout() {
-    
+
     d3.select(this).select("text").transition()
         .duration(750)
         .style("display","none")
@@ -147,6 +148,6 @@ function mouseout() {
         .attr('d', function (d) {
             return d3.svg.symbol().type(d.shape||"circle")
                     .size(scaleSize(d.size||1))()
-        })            
-        
+        })
+
 }

@@ -230,6 +230,12 @@ d3.bst = function (d3, canvasID, w, h) {
             .style("opacity", function(d,i) {
                 return d.opacity || 1;
             })
+<<<<<<< HEAD
+            .style("stroke-width", function(d) {
+                return strokeWidthRange(d.thickness) || 1;
+            })
+=======
+>>>>>>> 3a5337d6ec8aec65da6daadb1a7e85aefe66fbf0
             .attr("d", function(d) {
               var o = {x: source.x0, y: source.y0};
               return diagonal({source: o, target: o});

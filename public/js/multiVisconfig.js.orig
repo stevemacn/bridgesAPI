@@ -1,4 +1,10 @@
+<<<<<<< HEAD
+//console.log(data);
+
+var strokeWidthRange = d3.scale.linear()
+=======
 d3.strokeWidthRange = d3.scale.linear()
+>>>>>>> 3a5337d6ec8aec65da6daadb1a7e85aefe66fbf0
                         .domain([1,10])
                         .range([1,15])
                         .clamp(true);
@@ -27,8 +33,13 @@ for (var key in data) {
     height = ele.clientHeight + 15;
 
     if (d3.bst) {
+<<<<<<< HEAD
+        bst = d3.bst(d3, "#vis" + key, width, height)
+        bst.make(data[key])
+=======
         bst = d3.bst(d3, "#vis" + key, width, height);
         bst.make(data[key]);
+>>>>>>> 3a5337d6ec8aec65da6daadb1a7e85aefe66fbf0
     }
     else if (d3.queue) {
         d3.queue(d3, "#vis" + key, width, height, data[key].nodes);
@@ -40,7 +51,11 @@ for (var key in data) {
         d3.graph(d3, "#vis" + key, width, height, data[key]);
     }
     else {
+<<<<<<< HEAD
+        console.log("unknown type");
+=======
         console.log("unknown data type");
+>>>>>>> 3a5337d6ec8aec65da6daadb1a7e85aefe66fbf0
         d3.graph(d3, "#vis" + key, width, height, data[key]);
     }
 
@@ -66,11 +81,22 @@ function resize() {
     var sentinel = false;
 
     for(var i = 0; i < visCount; i++) {
+<<<<<<< HEAD
+        console.log((d3.select("#vis" + i)).attr("height"));
+        if ((d3.select("#vis" + i)).attr("height") < 400)
+            sentinel = true;
+    }
+
+    if(sentinel) {
+            d3.selectAll(".assignmentContainer")
+                .attr("height", h);
+=======
         if ((d3.select("#vis" + i)).attr("height") < 400)
             sentinel = true;
     }
     if(sentinel) {
         height *= 2;
+>>>>>>> 3a5337d6ec8aec65da6daadb1a7e85aefe66fbf0
 
         d3.selectAll(".assignmentContainer")
             .attr( "height", height );
@@ -88,6 +114,10 @@ function resize() {
 
 // Toggle minimizing and maximizing visualization divs
 function minimize() {
+<<<<<<< HEAD
+
+=======
+>>>>>>> 3a5337d6ec8aec65da6daadb1a7e85aefe66fbf0
     //Collapse/Expand All
     if(this.id == "min") {
         if(d3.select(this).attr("minimized") == "true") {   //MAXIMIZE
@@ -122,6 +152,10 @@ function minimize() {
         return;
     }
 
+<<<<<<< HEAD
+
+=======
+>>>>>>> 3a5337d6ec8aec65da6daadb1a7e85aefe66fbf0
     if(d3.select(this).attr("minimized") == "true") {   //MAXIMIZE
         d3.select("#vis" + this.id.substr(3))
             .classed("assignmentContainerMinimized", false);

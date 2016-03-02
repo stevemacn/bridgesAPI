@@ -13,6 +13,15 @@ d3.graph = function(d3, canvasID, w, h, data) {
         i = 0,
         canvasID = canvasID; //canvasID must have hash like "#vis" or "#canvas"
     var vis, svgGroup, defs;
+<<<<<<< HEAD
+    var count = 0
+
+var nodes = data.nodes
+var links = data.links
+
+for (i in links) {
+   if (count<links[i].value) count = links[i].value
+=======
     var count = 0;
 
 var nodes = data.nodes;
@@ -20,6 +29,7 @@ var links = data.links;
 
 for (i in links) {
    if (count<links[i].value) count = links[i].value;
+>>>>>>> 3a5337d6ec8aec65da6daadb1a7e85aefe66fbf0
 }
 
 var force = d3.layout.force()
@@ -79,7 +89,11 @@ var link = svgGroup.append("svg:g").selectAll("path")
     .attr("class", "link")
     .attr("marker-end", "url(#end)")
     .style("stroke-width", function (d) {
+<<<<<<< HEAD
+        return strokeWidthRange(d.thickness) || 1;
+=======
         return d3.strokeWidthRange(d.width) || 1;
+>>>>>>> 3a5337d6ec8aec65da6daadb1a7e85aefe66fbf0
     })
     .style("stroke", function (d) {
         return d.color || "black";
@@ -179,8 +193,13 @@ function mouseover() {
         .duration(750)
         .attr('d', function (d) {
             return d3.svg.symbol().type(d.shape||"circle")
+<<<<<<< HEAD
+                    .size(scaleSize(40))()
+        })
+=======
                     .size(scaleSize(40))();
         });
+>>>>>>> 3a5337d6ec8aec65da6daadb1a7e85aefe66fbf0
 }
 
 function mouseout() {
@@ -191,8 +210,13 @@ function mouseout() {
         .duration(750)
         .attr('d', function (d) {
             return d3.svg.symbol().type(d.shape||"circle")
+<<<<<<< HEAD
+                    .size(scaleSize(d.size||1))()
+        })
+=======
                     .size(scaleSize(d.size||1))();
         });
+>>>>>>> 3a5337d6ec8aec65da6daadb1a7e85aefe66fbf0
 }
 
 // zoom function
