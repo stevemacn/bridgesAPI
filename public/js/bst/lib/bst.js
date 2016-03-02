@@ -151,7 +151,7 @@ d3.bst = function (d3, canvasID, w, h) {
 
         nodeEnter.append('path')
             .attr("d", d3.svg.symbol()
-                .type(function(d) { return d.shape || "circle"; })
+                .type(function(d) { return d.shape || "rect"; })
                 .size(function(d) {return scaleSize(d.size) || 1; })
             )
             .style("fill", function(d) {
