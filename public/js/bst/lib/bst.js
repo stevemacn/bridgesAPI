@@ -157,23 +157,27 @@ d3.bst = function (d3, canvasID, w, h) {
             .style("fill", function(d) {
                 return d.color || "#fff";
             })
+            .style("opacity", function(d) {
+                return d.opacity || 1;
+            });
+
         nodeEnter.append("svg:text")
             .attr("dy", ".35em")
             .attr("x", "35px")
             .attr("y",  "-7px")
             .attr("text-anchor", "start")
             .style("display", "none")
-            .text(function(d) { return d.name; })
+            .text( function( d ) { return d.name; } );
 
-       if(nodes[0].key != null) {
+       if(nodes[0].key !== null) {
            nodeEnter.append("svg:text")
             .attr("dy", ".35em")
             .attr("x", "-8px")
             .attr("y",  "-15px")
             .attr("text-anchor", "start")
-           .style("display", "none")
-            .text(function(d) { return d.key || ""; })
-       };
+            // .style("display", "none")
+            .text(function(d) { return d.key || ""; } );
+       }
 
 
         // Transition nodes to their new position.
@@ -183,14 +187,13 @@ d3.bst = function (d3, canvasID, w, h) {
                 // var dx = d.x-15;
                 var dx = d.x;
                 return "translate(" + dx + "," + d.y + ")";
-            })
+            });
 
         nodeUpdate.select("node")
             .attr("width",30)
             .attr("height",10)
             .style("fill", function(d) {
                 return d.color || "#fff";
-                //return d._children ? "lightsteelblue" : "#fff";
             })
             .style("opacity", function(d) {
                 return d.opacity || 1;
@@ -304,7 +307,7 @@ function dragended() {
 function mouseover() {
     d3.select(this).select("text").transition()
         .duration(750)
-        .style("display","block")
+        .style("display","block");
 
     var el = d3.select(this);
     el.moveToFront();
@@ -313,7 +316,7 @@ function mouseover() {
 function mouseout() {
     d3.select(this).select("text").transition()
         .duration(750)
-        .style("display","none")
+        .style("display","none");
 }
 
 };
