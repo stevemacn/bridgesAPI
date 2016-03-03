@@ -53,13 +53,13 @@ d3.bst = function (d3, canvasID, w, h) {
     allZoom.push(zoom);
 
     bst.init = function (_w, _h, _mw, _mh, ds) {
-        mw = _mw
-        mh = _mh
-        w = _w
-        h = _h
-        depthStep = ds
+        mw = _mw;
+        mh = _mh;
+        w = _w;
+        h = _h;
+        depthStep = ds;
         return bst;
-    }
+    };
 
     //boilerplate stuff
     bst.make = function (data) {
@@ -78,10 +78,10 @@ d3.bst = function (d3, canvasID, w, h) {
             .call(drag);
 
         svgGroup = vis.append("svg:g")
-            .attr("transform", "translate(" + (mh + (w/2)) + "," + mw + ")")
+            .attr("transform", "translate(" + (mh + (w/2)) + "," + mw + ")");
         allSVG.push(svgGroup);
 
-        defs = vis.append('svg:defs')
+        defs = vis.append('svg:defs');
 
 //        var marker = defs.selectAll('marker')
 //          .data(markers)
@@ -104,7 +104,7 @@ d3.bst = function (d3, canvasID, w, h) {
         root.x0 = 0;
         root.y0 = (w) / 2;
         update(root);
-    }
+    };
 
     return bst;
 
