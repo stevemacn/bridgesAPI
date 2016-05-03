@@ -54,10 +54,10 @@ for (var key in data) {
   Recursive function adds a null child to enforce binary search tree child positioning.
   Optimizations: add the null child nodes (perhaps with more appropriate contents and checking)
     at some point in the controller, either when uploading a tree assignment or rendering a tree visualization.
-    We will also need to enforce different rules for positioning in n-ary trees. 
+    We will also need to enforce different rules for positioning in n-ary trees.
  */
 function tempAddChildNode( root ) {
-  if( root.role ) return;
+  if( root.role || !root.children ) return;
 
   if( root.children.length == 2 ) {
     tempAddChildNode( root.children[0] );
