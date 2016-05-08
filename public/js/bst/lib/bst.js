@@ -213,7 +213,7 @@ d3.bst = function (d3, canvasID, w, h) {
                  return "#ccc";
             })
             .style("opacity", function(d,i) {
-                return d.opacity || 1;
+                return d.target.role ? 0 : 1;
             })
             .attr("d", function(d) {
               var o = {x: source.x0, y: source.y0};
