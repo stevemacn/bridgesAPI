@@ -38,15 +38,15 @@ exports.saveSnapshot = function(req, res, next) {
             assignmentNumber: req.params.assignmentNumber
         })
         .exec(function (err, assignmentResult) {
-            if (err) return next(err)
+            if (err) return next(err);
             if (!assignmentResult)
-                return next("could not find assignment")
-            console.log("snapshot")
+                return next("could not find assignment");
+            console.log("snapshot");
             //Save JSON with modified positions
             //assignmentResult.save()
             //res.send("OK")
-    })
-}
+        });
+};
 
 //API route for uploading assignment data. If the
 //assignment already exists it will be replaced.
@@ -54,12 +54,12 @@ exports.upload = function (req, res, next) {
     // C++ version posts JSON as object, JAVA posts as plain string
     if(typeof req.body != "object") {
         //console.log("STRING: PARSING");
-        try { rawBody = JSON.parse(req.body) }
+        try { rawBody = JSON.parse(req.body); }
         catch (e) {
 
             if(typeof req.body != 'object') {
                 // console.log(e)
-                return next(e + " invalid syntax for raw body of request")
+                return next(e + " invalid syntax for raw body of request");
             } else {
                 rawBody = req.body;
             }
@@ -97,13 +97,12 @@ exports.upload = function (req, res, next) {
             apikey:req.query.apikey
         })
         .exec(function (err, user) {
-            if (err) return next (err)
-            if (!user) return next ("could not find user by apikey: " +
-                            req.query.apikey)
+            if (err) return next (err);
+            if (!user) return next ("could not find user by apikey: " + req.query.apikey);
 
             //if username found, upload or replace
-            replaceAssignment(res, user, assignmentID)
-        })
+            replaceAssignment(res, user, assignmentID);
+        });
 
     } else {// Add version-specific options here
          var validTypes = [
@@ -117,7 +116,6 @@ exports.upload = function (req, res, next) {
             "SinglyLinkedList",
             "DoublyLinkedList"
         ];
-
 
     }
 
@@ -354,26 +352,52 @@ exports.show = function (req, res, next) {
             "createMap": (function() { return (mapData.length > 0) ? true : false; })(),
             "mapData": mapData
         });
-    }
-
-  // TODO: implement interface and logic for deletion
-  exports.deleteAssignment = function (req, res) {
-      as = req.assginment
-      console.log("Deleting assignment with ID: " + as.assignmentID)
-
-      Assignment
-          .find({assignmentID: as.assignmentID})
-          .exec(function(err, assign) {
-                    if (err) return next(err)
-                    for (i in assign) {
-                        console.log(assign[i].assignmentID)
-                        assign[i].remove()
-                    }
-                })
-
-      //return res.redirect("gallery_2")
+      }
   };
 
+exports.testJSON = function (req, res, next) {
+    console.log('test JSON data for assignment upload');
+    // this.next = next;
 
+    var owner=false,
+        allAssigns = {},
+        mapData = [],
+        map;
 
+    var JSONdata = {"version":"0.4.0","visual":"BinarySearchTree","nodes":[{"color":[255,0,255,255],"shape":"circle","size":10,"name":"Hi","key":"5.4","children":[{"linkProperties":{"color":[0,0,0,255],"thickness":1.000000},"color":[0,255,0,255],"shape":"circle","size":10,"name":"Hello","key":"1.4","children":[{"name":"NULL"},{"name":"NULL"}]},{"linkProperties":{"color":[0,0,0,255],"thickness":1.000000},"color":[0,255,0,255],"shape":"circle","size":10,"name":"World","key":"1.12","children":[{"name":"NULL"},{"linkProperties":{"color":[0,0,0,255],"thickness":1.000000},"color":[0,255,0,255],"shape":"circle","size":10,"name":"World","key":"4.3","children":[{"name":"NULL"},{"name":"NULL"}]}]}]}]};
+
+    return res.render ('assignments/assignmentMulti', {
+        "title":"testJSON",
+        "user":"test",
+        "data":[JSONdata.nodes[0]],
+        "extent":1,
+        "assignmentNumber":1,
+        "schoolID":null,
+        "classID":null,
+        "vistype":"tree",
+        "shared":false,
+        "owner":"test",
+        "createMap": false,
+        "mapData": null
+    });
+
+  };
+
+// TODO: implement interface and logic for deletion
+exports.deleteAssignment = function (req, res) {
+    as = req.assginment;
+    console.log("Deleting assignment with ID: " + as.assignmentID);
+
+    Assignment
+        .find({assignmentID: as.assignmentID})
+        .exec(function(err, assign) {
+                  if (err) return next(err);
+                  for (var i in assign) {
+                      console.log(assign[i].assignmentID);
+                      assign[i].remove();
+                  }
+              });
+
+    // return res.redirect("gallery_2")
+    res.send("OK");
 };
