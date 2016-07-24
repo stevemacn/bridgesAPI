@@ -41,13 +41,8 @@ block content
                         button(class="optionButton", id="reset")
                                     label Reset view
 
-<<<<<<< HEAD
-                        button(class="optionButton", id="snapshotPositions", onclick="saveSnapshot()")
-                            label Save Positions
-=======
                         //button(class="optionButton", id="snapshotPositions", onclick="saveSnapshot()")
                         //    label Save Positions
->>>>>>> 3a5337d6ec8aec65da6daadb1a7e85aefe66fbf0
 
                     div
                         // a.btn.btn-primary(class="optionButton", id="saveButton" onclick="snapImage()")
@@ -84,7 +79,7 @@ block footerjs
     script.
         var owner = "#{owner}"
         if (owner==="false") {
-             $("#vis").css("width","99%")
+             $("#vis").css("width","90%")
         }
         var shared = "#{shared}"
         $("#private").prop('checked',false)
@@ -98,8 +93,6 @@ block footerjs
         var data = !{JSON.stringify(data)}
 
         var assignmentID = !{JSON.stringify(assignmentNumber)}
-<<<<<<< HEAD
-=======
 
     - if ( map )
         #mapContainer.mapContainer
@@ -107,7 +100,6 @@ block footerjs
         script( src = '//d3js.org/topojson.v1.min.js' )
         script( src = '/js/map.js' )
 
->>>>>>> 3a5337d6ec8aec65da6daadb1a7e85aefe66fbf0
     - if (vistype == "nodelink")
         script(src = '/js/graph.js')
     - else if (vistype == "tree")

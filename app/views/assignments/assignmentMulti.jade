@@ -40,13 +40,8 @@ block content
                                 label Reset view
 
                 div
-<<<<<<< HEAD
-                    a.btn.btn-primary(class="optionButton", id="saveButton" onclick="snapImage()")
-                            label(for="saveButton") Snapshoot
-=======
                     //a.btn.btn-primary(class="optionButton", id="saveButton" onclick="snapImage()")
                     //        label(for="saveButton") Snapshoot
->>>>>>> 3a5337d6ec8aec65da6daadb1a7e85aefe66fbf0
         -}
 
         table.full
@@ -89,13 +84,10 @@ block footerjs
     script.
         var data = !{JSON.stringify(data)}
         var assignmentNumber = !{JSON.stringify(assignmentNumber)}
-<<<<<<< HEAD
-=======
+
         var vistype = "#{vistype}"
         var mapData =  !{JSON.stringify(mapData)};
         var createMap =  !{JSON.stringify(createMap)};
-
->>>>>>> 3a5337d6ec8aec65da6daadb1a7e85aefe66fbf0
 
     // Map demonstrating locations in the assignment
     - if ( createMap )
@@ -138,23 +130,7 @@ block footerjs
             });
         }
 
-<<<<<<< HEAD
-        function setvis (selected) {
-            var assignmentNumber = !{JSON.stringify(assignmentNumber)}
-            $.ajax({
-                url: "/assignments/"+assignmentNumber+"/vistype/"+selected,
-                type:"post"
-            }).done(function() {
-                location.reload()
-                console.log("visualization type updated")
-            }).error(function(err) {
-                errmsg = JSON.parse(err.responseText)
-                console.log("Error: "+errmsg.error)
-            });
-        }
-=======
         // TODO: Save snapshot of a particular assignment
->>>>>>> 3a5337d6ec8aec65da6daadb1a7e85aefe66fbf0
         function saveSnapshot() {
             console.log("save snapshot");
         }
