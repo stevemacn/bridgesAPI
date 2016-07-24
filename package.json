@@ -7,7 +7,7 @@
     "postinstall": "bower install"
   },
   "dependencies": {
-    "d3": "latest",
+    "d3": "3.5.17",
     "newrelic": "latest",
     "npm": "latest",
     "express": "3.5.0",
