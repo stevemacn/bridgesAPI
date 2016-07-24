@@ -28,6 +28,7 @@ for (var key in data) {
 
     if (d3.bst) {
         bst = d3.bst(d3, "#vis" + key, width, height);
+        tempAddChildNode(data[key]);
         bst.make(data[key]);
     }
     else if (d3.queue) {
@@ -49,6 +50,32 @@ for (var key in data) {
   }
 }
 
+/*
+  Recursive function adds a null child to enforce binary search tree child positioning.
+  Optimizations: add the null child nodes (perhaps with more appropriate contents and checking)
+    at some point in the controller, either when uploading a tree assignment or rendering a tree visualization.
+    We will also need to enforce different rules for positioning in n-ary trees.
+ */
+function tempAddChildNode( root ) {
+  if( root.role || !root.children ) return;
+
+  if( root.children.length == 2 ) {
+    tempAddChildNode( root.children[0] );
+    tempAddChildNode( root.children[1] );
+  }
+  else if( root.children.length == 1 ) {
+    if( parseFloat( root.children[0].key ) < parseFloat( root.key ) ) {
+      root.children[1] = root.children[0];
+      root.children[0] = {role: "nullChild"};
+      tempAddChildNode( root.children[0] );
+      tempAddChildNode( root.children[1] );
+    } else {
+      root.children[1] = {role: "nullChild"};
+      tempAddChildNode( root.children[0] );
+      tempAddChildNode( root.children[1] );
+    }
+  }
+}
 
 // Reset positions and scales for all visualization divs
 function reset() {

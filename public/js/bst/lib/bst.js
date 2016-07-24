@@ -13,12 +13,12 @@ var scaleSize = d3.scale.linear()
     .domain([1,100])
     .range([80,4000]);
 
-//var markers = [
-//    { id: 0, name: 'circle', path: 'M 0, 0  m -5, 0  a 5,5 0 1,0 10,0  a 5,5 0 1,0 -10,0', viewbox: '-6 -6 12 12' }
-//  , { id: 1, name: 'square', path: 'M 0,0 m -5,-5 L 5,-5 L 5,5 L -5,5 Z', viewbox: '-5 -5 10 10' }
-//  , { id: 2, name: 'arrow', path: 'M 0,0 m -5,-5 L 5,0 L -5,5 Z', viewbox: '-5 -5 10 10' }
-//  , { id: 2, name: 'stub', path: 'M 0,0 m -1,-5 L 1,-5 L 1,5 L -1,5 Z', viewbox: '-1 -5 2 10' }
-//]
+var markers = [
+   { id: 0, name: 'circle', path: 'M 0, 0  m -5, 0  a 5,5 0 1,0 10,0  a 5,5 0 1,0 -10,0', viewbox: '-6 -6 12 12' },
+   { id: 1, name: 'square', path: 'M 0,0 m -5,-5 L 5,-5 L 5,5 L -5,5 Z', viewbox: '-5 -5 10 10' },
+   { id: 2, name: 'arrow', path: 'M 0,0 m -5,-5 L 5,0 L -5,5 Z', viewbox: '-5 -5 10 10' },
+   { id: 2, name: 'stub', path: 'M 0,0 m -1,-5 L 1,-5 L 1,5 L -1,5 Z', viewbox: '-1 -5 2 10' }
+];
 
 d3.bst = function (d3, canvasID, w, h) {
 
@@ -27,7 +27,8 @@ d3.bst = function (d3, canvasID, w, h) {
     //defaults
     var bst = {},
         mw = 0, mh = 0,
-        w = w || 1280, h = h || 800,
+        w = w || 1280,
+        h = h || 800,
         i = 0,
         tree,
         depthStep = 75,
@@ -53,13 +54,13 @@ d3.bst = function (d3, canvasID, w, h) {
     allZoom.push(zoom);
 
     bst.init = function (_w, _h, _mw, _mh, ds) {
-        mw = _mw
-        mh = _mh
-        w = _w
-        h = _h
-        depthStep = ds
+        mw = _mw;
+        mh = _mh;
+        w = _w;
+        h = _h;
+        depthStep = ds;
         return bst;
-    }
+    };
 
     //boilerplate stuff
     bst.make = function (data) {
@@ -78,33 +79,34 @@ d3.bst = function (d3, canvasID, w, h) {
             .call(drag);
 
         svgGroup = vis.append("svg:g")
-            .attr("transform", "translate(" + (mh + (w/2)) + "," + mw + ")")
+            .attr("transform", "translate(" + (mh + (w/2)) + "," + mw + ")");
         allSVG.push(svgGroup);
 
-        defs = vis.append('svg:defs')
+        defs = vis.append('svg:defs');
 
-//        var marker = defs.selectAll('marker')
-//          .data(markers)
-//          .enter()
-//          .append('svg:marker')
-//            .attr('id', function(d){ return 'marker_' + d.name})
-//            .attr("markerUnits", "userSpaceOnUse")
-//            .attr('markerHeight', 5)
-//            .attr('markerWidth', 5)
-//            //.attr('markerUnits', 'strokeWidth')
-//            .attr('orient', 'auto')
-//            .attr('refX', 0)
-//            .attr('refY', 0)
-//            .attr('viewBox', function(d){ return d.viewbox })
-//            .append('svg:path')
-//              .attr('d', function(d){ return d.path })
-//              .attr('fill', function(d,i) { return "black"});
+       var marker = defs.selectAll('marker')
+         .data(markers)
+         .enter()
+         .append('svg:marker')
+           .attr('id', function(d){ return 'marker_' + d.name; })
+           .attr("markerUnits", "userSpaceOnUse")
+           .attr('markerHeight', 5)
+           .attr('markerWidth', 5)
+           //.attr('markerUnits', 'strokeWidth')
+           .attr('orient', 'auto')
+           .attr('refX', 0)
+           .attr('refY', 0)
+           .attr('viewBox', function(d){ return d.viewbox; })
+           .append('svg:path')
+             .attr('d', function(d){ return d.path; })
+             .attr('fill', function(d,i) { return "#ccc"; });
 
         root = data;
         root.x0 = 0;
         root.y0 = (w) / 2;
+
         update(root);
-    }
+    };
 
     return bst;
 
@@ -127,7 +129,7 @@ d3.bst = function (d3, canvasID, w, h) {
 
         // Normalize for fixed-depth.
         nodes.forEach(function(d) { d.y = 15 + d.depth * depthStep; });
-        nodes.forEach(function(d) { d.x = -1 * d.x; });
+        nodes.forEach(function(d) { d.x = -1 * d.x; }); // -1 here flips. Fix for new representation
 
         // Update the nodes…
         var node = svgGroup.selectAll("g.node")
@@ -138,10 +140,10 @@ d3.bst = function (d3, canvasID, w, h) {
         // Enter any new nodes at the parent's previous position.
         var nodeEnter = node.enter().append("svg:g")
             .attr("class", "node")
-            .attr("d", d3.svg.symbol()
-                .type(function(d) { return d.shape || "rect"; })
-                .size(function(d) {return  1; })
-            )
+            // .attr("d", d3.svg.symbol()
+            //     .type(function(d) { return d.shape || "rect"; })
+            //     .size( 1 )
+            // )
             .attr("transform", function(d) {
                 return "translate(" + source.x0 + "," + source.y0 + ")";
             })
@@ -152,28 +154,32 @@ d3.bst = function (d3, canvasID, w, h) {
         nodeEnter.append('path')
             .attr("d", d3.svg.symbol()
                 .type(function(d) { return d.shape || "rect"; })
-                .size(function(d) {return scaleSize(d.size) || 1; })
+                .size(function(d) { return scaleSize(d.size) || 1; })
             )
             .style("fill", function(d) {
                 return d.color || "#fff";
             })
+            .style("opacity", function(d) {
+                return d.role ? 0 : ( d.opacity || 1 );
+            });
+
         nodeEnter.append("svg:text")
             .attr("dy", ".35em")
             .attr("x", "35px")
             .attr("y",  "-7px")
             .attr("text-anchor", "start")
             .style("display", "none")
-            .text(function(d) { return d.name; })
+            .text( function( d ) { return d.name; } );
 
-       if(nodes[0].key != null) {
+       if(nodes[0].key !== null) {
            nodeEnter.append("svg:text")
             .attr("dy", ".35em")
             .attr("x", "-8px")
             .attr("y",  "-15px")
             .attr("text-anchor", "start")
-           .style("display", "none")
-            .text(function(d) { return d.key || ""; })
-       };
+            // .style("display", "none")
+            .text(function(d) { return d.key || ""; } );
+       }
 
 
         // Transition nodes to their new position.
@@ -183,28 +189,7 @@ d3.bst = function (d3, canvasID, w, h) {
                 // var dx = d.x-15;
                 var dx = d.x;
                 return "translate(" + dx + "," + d.y + ")";
-            })
-
-        nodeUpdate.select("node")
-            .attr("width",30)
-            .attr("height",10)
-            .style("fill", function(d) {
-                return d.color || "#fff";
-                //return d._children ? "lightsteelblue" : "#fff";
-            })
-            .style("opacity", function(d) {
-                return d.opacity || 1;
-            })
-            .style("stroke", function(d) {
-                return "black";
-            })
-            .style("stroke-width", function(d) {
-                return 1;
-            })
-            .style("stroke-dasharray", function(d) {
-                return d._children ? "3,3" : "0,0";
             });
-
 
         // Transition exiting nodes to the parent's new position.
         var nodeExit = node.exit().transition()
@@ -225,7 +210,7 @@ d3.bst = function (d3, canvasID, w, h) {
             .attr("class", "link")
             //.style("stroke", function(d,i) { return i < 250 ? "red" : "#ccc"})
             .style("stroke", function(d,i) {
-                return d.color || "#ccc";
+                 return "#ccc";
             })
             .style("opacity", function(d,i) {
                 return d.opacity || 1;
@@ -235,7 +220,7 @@ d3.bst = function (d3, canvasID, w, h) {
               return diagonal({source: o, target: o});
             })
             .attr('marker-start', function(d,i){ return 'url(#marker_circle)'; })
-            .attr('marker-end', function(d,i){ return 'url(#marker_square)'; })
+            .attr('marker-end', function(d,i){ return 'url(#marker_arrow)'; })
             .transition()
             .duration(duration)
             .attr("d", diagonal);
@@ -304,7 +289,7 @@ function dragended() {
 function mouseover() {
     d3.select(this).select("text").transition()
         .duration(750)
-        .style("display","block")
+        .style("display","block");
 
     var el = d3.select(this);
     el.moveToFront();
@@ -313,7 +298,7 @@ function mouseover() {
 function mouseout() {
     d3.select(this).select("text").transition()
         .duration(750)
-        .style("display","none")
+        .style("display","none");
 }
 
 };

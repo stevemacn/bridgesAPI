@@ -1,18 +1,18 @@
-//This code is heavily based on code from 
-//http://mbostock.github.io/d3/talk/20111018/tree.html 
+//This code is heavily based on code from
+//http://mbostock.github.io/d3/talk/20111018/tree.html
 
 d3.array = function(d3, canvasID, w, h, data) {
-    
+
     //d3.select("#reset").on("click", reset);
-    
+
     var spacing = 5;//w / data.length;
     var marginLeft = 20;
     var defaultSize = 100;
-    
-    // error when zooming directly after pan on OSX     
+
+    // error when zooming directly after pan on OSX
     // https://github.com/mbostock/d3/issues/2205
     var zoom = d3.behavior.zoom()
-        .scaleExtent([0.1,5])
+        .scaleExtent([0,5])
         .on("zoom", zoomHandler);
         zoom.scale(1);
     allZoom.push(zoom);
@@ -24,12 +24,12 @@ d3.array = function(d3, canvasID, w, h, data) {
         .attr("id", "svg" + canvasID.substr(4))
         .classed("svg", true)
         .call(zoom);
-    
+
     var svgGroup = chart.append("g");
     allSVG.push(svgGroup);
 
-    var elementsPerRow = 4 * parseInt((w - (spacing + defaultSize)) / (spacing + defaultSize));
-    
+    // var elementsPerRow = 4 * parseInt((w - (spacing + defaultSize)) / (spacing + defaultSize));
+
     var nodes = svgGroup.selectAll("nodes")
         .data(data)
         .enter().append("g")
@@ -39,9 +39,9 @@ d3.array = function(d3, canvasID, w, h, data) {
             //console.log(d.size);
             //size = parseFloat(d.size || defaultSize);
             size = defaultSize;
-    
-            return "translate(" + (marginLeft + ((i % elementsPerRow) * (spacing + size)))+ "," + ((h/4) + ((Math.floor(i / elementsPerRow)) * (spacing+size))) + ")";
-        })
+            return "translate(" + (marginLeft + i * (spacing + size)) + ")";
+            // return "translate(" + (marginLeft + ((i % elementsPerRow) * (spacing + size)))+ "," + ((h/4) + ((Math.floor(i / elementsPerRow)) * (spacing+size))) + ")";
+        });
 
     nodes.append("rect")
         .attr("height", function(d) {
@@ -82,7 +82,7 @@ d3.array = function(d3, canvasID, w, h, data) {
 //            return 15 + size
 //        })
         .attr("dy", ".35em")
-    
+
      var insertLinebreaks = function (d, i) {
         var el = d3.select(this);
         var words = d3.select(this).text().split('\n');
@@ -115,7 +115,7 @@ d3.array = function(d3, canvasID, w, h, data) {
 //        .style("stroke-width", function(d) {
 //                return strokeWidthRange(d.weight) || 1;
 //            })
-    
+
 function mouseover() {
 
     d3.select(this).selectAll(".TEMP").transition()
@@ -127,12 +127,12 @@ function mouseover() {
         .attr('d', function (d) {
             return d3.svg.symbol().type(d.shape||"circle")
                     .size(scaleSize(40))()
-        })            
-    */  
+        })
+    */
 }
 
 function mouseout() {
-    
+
     d3.select(this).selectAll(".TEMP").transition()
         .duration(750)
         .style("display","none")
@@ -142,8 +142,8 @@ function mouseout() {
         .attr('d', function (d) {
             return d3.svg.symbol().type(d.shape||"circle")
                     .size(scaleSize(d.size||1))()
-        })            
-    */  
+        })
+    */
 }
 
 //// zoom function
@@ -151,12 +151,12 @@ function zoomHandler() {
 //        console.log(d3.event.scale);
     svgGroup.attr("transform", "translate(" + (d3.event.translate) + ")scale(" + d3.event.scale + ")");
 }
-////    
+////
 //function reset() {
 //    zoom.scale(1);
 //    zoom.translate([0, 0]);
 //    //svgGroup.attr("transform", "translate(0,0)scale(1,1)");
 //    svgGroup.attr("transform", "translate(" + zoom.translate() + ")scale(" + zoom.scale() + ")");
 //}
-    
+
 }

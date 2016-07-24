@@ -8,14 +8,14 @@
   ],
   "dependencies": {
 
-    "d3": "latest",
+    "d3": "3.5.17",
     "jquery": "latest",
     "css-toggle-switch": "~2.1.5",
     "angular": "~1.2.22"
   },
   "devDependencies": {
 
-    "d3": "latest",
+    "d3": "3.5.17",
     "jquery": "latest",
     "css-toggle-switch": "~2.1.5",
     "angular": "~1.2.22"
