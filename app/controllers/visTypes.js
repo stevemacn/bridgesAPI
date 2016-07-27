@@ -14,6 +14,8 @@ exports.getVisType = function(toCheck) {
         "DoublyLinkedList": "nodelink"
     };
 
+    console.log(toCheck, validTypes[toCheck]);
+
     if( toCheck && validTypes[toCheck] )
       return validTypes[toCheck];
     else
