@@ -91,8 +91,10 @@ exports.upload = function (req, res, next) {
     if (subAssignment == "0") subAssignment = "00";
 
     // validate visualization type
+    console.log("!");
     var visualizationType = visTypes.getVisType(rawBody.visual);
     console.log(visTypes, visualizationType);
+    console.log("!!");
 
     //get username from apikey
     User.findOne({
