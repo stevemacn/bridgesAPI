@@ -5,6 +5,19 @@ var mongoose = require('mongoose'),
     treemill = require('treemill'),
     visTypes = require('./visTypes.js');
 
+// Array of possible assignment types. Can refactor into a new file and import as object.
+var assignmentTypes = [
+   "Array",
+   "Array_Stack",
+   "Array_Queue",
+   "LinkedListStack",
+   "LinkedListQueue",
+   "BinaryTree",
+   "BinarySearchTree",
+   "SinglyLinkedList",
+   "DoublyLinkedList"
+];
+
 //API route to toggle the visibility of an assignment
 //between private and public.
 exports.updateVisibility = function (req, res, next) {
@@ -69,55 +82,28 @@ exports.upload = function (req, res, next) {
         rawBody = req.body;
     }
 
-
-    var version = rawBody.version;
-
+    // Handle assignment number
     var assignmentID = req.params.assignmentID;
     console.log("->", assignmentID);
     var assignmentRaw = assignmentID.split(".");
     var assignmentNumber = assignmentRaw[0];
     var subAssignment = assignmentRaw[1];
-
     if (subAssignment == "0") subAssignment = "00";
 
-    var visualizationType = rawBody.visual; //check this against possible ones
+    // validate visualization type
+    var visualizationType = visTypes.getVisType(rawBody.visual);
 
+    //get username from apikey
+    User.findOne({
+        apikey:req.query.apikey
+    })
+    .exec(function (err, user) {
+        if (err) return next (err);
+        if (!user) return next ("could not find user by apikey: " + req.query.apikey);
 
-
-    if(version == '0.4.0') { //version with assignmentID as one string
-        // set the vis to default type
-        if(visualizationType != "tree" && visualizationType != "AList")
-           visualizationType = "nodelink";
-
-        //TEMP
-        //visualizationType = "AList";
-
-        //get username from apikey
-        User.findOne({
-            apikey:req.query.apikey
-        })
-        .exec(function (err, user) {
-            if (err) return next (err);
-            if (!user) return next ("could not find user by apikey: " + req.query.apikey);
-
-            //if username found, upload or replace
-            replaceAssignment(res, user, assignmentID);
-        });
-
-    } else {// Add version-specific options here
-         var validTypes = [
-            "Array",
-            "Array_Stack",
-            "Array_Queue",
-            "LinkedListStack",
-            "LinkedListQueue",
-            "BinaryTree",
-            "BinarySearchTree",
-            "SinglyLinkedList",
-            "DoublyLinkedList"
-        ];
-
-    }
+        //if username found, upload or replace
+        replaceAssignment(res, user, assignmentID);
+    });
 
     function replaceAssignment (res, user, assignmentID) {
 
@@ -206,8 +192,6 @@ exports.show = function (req, res, next) {
     function getAssignment (req, res, next, email, cb) {
         next = next;
 
-        var version = "0.4.0";
-
         Assignment.findOne({
             email: email,
             assignmentNumber: assignmentNumber
@@ -218,8 +202,6 @@ exports.show = function (req, res, next) {
             if (!assignment || assignment.length === 0) {
                 return next ("the assignment was not found");
             }
-
-            console.log(assignment);
 
             // If the assignment is not public, see if user has access to private assignment
             if(!assignment.shared) {
@@ -298,10 +280,6 @@ exports.show = function (req, res, next) {
             if (sessionUser.email==assignments[0].email) owner = true;
         }
 
-        //default visualization
-        //if (!assignments.vistype) assignments.vistype = "nodelink"
-        //check data for flat vs unflattened representation
-
         var unflatten = function (data) {
             //check whether the data is already hierachical
             if ("children" in data) return data;
@@ -320,20 +298,28 @@ exports.show = function (req, res, next) {
 
         /* parse and store all subassignments */
         for(var i = 0; i < assignments.length; i++) {
+
             data = assignments[i].data.toObject()[0];
 
             // pull out all coordinates from JSON
-            data.nodes.forEach(function(d) {
-              if(d.location && d.location[0] !== 0 && d.location[1] !== 0)
-                mapData.push( { "lat": d.location[0], "long": d.location[1] } );
-            });
+            // data.nodes.forEach(function(d) {
+            //   if(d.location && d.location[0] !== 0 && d.location[1] !== 0)
+            //     mapData.push( { "lat": d.location[0], "long": d.location[1] } );
+            // });
+            mapData = [];
 
-
-            if (assignments[i].vistype == "tree") data = unflatten(data);
-            else data = flatten(data);
+            // Client should send trees as hierarchical representation now..
+            // This captures the data from the OLD flat tree representation
+            if((data.visual == "tree") && !("nodes" in data && "children" in data.nodes)) {
+              console.log(data);
+              data = unflatten(data);
+            }
+            // This captures the data from the NEW hierarchical tree representation
+            if("nodes" in data && "children" in data.nodes) {
+              data = data.nodes;
+            }
 
             vistype = assignments[i].vistype;
-            if ("error" in data) vistype = "error";
 
             allAssigns[i] = data;
         }
@@ -364,6 +350,7 @@ exports.testJSON = function (req, res, next) {
         mapData = [],
         map;
 
+    // Add test JSON here
     var JSONdata = {"version":"0.4.0","visual":"BinarySearchTree","nodes":[{"color":[255,0,255,255],"shape":"circle","size":10,"name":"Hi","key":"5.4","children":[{"linkProperties":{"color":[0,0,0,255],"thickness":1.000000},"color":[0,255,0,255],"shape":"circle","size":10,"name":"Hello","key":"1.4","children":[{"name":"NULL"},{"name":"NULL"}]},{"linkProperties":{"color":[0,0,0,255],"thickness":1.000000},"color":[0,255,0,255],"shape":"circle","size":10,"name":"World","key":"1.12","children":[{"name":"NULL"},{"linkProperties":{"color":[0,0,0,255],"thickness":1.000000},"color":[0,255,0,255],"shape":"circle","size":10,"name":"World","key":"4.3","children":[{"name":"NULL"},{"name":"NULL"}]}]}]}]};
 
     return res.render ('assignments/assignmentMulti', {
