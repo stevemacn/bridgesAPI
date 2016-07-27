@@ -92,6 +92,7 @@ exports.upload = function (req, res, next) {
 
     // validate visualization type
     var visualizationType = visTypes.getVisType(rawBody.visual);
+    console.log(visTypes, visualizationType);
 
     //get username from apikey
     User.findOne({
