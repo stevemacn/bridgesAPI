@@ -84,17 +84,14 @@ exports.upload = function (req, res, next) {
 
     // Handle assignment number
     var assignmentID = req.params.assignmentID;
-    console.log("->!!", assignmentID);
+    console.log("->", assignmentID);
     var assignmentRaw = assignmentID.split(".");
     var assignmentNumber = assignmentRaw[0];
     var subAssignment = assignmentRaw[1];
     if (subAssignment == "0") subAssignment = "00";
 
     // validate visualization type
-    console.log("!");
     var visualizationType = visTypes.getVisType(rawBody.visual);
-    console.log(visTypes, visualizationType);
-    console.log("!!");
 
     //get username from apikey
     User.findOne({
