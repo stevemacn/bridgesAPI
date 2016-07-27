@@ -319,8 +319,6 @@ exports.show = function (req, res, next) {
               data = data.nodes;
             }
 
-            vistype = assignments[i].vistype;
-
             allAssigns[i] = data;
         }
 
@@ -332,7 +330,7 @@ exports.show = function (req, res, next) {
             "assignmentNumber":assignmentNumber,
             "schoolID":assignments[0].schoolID,
             "classID":assignments[0].classID,
-            "vistype":vistype,
+            "vistype":assignments[0].vistype,
             "shared":assignments[0].shared,
             "owner":owner,
             "createMap": (function() { return (mapData.length > 0) ? true : false; })(),

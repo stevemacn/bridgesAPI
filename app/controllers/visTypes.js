@@ -8,13 +8,20 @@ exports.getVisType = function(toCheck) {
         "Array_Queue":      "Alist",
         "LinkedListStack":  "nodelink",
         "LinkedListQueue":  "nodelink",
+
+        "SinglyLinkedList": "nodelink",
+        "llist":            "nodelink",
+        "DoublyLinkedList": "nodelink",
+        "dllist":           "nodelink",
+
+        "Tree":             "tree",
         "BinaryTree":       "tree",
         "BinarySearchTree": "tree",
-        "SinglyLinkedList": "nodelink",
-        "DoublyLinkedList": "nodelink"
-    };
+        "AVLTree":          "tree",
 
-    console.log(toCheck, validTypes[toCheck]);
+        "GraphAdjacencyList":   "nodelink",
+        "GraphAdjacencyMatrix": "nodelink"
+    };
 
     if( toCheck && validTypes[toCheck] )
       return validTypes[toCheck];
