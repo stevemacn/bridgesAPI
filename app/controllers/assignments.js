@@ -311,7 +311,6 @@ exports.show = function (req, res, next) {
             // Client should send trees as hierarchical representation now..
             // This captures the data from the OLD flat tree representation
             if((data.visual == "tree") && !("nodes" in data && "children" in data.nodes)) {
-              console.log(data);
               data = unflatten(data);
             }
             // This captures the data from the NEW hierarchical tree representation
