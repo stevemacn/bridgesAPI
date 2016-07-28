@@ -8,6 +8,8 @@ exports.view = function(req, res, next) {
           subAssignment: "00"
       }, {
           assignmentID: 1,
+          title: 1,
+          description: 1,
           assignmentNumber: 1,
           "data.visual": 1,
           vistype: 1,

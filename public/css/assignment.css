@@ -158,14 +158,24 @@
 }
 
 .gallery_links{
+    padding-top: 10px;
     text-align: center;
-    text-shadow: 1px 0px #C0C0C0;
+    /*text-shadow: 1px 0px #C0C0C0;*/
     color: #262626;
+    font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
 }
 
 .gallery_links:hover{
     text-shadow: none;
     color:#888888;
+}
+
+.gallery_link_title {
+  font-size: 110%;
+}
+
+.gallery_link_small {
+  font-size: 70%;
 }
 
 table.full {
