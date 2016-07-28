@@ -53,7 +53,7 @@ d3.array = function(d3, canvasID, w, h, data) {
             return defaultSize;
         })
         .style("fill", function(d) {
-            return d.color || "steelblue"
+            return getColor(d.color) || "steelblue"
         })
         .style("stroke", "gray")
         .style("stroke-width", 2)

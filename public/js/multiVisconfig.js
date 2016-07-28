@@ -77,6 +77,13 @@ function tempAddChildNode( root ) {
   }
 }
 
+// function to return color depending on the style of representation
+function getColor(color) {
+  if(Array.isArray(color))
+    return "rgba(" + color[0] + "," + color[1] + "," + color[2] + "," + color[3] + ")";
+  return color;
+}
+
 // Reset positions and scales for all visualization divs
 function reset() {
     for (var i = 0; i < allZoom.length; i++) {

@@ -129,7 +129,7 @@ d3.bst = function (d3, canvasID, w, h) {
 
         // Normalize for fixed-depth.
         nodes.forEach(function(d) { d.y = 15 + d.depth * depthStep; });
-        nodes.forEach(function(d) { d.x = -1 * d.x; }); // -1 here flips. Fix for new representation
+        // nodes.forEach(function(d) { d.x = -1 * d.x; }); // -1 here flips. Fix for new representation
 
         // Update the nodes…
         var node = svgGroup.selectAll("g.node")
@@ -157,7 +157,8 @@ d3.bst = function (d3, canvasID, w, h) {
                 .size(function(d) { return scaleSize(d.size) || 1; })
             )
             .style("fill", function(d) {
-                return d.color || "#fff";
+
+                return getColor(d.color) || "#fff";
             })
             .style("opacity", function(d) {
                 return d.role ? 0 : ( d.opacity || 1 );
