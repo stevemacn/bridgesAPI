@@ -157,7 +157,6 @@ d3.bst = function (d3, canvasID, w, h) {
                 .size(function(d) { return scaleSize(d.size) || 1; })
             )
             .style("fill", function(d) {
-
                 return getColor(d.color) || "#fff";
             })
             .style("opacity", function(d) {
@@ -209,11 +208,16 @@ d3.bst = function (d3, canvasID, w, h) {
         // Enter any new links at the parent's previous position.
         link.enter().insert("svg:path", "g")
             .attr("class", "link")
-            //.style("stroke", function(d,i) { return i < 250 ? "red" : "#ccc"})
             .style("stroke", function(d,i) {
-                 return "#ccc";
+                if(d.target.linkProperties) return getColor(d.target.linkProperties.color);
+                return "#ccc";
+            })
+            .style("stroke-width", function(d,i) {
+                if(d.target.linkProperties) return d3.strokeWidthRange(d.target.linkProperties.thickness);
+                return d3.strokeWidthRange(1);
             })
             .style("opacity", function(d,i) {
+                if(d.target.name == "NULL") return 0;
                 return d.opacity || 1;
             })
             .attr("d", function(d) {
