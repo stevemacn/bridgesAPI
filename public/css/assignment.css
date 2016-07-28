@@ -181,3 +181,20 @@ td.right {
     width: 97%;
     vertical-align: middle ;
 }
+
+#assignmentTitle {
+    padding-left: 50px;
+    font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
+    font-size: 180%;
+    width: 300px;
+}
+
+#assignmentDescription {
+    padding-left: 50px;
+    padding-top: 15px;
+    margin-bottom: 25px;
+    font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
+    font-size: 100%;
+    max-width: 65%;
+
+}

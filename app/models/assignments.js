@@ -19,8 +19,10 @@ var Assignment = new Schema ({
     assignmentID:       {type: Number, default: ''},   // integer representation of an assignment
     classID:            {type: String, default: ''},
     schoolID:           {type: String, default: ''},
+    title:              {type: String, default: ''},
+    description:        {type: String, default: ''},
     dateCreated:        {type: Date, default: Date.now()},
-    shared:             {type: Boolean, default: 'false'},//public or private
+    shared:             {type: Boolean, default: 'false'}, //public or private
     vistype:            {type: String, default:'nodelink'},
     thumbnail:          {type: String, default:'nodelink'},
     //use mongoose thumbnail right here....
