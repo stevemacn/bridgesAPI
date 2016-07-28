@@ -82,7 +82,7 @@ var link = svgGroup.append("svg:g").selectAll("path")
         return d3.strokeWidthRange(d.width) || 1;
     })
     .style("stroke", function (d) {
-        return d.color || "black";
+        return getColor(d.color) || "black";
     })
     .style("opacity", function(d) {
         return d.opacity || 1;
