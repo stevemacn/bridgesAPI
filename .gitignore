@@ -21,7 +21,7 @@ config/keys.json
 
 # Don't steal our DB!! #
 ###################
-config/config.js
+/config/config.js
 
 # Logs and databases #
 ######################

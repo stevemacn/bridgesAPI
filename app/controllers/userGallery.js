@@ -24,7 +24,7 @@ exports.view = function(req, res, next) {
               return parseFloat(a.assignmentID) - parseFloat(b.assignmentID);
           });
 
-          return res.render('assignments/gallery_2', {
+          return res.render('assignments/userGallery', {
             "title": "Assignment gallery",
             "user":req.user,
             "usernames": req.params.userNameRes,

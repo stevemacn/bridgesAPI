@@ -186,10 +186,10 @@ module.exports = function(app, passport, streamable) {
     //
     // -------------------------------------------------------
     var gallery = require('../app/controllers/gallery.js')      // Public gallery
-    var gallery_2 = require('../app/controllers/gallery_2.js')  // Private user gallery
+    var userGallery = require('../app/controllers/userGallery.js')  // Private user gallery
 
     app.get('/assignments/:assignmentNumber', gallery.view, handleError)
-    app.get('/username/:userNameRes', isLoggedIn, gallery_2.view, handleError)
+    app.get('/username/:userNameRes', isLoggedIn, userGallery.view, handleError)
 
 
     app.post('/users/session',

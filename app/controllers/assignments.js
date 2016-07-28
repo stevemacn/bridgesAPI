@@ -376,6 +376,6 @@ exports.deleteAssignment = function (req, res) {
                   }
               });
 
-    // return res.redirect("gallery_2")
+    // return res.redirect("userGallery")
     res.send("OK");
 };

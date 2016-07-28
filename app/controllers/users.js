@@ -128,7 +128,7 @@ exports.view = function(req, res) {
 
                 getAssignments(assig, [], function(assignmentsRes) {
 
-                    return res.render('assignments/gallery_2', {
+                    return res.render('assignments/userGallery', {
                        "title": "Assignment gallery",
                        "user":req.user,
                        "usernames": req.params.userNameRes,
