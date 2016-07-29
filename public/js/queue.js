@@ -36,7 +36,7 @@ d3.queue = function(d3, canvasID, w, h, data) {
             return parseFloat(d.size || defaultSize);
         })
         .style("fill", function(d) {
-            return getColor(d.color) || "steelblue"
+            return BridgesVisualizer.getColor(d.color) || "steelblue"
         })
         .style("stroke", "gray")
         .style("stroke-width", 2)
@@ -84,7 +84,7 @@ d3.queue = function(d3, canvasID, w, h, data) {
         .attr("y2", h / 2)
         .style("stroke", "black")
         .style("stroke-width", function(d) {
-                return strokeWidthRange(d.weight) || 1;
+                return BridgesVisualizer.strokeWidthRange(d.weight) || 1;
             })
 
 function mouseover() {
