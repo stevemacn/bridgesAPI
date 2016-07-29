@@ -128,7 +128,7 @@ d3.bst = function (d3, canvasID, w, h) {
         var nodes = tree.nodes(root).reverse();
 
         // Normalize for fixed-depth.
-        nodes.forEach(function(d) { d.y = 15 + d.depth * depthStep; });
+        nodes.forEach(function(d) { d.y = 50 + d.depth * depthStep; });
         // nodes.forEach(function(d) { d.x = -1 * d.x; }); // -1 here flips. Fix for new representation
 
         // Update the nodes…
