@@ -9,7 +9,7 @@
     float: left;
     margin-bottom: 5px;
     margin-top: 5px;
-    min-height: 350px;
+    min-height: 500px;
 }
 
 .assignmentContainer .maximized{
@@ -158,14 +158,24 @@
 }
 
 .gallery_links{
+    padding-top: 10px;
     text-align: center;
-    text-shadow: 1px 0px #C0C0C0;
+    /*text-shadow: 1px 0px #C0C0C0;*/
     color: #262626;
+    font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
 }
 
 .gallery_links:hover{
     text-shadow: none;
     color:#888888;
+}
+
+.gallery_link_title {
+  font-size: 110%;
+}
+
+.gallery_link_small {
+  font-size: 70%;
 }
 
 table.full {
@@ -180,4 +190,22 @@ td.left {
 td.right {
     width: 97%;
     vertical-align: middle ;
+}
+
+#assignmentTitle {
+    padding-left: 50px;
+    padding-top: 15px;
+    font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
+    font-size: 180%;
+    width: 300px;
+}
+
+#assignmentDescription {
+    padding-left: 50px;
+    padding-top: 15px;
+    margin-bottom: 25px;
+    font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
+    font-size: 100%;
+    max-width: 65%;
+
 }

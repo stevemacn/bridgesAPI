@@ -7,16 +7,14 @@ block css
     link(rel='stylesheet', href='/components/css-toggle-switch/dist/toggle-switch.css')
 
 block scripts
-    script(type='application/ecmascript' async='' src='/js/html2canvas.js')
-    script(type='application/ecmascript' async='' src='/js/FileSaver.js')
-    script(type='application/ecmascript' async='' src='/js/Blob.js')
-    script(type='application/ecmascript' async='' src='/js/dropzone.js')
-    script(src='/js/snapshoot.js')
+    //script(type='application/ecmascript' async='' src='/js/html2canvas.js')
+    //script(type='application/ecmascript' async='' src='/js/FileSaver.js')
+    //script(type='application/ecmascript' async='' src='/js/Blob.js')
+    //script(type='application/ecmascript' async='' src='/js/dropzone.js')
+    //script(src='/js/snapshoot.js')
 
 
 block content
-
-
     include ../includes/header.jade
     div#assignmentCanvas(overflow='auto')
         -if (owner) {
@@ -33,8 +31,8 @@ block content
                         a.btn.btn-primary
 
                 div
-                    button(class='optionButton', id='resize')
-                                label Resize view
+                    //  button(class='optionButton', id='resize')
+                    //              label Resize view
 
                     button(class='optionButton', id='reset')
                                 label Reset view
@@ -50,6 +48,9 @@ block content
                     button(class='minimize' id='min')
                         label -
                 td.right
+                    div#assignmentTitle #{assignmentTitle}
+                    div#assignmentDescription #{assignmentDescription}
+
 
         -for (var i = 0; i < extent; i++) {
              table.full

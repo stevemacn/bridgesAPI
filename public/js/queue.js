@@ -1,11 +1,11 @@
-//This code is heavily based on code from 
-//http://mbostock.github.io/d3/talk/20111018/tree.html 
+//This code is heavily based on code from
+//http://mbostock.github.io/d3/talk/20111018/tree.html
 
 d3.queue = function(d3, canvasID, w, h, data) {
 
-    
+
     //d3.select("#reset").on("click", reset);
-    
+
     var spacing = 140//w / data.length;
     var defaultSize = 15;
 
@@ -36,7 +36,7 @@ d3.queue = function(d3, canvasID, w, h, data) {
             return parseFloat(d.size || defaultSize);
         })
         .style("fill", function(d) {
-            return d.color || "steelblue"
+            return getColor(d.color) || "steelblue"
         })
         .style("stroke", "gray")
         .style("stroke-width", 2)
@@ -53,7 +53,7 @@ d3.queue = function(d3, canvasID, w, h, data) {
             return 15 + size
         })
         .attr("dy", ".35em")
-    
+
      var insertLinebreaks = function (d, i) {
         var el = d3.select(this);
         var words = d3.select(this).text().split('\n');
@@ -86,7 +86,7 @@ d3.queue = function(d3, canvasID, w, h, data) {
         .style("stroke-width", function(d) {
                 return strokeWidthRange(d.weight) || 1;
             })
-    
+
 function mouseover() {
 
     d3.select(this).select("text").transition()
@@ -98,12 +98,12 @@ function mouseover() {
         .attr('d', function (d) {
             return d3.svg.symbol().type(d.shape||"circle")
                     .size(scaleSize(40))()
-        })            
-    */  
+        })
+    */
 }
 
 function mouseout() {
-    
+
     d3.select(this).select("text").transition()
         .duration(750)
         .style("display","none")
@@ -113,20 +113,20 @@ function mouseout() {
         .attr('d', function (d) {
             return d3.svg.symbol().type(d.shape||"circle")
                     .size(scaleSize(d.size||1))()
-        })            
-    */  
+        })
+    */
 }
 
 //// zoom function
 //function zoomHandler() {
 //    svgGroup.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
 //}
-//    
+//
 //function reset() {
 //    zoom.scale(1);
 //    zoom.translate([0, 0]);
 //    //svgGroup.attr("transform", "translate(0,0)scale(1,1)");
 //    svgGroup.attr("transform", "translate(" + zoom.translate() + ")scale(" + zoom.scale() + ")");
 //}
-    
+
 }

@@ -40,4 +40,7 @@ block content
                                   img(src='/img/LList.png' title=assignments[x].vistype)
 
                   a(style='text-decoration: none; ' href='/assignments/'+assignments[x].assignmentNumber+'/'+usernames)
-                      h4(class='gallery_links') #{assignments[x].assignmentNumber} #{assignments[x].data[0].visual}
+                      div(class='gallery_links')
+                        div.gallery_link_title #{assignments[x].title}
+                        div.gallery_link_small Assignment #{assignments[x].assignmentNumber}
+                        div.gallery_link_small #{assignments[x].data[0].visual}

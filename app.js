@@ -40,7 +40,6 @@ var streamable = require('streamable').streamable(io);
 console.log("Server listening on port " + port)
 
 //Bootstrap routes.
-require('./config/routes_2')(app, passport, streamable)
+require('./config/routes')(app, passport, streamable)
 
 exports = module.exports = app
-

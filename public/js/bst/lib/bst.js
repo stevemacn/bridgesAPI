@@ -129,7 +129,7 @@ d3.bst = function (d3, canvasID, w, h) {
 
         // Normalize for fixed-depth.
         nodes.forEach(function(d) { d.y = 15 + d.depth * depthStep; });
-        nodes.forEach(function(d) { d.x = -1 * d.x; }); // -1 here flips. Fix for new representation
+        // nodes.forEach(function(d) { d.x = -1 * d.x; }); // -1 here flips. Fix for new representation
 
         // Update the nodes…
         var node = svgGroup.selectAll("g.node")
@@ -157,7 +157,7 @@ d3.bst = function (d3, canvasID, w, h) {
                 .size(function(d) { return scaleSize(d.size) || 1; })
             )
             .style("fill", function(d) {
-                return d.color || "#fff";
+                return getColor(d.color) || "#fff";
             })
             .style("opacity", function(d) {
                 return d.role ? 0 : ( d.opacity || 1 );
@@ -208,11 +208,16 @@ d3.bst = function (d3, canvasID, w, h) {
         // Enter any new links at the parent's previous position.
         link.enter().insert("svg:path", "g")
             .attr("class", "link")
-            //.style("stroke", function(d,i) { return i < 250 ? "red" : "#ccc"})
             .style("stroke", function(d,i) {
-                 return "#ccc";
+                if(d.target.linkProperties) return getColor(d.target.linkProperties.color);
+                return "#ccc";
+            })
+            .style("stroke-width", function(d,i) {
+                if(d.target.linkProperties) return d3.strokeWidthRange(d.target.linkProperties.thickness);
+                return d3.strokeWidthRange(1);
             })
             .style("opacity", function(d,i) {
+                if(d.target.name == "NULL") return 0;
                 return d.opacity || 1;
             })
             .attr("d", function(d) {

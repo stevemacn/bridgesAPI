@@ -62,7 +62,7 @@ vis.append("svg:defs").selectAll("marker")
     .attr("refY", 0)
     .attr("markerUnits", "userSpaceOnUse")
     .style("fill", function (d) {
-        return d.color || "black";
+        return getColor(d.color) || "black";
     })
     .style("opacity", function(d) {
         return d.opacity || 1;
@@ -82,7 +82,7 @@ var link = svgGroup.append("svg:g").selectAll("path")
         return d3.strokeWidthRange(d.width) || 1;
     })
     .style("stroke", function (d) {
-        return d.color || "black";
+        return getColor(d.color) || "black";
     })
     .style("opacity", function(d) {
         return d.opacity || 1;
@@ -115,7 +115,7 @@ node
         .size(function(d) {return scaleSize(d.size || 1); })
     )
     .style("fill", function(d, i) {
-        return d.color || defaultColors(i);
+        return getColor(d.color) || defaultColors(i);
     })
     .style("opacity", function(d) {
         return d.opacity || 1;

@@ -5,19 +5,6 @@ var mongoose = require('mongoose'),
     treemill = require('treemill'),
     visTypes = require('./visTypes.js');
 
-// Array of possible assignment types. Can refactor into a new file and import as object.
-var assignmentTypes = [
-   "Array",
-   "Array_Stack",
-   "Array_Queue",
-   "LinkedListStack",
-   "LinkedListQueue",
-   "BinaryTree",
-   "BinarySearchTree",
-   "SinglyLinkedList",
-   "DoublyLinkedList"
-];
-
 //API route to toggle the visibility of an assignment
 //between private and public.
 exports.updateVisibility = function (req, res, next) {
@@ -117,6 +104,7 @@ exports.upload = function (req, res, next) {
                     console.log(err);
                 console.log("replaceAssignment() removed assignments (" + assignmentNumber + ".*) from user: \"" + user.username + "\"");
 
+
                 // have to put this code to create/save assignment in both cases
                 // since the removal happens asynchronously for assignments
                 assignment = new Assignment();
@@ -128,6 +116,8 @@ exports.upload = function (req, res, next) {
                 assignment.subAssignment = subAssignment;
                 assignment.schoolID = req.params.schoolID || "";
                 assignment.classID = req.params.classID || "";
+                assignment.title = "Test Title"; // get title from raw body?
+                assignment.description = "Herein lies a brief description of this particular assignment. Note the fine craftsmanship of the data structure. The quick brown fox jumped over the lazy dog. I'm trapped in a computer, pls help!"; // get description from raw body?
                 assignment.save();
 
                 User.findOne({
@@ -151,6 +141,8 @@ exports.upload = function (req, res, next) {
           assignment.subAssignment = subAssignment;
           assignment.schoolID = req.params.schoolID || "";
           assignment.classID = req.params.classID || "";
+          assignment.title = "Test Title"; // get title from raw body?
+          assignment.description = "Herein lies a brief description of this particular assignment. Note the fine craftsmanship of the data structure. The quick brown fox jumped over the lazy dog. I'm trapped in a computer, pls help!"; // get description from raw body?
           assignment.save();
 
           User.findOne({
@@ -311,7 +303,6 @@ exports.show = function (req, res, next) {
             // Client should send trees as hierarchical representation now..
             // This captures the data from the OLD flat tree representation
             if((data.visual == "tree") && !("nodes" in data && "children" in data.nodes)) {
-              console.log(data);
               data = unflatten(data);
             }
             // This captures the data from the NEW hierarchical tree representation
@@ -323,7 +314,9 @@ exports.show = function (req, res, next) {
         }
 
         return res.render ('assignments/assignmentMulti', {
-            "title":"assignmentMulti",
+            "title":"Assignment " + assignmentNumber,
+            "assignmentTitle": assignments[0].title,
+            "assignmentDescription": assignments[0].description,
             "user":sessionUser,
             "data":allAssigns,
             "extent":Object.keys(allAssigns).length,
@@ -383,6 +376,6 @@ exports.deleteAssignment = function (req, res) {
                   }
               });
 
-    // return res.redirect("gallery_2")
+    // return res.redirect("userGallery")
     res.send("OK");
 };
