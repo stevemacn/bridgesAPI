@@ -1,7 +1,15 @@
-d3.strokeWidthRange = d3.scale.linear()
+
+// Bridges visualizer object to remove vis methods from the global scope
+BridgesVisualizer.strokeWidthRange = d3.scale.linear()
                         .domain([1,10])
                         .range([1,15])
                         .clamp(true);
+// function to return color depending on the style of representation
+BridgesVisualizer.getColor = function(color) {
+  if(Array.isArray(color))
+    return "rgba(" + color[0] + "," + color[1] + "," + color[2] + "," + color[3] + ")";
+  return color;
+};
 
 // bind event handlers for ui
 d3.selectAll(".minimize").on("click", minimize);
@@ -77,13 +85,6 @@ function tempAddChildNode( root ) {
   }
 }
 
-// function to return color depending on the style of representation
-function getColor(color) {
-  if(Array.isArray(color))
-    return "rgba(" + color[0] + "," + color[1] + "," + color[2] + "," + color[3] + ")";
-  return color;
-}
-
 // Reset positions and scales for all visualization divs
 function reset() {
     for (var i = 0; i < allZoom.length; i++) {
@@ -127,10 +128,8 @@ function minimize() {
         if(d3.select(this).attr("minimized") == "true") {   //MAXIMIZE
             d3.selectAll(".assignmentContainer")
                 .classed("assignmentContainerMinimized", false);
-
             d3.selectAll(".svg")
                 .style("display", "block");
-
             d3.selectAll(".minimize")
                 .attr("minimized", false)
                 .text("-");
@@ -141,10 +140,8 @@ function minimize() {
         } else {    //MINIMIZE
             d3.selectAll(".assignmentContainer")
                 .classed("assignmentContainerMinimized", true);
-
             d3.selectAll(".svg")
                 .style("display", "none");
-
             d3.selectAll(".minimize")
                 .attr("minimized", true)
                 .text("+");
@@ -159,12 +156,9 @@ function minimize() {
     if(d3.select(this).attr("minimized") == "true") {   //MAXIMIZE
         d3.select("#vis" + this.id.substr(3))
             .classed("assignmentContainerMinimized", false);
-
         d3.select("#svg" + this.id.substr(3))
             .style("display", "block");
-
         d3.select(this).attr("minimized", false);
-
         d3.select(this).text("-");
 
         maximizedCount++;
@@ -179,12 +173,9 @@ function minimize() {
     } else {    //MINIMIZE
         d3.select("#vis" + this.id.substr(3))
             .classed("assignmentContainerMinimized", true);
-
         d3.select("#svg" + this.id.substr(3))
             .style("display", "none");
-
         d3.select(this).attr("minimized", true);
-
         d3.select(this).text("+");
 
         minimizedCount++;

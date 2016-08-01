@@ -77,8 +77,10 @@ exports.upload = function (req, res, next) {
     var subAssignment = assignmentRaw[1];
     if (subAssignment == "0") subAssignment = "00";
 
-    // validate visualization type
+    // validate attributes
     var visualizationType = visTypes.getVisType(rawBody.visual);
+    var title = rawBody.title || "";
+    var description = rawBody.description || "";
 
     //get username from apikey
     User.findOne({
@@ -116,8 +118,8 @@ exports.upload = function (req, res, next) {
                 assignment.subAssignment = subAssignment;
                 assignment.schoolID = req.params.schoolID || "";
                 assignment.classID = req.params.classID || "";
-                assignment.title = "Test Title"; // get title from raw body?
-                assignment.description = "Herein lies a brief description of this particular assignment. Note the fine craftsmanship of the data structure. The quick brown fox jumped over the lazy dog. I'm trapped in a computer, pls help!"; // get description from raw body?
+                assignment.title = title;
+                assignment.description = description;
                 assignment.save();
 
                 User.findOne({

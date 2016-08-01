@@ -128,7 +128,7 @@ d3.bst = function (d3, canvasID, w, h) {
         var nodes = tree.nodes(root).reverse();
 
         // Normalize for fixed-depth.
-        nodes.forEach(function(d) { d.y = 15 + d.depth * depthStep; });
+        nodes.forEach(function(d) { d.y = 50 + d.depth * depthStep; });
         // nodes.forEach(function(d) { d.x = -1 * d.x; }); // -1 here flips. Fix for new representation
 
         // Update the nodes…
@@ -157,7 +157,7 @@ d3.bst = function (d3, canvasID, w, h) {
                 .size(function(d) { return scaleSize(d.size) || 1; })
             )
             .style("fill", function(d) {
-                return getColor(d.color) || "#fff";
+                return BridgesVisualizer.getColor(d.color) || "#fff";
             })
             .style("opacity", function(d) {
                 return d.role ? 0 : ( d.opacity || 1 );
@@ -209,12 +209,12 @@ d3.bst = function (d3, canvasID, w, h) {
         link.enter().insert("svg:path", "g")
             .attr("class", "link")
             .style("stroke", function(d,i) {
-                if(d.target.linkProperties) return getColor(d.target.linkProperties.color);
+                if(d.target.linkProperties) return BridgesVisualizer.getColor(d.target.linkProperties.color);
                 return "#ccc";
             })
             .style("stroke-width", function(d,i) {
-                if(d.target.linkProperties) return d3.strokeWidthRange(d.target.linkProperties.thickness);
-                return d3.strokeWidthRange(1);
+                if(d.target.linkProperties) return BridgesVisualizer.strokeWidthRange(d.target.linkProperties.thickness);
+                return BridgesVisualizer.strokeWidthRange(1);
             })
             .style("opacity", function(d,i) {
                 if(d.target.name == "NULL") return 0;

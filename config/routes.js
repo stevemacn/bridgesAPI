@@ -52,7 +52,6 @@ module.exports = function(app, passport, streamable) {
     //Allows users to by pass authentication to api requests
     //if they have a valid api key.
     var hasAccess = function(req, res, next) {
-
         //authenticated
         if (req.isAuthenticated()) {
             return next()
