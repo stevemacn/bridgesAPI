@@ -20,7 +20,7 @@ block content
 
     div(style='margin:5%')
         - for (var x = 0; x < assignments.length; x++)
-            div(style="float:left;width:120px;height:200px; margin-left:50px")
+            div(class='gallery_assignment_container')
                 a(href='/assignments/'+assignments[x].assignmentNumber+'/'+usernames)
                   - if (assignments[x].shared == false)
                           div(class='gallery_assignment_div_private')

@@ -122,8 +122,19 @@
     font-weight: bolder;
 }
 
+.gallery_assignment_container {
+  float:left;
+  width:160px;
+  height:240px;
+  margin-left:20px;
+  margin-bottom:10px;
+  overflow: hidden;
+}
+
 .gallery_assignment_div_private{
     height:120px;
+    width:120px;
+    margin-left: 20px;
     border-style: solid;
     border-width:4px;
     border-style: outset;
@@ -137,7 +148,9 @@
 }
 
 .gallery_assignment_div_public{
+     margin-left: 20px;
     height:120px;
+    width:120px;
     border-style: solid;
     border-width:4px;
     border-style: outset;
@@ -197,7 +210,7 @@ td.right {
     padding-top: 15px;
     font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
     font-size: 180%;
-    width: 300px;
+    max-width: 50%;
 }
 
 #assignmentDescription {

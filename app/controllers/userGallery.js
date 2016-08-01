@@ -16,7 +16,7 @@ exports.view = function(req, res, next) {
           shared: 1
       })
       //Do we want to load every single whole number assignment, or just some? Query might be time intensive.
-      .limit( 25 )
+      // .limit( 25 )
       .exec(function(err, assignmentResult) {
           if (err) return next(err);
           if (!assignmentResult) return next("could not find " + "assignment " + req.params.userNameRes);
