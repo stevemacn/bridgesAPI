@@ -26,8 +26,10 @@
     width:75%;
     float: left;
     margin-bottom: 5px;
+    padding-bottom: 5px;
     margin-top: 5px;
     min-height: 250px;
+    overflow: scroll;
 }
 
 .assignmentContainerMinimized {
@@ -214,11 +216,11 @@ td.right {
 }
 
 #assignmentDescription {
-    padding-left: 50px;
+    padding-left: 15px;
     padding-top: 15px;
     margin-bottom: 25px;
     font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
     font-size: 100%;
-    max-width: 65%;
+    /*max-width: 95%;*/
 
 }

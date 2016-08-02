@@ -17,7 +17,7 @@ block scripts
 block content
     include ../includes/header.jade
     div#assignmentCanvas(overflow='auto')
-        -if (owner) {
+        if (owner)
             #optionContainer.optionContainer
                 div(style='margin:10px 10px 10px 10px;')
                     label Share #{shared}
@@ -31,16 +31,13 @@ block content
                         a.btn.btn-primary
 
                 div
-                    //  button(class='optionButton', id='resize')
-                    //              label Resize view
-
                     button(class='optionButton', id='reset')
                                 label Reset view
+                div#assignmentDescription #{assignmentDescription}
+        else if (assignmentDescription.length > 0)
+            #optionContainer.optionContainer
+                div#assignmentDescription #{assignmentDescription}
 
-                div
-                    //a.btn.btn-primary(class="optionButton", id="saveButton" onclick="snapImage()")
-                    //        label(for="saveButton") Snapshoot
-        -}
 
         table.full
                 tr
@@ -48,8 +45,10 @@ block content
                     button(class='minimize' id='min')
                         label -
                 td.right
-                    div#assignmentTitle #{assignmentTitle}
-                    div#assignmentDescription #{assignmentDescription}
+                      if (assignmentTitle.length > 0)
+                        div#assignmentTitle #{assignmentTitle}
+                      else
+                        div#assignmentTitle Assignment #{assignmentNumber}
 
 
         -for (var i = 0; i < extent; i++) {
@@ -71,7 +70,7 @@ block footerjs
 
     script.
         var owner = '#{owner}'
-        if ( owner === 'false' ) {
+        if ( '#{assignmentDescription}'.length <= 0 ) {
              $('.vis').css('width','99%') // adjust assignment width for public assignments
         }
         var shared = '#{shared}'

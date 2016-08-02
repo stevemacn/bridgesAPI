@@ -51,6 +51,7 @@ module.exports = function (grunt) {
           'app/**/*.js',
           'app/**/**/*.js',
           'config/*.js',
+          'app/views/**/*.jade'
         ],
         tasks: ['develop', 'bower', 'modernizr', 'delayed-livereload']
       },
