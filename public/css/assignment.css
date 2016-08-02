@@ -67,11 +67,11 @@
 }
 
 #optionContainer{
-    max-width:20%;
-    left: 75%;
-    height:300px;
+    max-width:28%;
+    left: 70%;
+    min-height:240px;
+    max-height:80%;
     position:fixed;
-
 }
 
 #mapContainer{
@@ -216,8 +216,8 @@ td.right {
 }
 
 #assignmentDescription {
-    padding-left: 15px;
     padding-top: 15px;
+    padding-left: 5px;
     margin-bottom: 25px;
     font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
     font-size: 100%;
