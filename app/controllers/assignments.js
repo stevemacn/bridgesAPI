@@ -363,21 +363,19 @@ exports.testJSON = function (req, res, next) {
 
   };
 
-// TODO: implement interface and logic for deletion
 exports.deleteAssignment = function (req, res) {
-    as = req.assginment;
-    console.log("Deleting assignment with ID: " + as.assignmentID);
-
     Assignment
-        .find({assignmentID: as.assignmentID})
+        .find({
+          "assignmentNumber": req.params.assignmentNumber,
+          "email": req.user.email
+        })
         .exec(function(err, assign) {
-                  if (err) return next(err);
-                  for (var i in assign) {
-                      console.log(assign[i].assignmentID);
-                      assign[i].remove();
-                  }
-              });
+            if (err) return next(err);
+            for (var i in assign) {
+                assign[i].remove();
+            }
+            console.log("Deleted assignment: " + req.params.assignmentNumber, "for user", req.user.email);
+        });
 
-    // return res.redirect("userGallery")
-    res.send("OK");
+    return res.redirect("username/");
 };

@@ -175,6 +175,9 @@ module.exports = function(app, passport, streamable) {
     app.get('/assignments/:assignmentNumber/:username',
               assignments.show, handleError)
 
+    // delete the assignment specified for the current user
+    app.delete('/assignments/:assignmentNumber', isLoggedIn, assignments.deleteAssignment)
+
 
     // -------------------------------------------------------
     //

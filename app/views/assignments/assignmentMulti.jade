@@ -34,6 +34,20 @@ block content
                     button(class='optionButton', id='reset')
                                 label Reset view
                 div#assignmentDescription #{assignmentDescription}
+
+                -var src = "/assignments/"+assignmentNumber
+                form(action=src, method='post')
+                    div(style="margin-top:20px;")
+                        input(type="hidden", name="_csrf", value=csrftoken)
+                        input.form-control(
+                                type="hidden",
+                                name="_method",
+                                value="DELETE")
+
+                        input#submit.btn.btn-danger.center-block(
+                                type='submit',
+                                value="Delete Assignment")
+
         else if (assignmentDescription.length > 0)
             #optionContainer.optionContainer
                 div#assignmentDescription #{assignmentDescription}
