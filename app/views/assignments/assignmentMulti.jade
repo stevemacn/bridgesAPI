@@ -84,7 +84,7 @@ block footerjs
 
     script.
         var owner = '#{owner}'
-        if ( '#{assignmentDescription}'.length <= 0 ) {
+        if ( !owner && '#{assignmentDescription}'.length <= 0 ) {
              $('.vis').css('width','99%') // adjust assignment width for public assignments
         }
         var shared = '#{shared}'
