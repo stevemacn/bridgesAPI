@@ -91,7 +91,12 @@ function reset() {
         var zoom = allZoom[i];
         var svgGroup = allSVG[i];
         zoom.scale(1);
-        zoom.translate([0, 0]);
+
+        /* set default translate based on visualization type */
+        if(d3.array) zoom.translate([20, 200]);
+        else if(d3.bst) zoom.translate([(d3.select("#svg0").attr("width")/2), 0]);
+        else zoom.translate([0, 0]);
+        
         svgGroup.attr("transform", "translate(" + zoom.translate() + ")scale(" + zoom.scale() + ")");
     }
 }
