@@ -175,8 +175,12 @@ module.exports = function(app, passport, streamable) {
     app.get('/assignments/:assignmentNumber/:username',
               assignments.show, handleError)
 
+    // update the assignment specified for the current user
+    //  save the positions of any fixed nodes
+    app.post('/assignments/updatePositions/:assignmentNumber', isLoggedIn, assignments.savePositions);
+
     // delete the assignment specified for the current user
-    app.delete('/assignments/:assignmentNumber', isLoggedIn, assignments.deleteAssignment)
+    app.delete('/assignments/:assignmentNumber', isLoggedIn, assignments.deleteAssignment);
 
 
     // -------------------------------------------------------

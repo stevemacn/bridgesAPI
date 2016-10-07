@@ -96,7 +96,7 @@ function reset() {
         if(d3.array) zoom.translate([20, 200]);
         else if(d3.bst) zoom.translate([(d3.select("#svg0").attr("width")/2), 0]);
         else zoom.translate([0, 0]);
-        
+
         svgGroup.attr("transform", "translate(" + zoom.translate() + ")scale(" + zoom.scale() + ")");
     }
 }
@@ -192,4 +192,36 @@ function minimize() {
                 .text("+");
         }
     }
+}
+
+// Asynchronously update the node positions
+function savePositions () {
+  var updateTheseNodes = {};
+
+
+  // store indices for all fixed nodes
+  for (var key in data) {
+    updateTheseNodes[key] = {
+      'fixedNodes': {},
+      'unfixedNodes': {}
+    };
+    if (data.hasOwnProperty(key)) {
+      d3.select("#vis" + key).selectAll(".node").each(function(d, i) {
+        // we need to name the nodes so we can identify them on the server; indices don't suffice
+        if(d.fixed) updateTheseNodes[key].fixedNodes["n" + i] = {"x": d.x, "y": d.y};
+        else updateTheseNodes[key].unfixedNodes["n" + i] = true;
+      });
+    }
+  }
+
+  // send fixed node indices to the server to save
+  $.ajax({
+      url: "/assignments/updatePositions/"+assignmentNumber,
+      type: "post",
+      data: updateTheseNodes
+  }).done(function() {
+      console.log('positions saved');
+  }).error(function(err){
+      console.log(err);
+  });
 }

@@ -363,6 +363,43 @@ exports.testJSON = function (req, res, next) {
 
   };
 
+/* Update the nodes of the given assignment */
+exports.savePositions = function(req, res) {
+    Assignment
+        .find({
+          "assignmentNumber": req.params.assignmentNumber,
+          "email": req.user.email
+        })
+        .exec(function(err, assign) {
+            if (err) return next(err);
+
+            // handle each assignment
+            for(var i in assign) {
+              // update all fixed nodes
+              for(var j in req.body[i].fixedNodes) {
+                n = +j.slice(1);
+                // set the relevant nodes to be fixed
+                assign[i].data[0].nodes[n].fixed = true;
+                assign[i].data[0].nodes[n].x = +req.body[i].fixedNodes[j].x;
+                assign[i].data[0].nodes[n].y = +req.body[i].fixedNodes[j].y;
+                delete assign[i].data[0].nodes[n].location;
+              }
+              // update all unfixed nodes
+              for(var j in req.body[i].unfixedNodes) {
+                n = +j.slice(1);
+                delete assign[i].data[0].nodes[n].fixed;
+                delete assign[i].data[0].nodes[n].x;
+                delete assign[i].data[0].nodes[n].y;
+                delete assign[i].data[0].nodes[n].location;
+              }
+              // save the updated data
+              assign[i].markModified('data'); //http://mongoosejs.com/docs/faq.html
+              assign[i].save();
+            }
+        });
+    res.send("OK");
+};
+
 exports.deleteAssignment = function (req, res) {
     Assignment
         .find({

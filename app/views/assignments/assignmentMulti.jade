@@ -30,13 +30,19 @@ block content
                         label(for='private') Private
                         a.btn.btn-primary
 
-                div
-                    button(class='optionButton', id='reset')
-                                label Reset view
+
+                button(class='optionButton', id='reset')
+                        label Reset view
+
+                if (vistype == "nodelink")
+                  button#savePosition.optionButton(
+                          onclick='savePositions()')
+                          label Save Positions
+
+
                 div#assignmentDescription #{assignmentDescription}
 
-                -var src = "/assignments/"+assignmentNumber
-                form(action=src, method='post')
+                form(action="/assignments/"+assignmentNumber, method='post')
                     div(style="margin-top:20px;")
                         input(type="hidden", name="_csrf", value=csrftoken)
                         input.form-control(

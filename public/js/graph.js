@@ -148,10 +148,12 @@ d3.graph = function(d3, id, W, H, data) {
   // Add line breaks to node labels
   svgGroup.selectAll('text').each(insertLineBreaks);
 
-
-
-
   force.on("tick", function() {
+      node
+        .attr("transform", function(d, i) {
+          return "translate(" + d.x + "," + d.y + ")";
+        });
+
       link
           .attr("d", function(d) {
               var dx = d.target.x - d.source.x,
@@ -163,11 +165,6 @@ d3.graph = function(d3, id, W, H, data) {
                   dr + "," + dr + " 0 0,1 " +
                   d.target.x + "," +
                   d.target.y;
-          });
-
-      node
-          .attr("transform", function(d) {
-              return "translate(" + d.x + "," + d.y + ")";
           });
   });
 
