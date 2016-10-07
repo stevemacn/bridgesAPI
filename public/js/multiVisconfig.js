@@ -221,7 +221,5 @@ function savePositions () {
       data: updateTheseNodes
   }).done(function() {
       console.log('positions saved');
-  }).error(function(err){
-      console.log(err);
   });
 }
