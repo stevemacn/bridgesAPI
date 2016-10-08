@@ -12,6 +12,34 @@ module.exports = function (grunt) {
         file: 'app.js'
       }
     },
+    update_submodules: {
+       default: {
+           options: {
+               // default command line parameters will be used: --init --recursive
+           }
+       }
+    },
+    bower: {
+      install: {
+         options: {
+           targetDir: "public/components"
+         }
+      }
+    },
+    modernizr: {
+      dist: {
+        "dest" : "build/modernizr-custom.js",
+        "parseFiles": true,
+
+        // [REQUIRED] Path to the build you're using for development.
+        "devFile" : "public/js/modernizr-dev.js",
+
+        // Path to save out the built file.
+        "outputFile" : "public/components/modernizr/modernizr.js",
+
+        "uglify": true
+        }
+    },
     watch: {
       options: {
         nospawn: true,
@@ -21,10 +49,11 @@ module.exports = function (grunt) {
         files: [
           'app.js',
           'app/**/*.js',
-          'app/**/**/*js',
-          'config/*.js'
+          'app/**/**/*.js',
+          'config/*.js',
+          'app/views/**/*.jade'
         ],
-        tasks: ['develop', 'delayed-livereload']
+        tasks: ['develop', 'bower', 'modernizr', 'delayed-livereload']
       },
       jade: {
         files: ['app/views/**/*.jade'],
@@ -32,6 +61,12 @@ module.exports = function (grunt) {
       },
     }
   });
+
+  grunt.loadNpmTasks('grunt-develop');
+  grunt.loadNpmTasks('grunt-contrib-watch');
+  grunt.loadNpmTasks('grunt-bower-task');
+  grunt.loadNpmTasks("grunt-modernizr");
+  grunt.loadNpmTasks( "grunt-update-submodules" );
 
   grunt.registerTask('test', 'run mocha', function () {
      var done = this.async();
@@ -60,8 +95,5 @@ module.exports = function (grunt) {
     }, 500);
   });
 
-  grunt.loadNpmTasks('grunt-develop');
-  grunt.loadNpmTasks('grunt-contrib-watch');
-
-  grunt.registerTask('default', ['develop', 'watch']);
+  grunt.registerTask('default', ['develop', 'update_submodules', 'bower', 'modernizr', 'watch']);
 };

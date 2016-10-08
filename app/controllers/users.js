@@ -1,16 +1,15 @@
 var mongoose = require('mongoose')
     , User = mongoose.model('User')
     , Account = mongoose.model('Account')
-    , Assignment = mongoose.model("Assignment")
+    , Assignment = mongoose.model('Assignment')
 //Setup for logging in via twitter
 var login = function (req, res) {
-    
     if (req.session.returnTo) {
         res.redirect(req.session.returnTo)
         delete req.session.returnTo
         return
     }
-    return res.redirect('/home')  
+    return res.redirect('/home')
 }
 
 exports.authCallback = login
@@ -22,11 +21,12 @@ exports.index = function (req, res) {
     if (!user) var user
     if (req.user)
         user = req.user
-    else 
+    else
         var user = ""
     res.render('home/index', {
         title: 'Index',
         user: user
+
     })
 }
 
@@ -38,11 +38,13 @@ exports.login = function (req, res) {
         var user = ""
 
     msg = req.flash('loginMessage')
+
     res.render("users/login", {
         title: 'Login',
         user: user,
         message: msg
    })
+
 }
 
 exports.logout = function (req, res) {
@@ -52,30 +54,95 @@ exports.logout = function (req, res) {
 }
 
 exports.display = function (req, res) {
-    
+    //console.log("DISPLAY");
     if (!req.user) return res.redirect("login")
-    
-    user = req.user
 
+    user = req.user
     Account
         .findOne({ email : user.email })
         .exec(function (err, accts) {
             if (err) return next(err)
             if (!accts) accts = new Account
-            res.render('users/index', {
+            return res.render('users/index', {
                 title: user.username + "'s Dashboard - Bridges",
                 user: user,
                 acct: accts
             })
         })
-    
+
+}
+
+
+exports.profile = function (req, res) {
+    //console.log("DISPLAY");
+    if (!req.user) return res.redirect("login")
+
+    user = req.user
+    Account
+        .findOne({ email : user.email })
+        .exec(function (err, accts) {
+            if (err) return next(err)
+            if (!accts) accts = new Account
+            return res.render('users/profile', {
+                title: user.username + "'s Dashboard - Bridges",
+                user: user,
+                acct: accts
+            })
+        })
+
+}
+
+exports.view = function(req, res) {
+
+    var getAssignments = function(assig, assignmentsRes, cb) {
+        if (assig.length == 0) return cb(assignmentsRes)
+            var assID = assig.pop()
+            Assignment
+                .findOne({
+                         "assignmentID": assID
+                 })
+                .exec(function(err, assID) {
+                      if (err) return null;
+                      if (assID) assignmentsRes.push(assID)
+                      getAssignments(assig, assignmentsRes, cb)
+                })
+    }
+
+    if (!req.params.userNameRes)
+        return next("no user name provided")
+
+        Assignment
+            .find({
+                  email: req.params.userNameRes,
+                  //shared: true
+              })
+            .exec(function(err, assignmentResult) {
+                if (err) return next(err)
+
+                if (!assignmentResult) return next("could not find " +
+                                                 "assignment " + req.params.userNameRes)
+
+                var assig = []
+                for (i = 0; i < assignmentResult.length; i++)
+                assig.push(assignmentResult[i].assignmentID)
+
+                getAssignments(assig, [], function(assignmentsRes) {
+
+                    return res.render('assignments/userGallery', {
+                       "title": "Assignment gallery",
+                       "user":req.user,
+                       "usernames": req.params.userNameRes,
+                       "assignments":assignmentsRes
+                    })
+                })
+            })
 }
 
 exports.deletePerson = function (req, res) {
 
     user = req.user
     console.log("Deleting user: " + user.email)
-    
+
     User
         .findOne({email: user.email})
         .exec(function (err, user) {
@@ -106,7 +173,7 @@ exports.deletePerson = function (req, res) {
 exports.getkey = function (req, res) {
     console.log("User: "+req.user.username +"("+req.user.email+")"+
         " requsted a new apikey")
-    user = req.user 
+    user = req.user
     user.generateKey()
     user.save()
     res.send(user.apikey)
@@ -135,7 +202,7 @@ exports.create = function (req, res) {
                     title: 'Sign up'
              })
         }
-  
+
         // manually login the user once successfully signed up
         req.logIn(user, function(err) {
             if (err) return next(err)

@@ -4,6 +4,7 @@ var mongoose = require('mongoose'),
     Assignment = mongoose.model('Assignment')
 
 exports.view = function(req, res) {
+    var assignmentNumber
 
     var getUsername = function(users, usernames, cb) {
         if (users.length == 0) return cb(usernames)
@@ -19,32 +20,53 @@ exports.view = function(req, res) {
             })
     }
 
-    if (!req.params.assignmentNumber) 
-        return next("no assignment number provided") 
+    if (!req.params.assignmentNumber) {
+      return next("No assignment number given");
 
-    Assignment
-        .find({
-            assignmentID: req.params.assignmentNumber,
-            shared: true
-        })
-        .exec(function(err, assignmentResult) {
-            if (err) return next(err)
-                
-            if (!assignmentResult) return next("could not find " +
-                "assignemnt " + req.params.assignmentNumber)
 
-            var users = []
-            for (i = 0; i < assignmentResult.length; i++)
-                users.push(assignmentResult[i].email)
+    } else {
 
-            getUsername(users, [], function(usernames) {
+      assignmentNumber = req.params.assignmentNumber;
 
-                return res.render('assignments/gallery', {
-                    "title": "Assignment gallery",
-                    "user":req.user,
-                    "usernames": usernames,
-                    "assignmentID":req.params.assignmentNumber
-                })
-            })
-        })
+      Assignment
+          .find({
+              assignmentNumber: assignmentNumber,
+              subAssignment: "00",
+              shared: true
+          })
+          .exec(function(err, assignmentResult) {
+
+              if (err) return next(err)
+              if (!assignmentResult) return next("could not find " +
+                  "assignment " + req.params.assignmentNumber)
+
+              if(assignmentResult.length == 0) {
+                  return res.render('assignments/gallery', {
+                      "title": "Assignment gallery",
+                      "user":req.user,
+                      "usernames": "",
+                      "assignmentNumber":-1
+                  })
+              }
+
+              if(assignmentResult.length <= 0) {
+                  return res.redirect('/username/'+req.user.username);
+              }
+
+              var users = []
+              for (i = 0; i < assignmentResult.length; i++)
+                  users.push(assignmentResult[i].email)
+
+              getUsername(users, [], function(usernames) {
+
+                  return res.render('assignments/gallery', {
+                      "title": "Assignment gallery",
+                      "user":req.user,
+                      "usernames": usernames,
+                      "assignmentNumber":req.params.assignmentNumber,
+                      "assignments":assignmentResult
+                  })
+              })
+          })
+        }
 }

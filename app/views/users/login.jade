@@ -1,4 +1,8 @@
-extends layout 
+extends layout
+
+block css
+    link(rel='stylesheet',
+         href='/css/header.css')
 
 block form
     .well
@@ -7,13 +11,13 @@ block form
             legend Log in!
             input(type="hidden", name="_csrf", value=csrftoken)
             .form-group
-                label.col-lg-2.control-label Username 
+                label.col-lg-2.control-label Username
                 div.col-lg-10
                     input#user.form-control(
                         type='text',
                         name='username',
                         placeholder='User Name')
-            .form-group 
+            .form-group
                 label.col-lg-2.control-label Password
                 div.col-lg-10
                     input#pwd.form-control(
@@ -25,8 +29,8 @@ block form
                     input#submit(type='submit', value='Log In').btn.btn-primary
             .form-group
                 div.col-lg-10
-                    p Don't have a an account? 
-                        a(href="/signup") Signup!
+                    p Don't have an account?
+                        a(href="/signup")  Sign up!
 block validate
     - if (message != ''){
         p.alert.alert-danger=message

@@ -1,45 +1,72 @@
+// OLD VERSION. TO REMOVE
 extends ../includes/boilerplate.jade
-block css 
-    link(rel='stylesheet', 
+block css
+    link(rel='stylesheet',
+         href='/css/header.css')
+    link(rel='stylesheet',
          href='/css/assignment.css')
-    link(rel='stylesheet', 
+    link(rel='stylesheet',
+        href='/css/dropzone.css')
+    link(rel='stylesheet',
              href='/components/css-toggle-switch/dist/toggle-switch.css')
-                 
-block content                 
+
+
+block content
     include ../includes/header.jade
-    div#assignmentCanvas(overflow="auto") 
-        #vis.assignmentContainer(overflow="hidden", display="block")
-        -if (owner) {    
-            #optionContainer.assignmentContainer  
+
+    //script(type="application/ecmascript" async="" src='/js/html2canvas.js')
+    //script(type="application/ecmascript" async="" src='/js/FileSaver.js')
+    //script(type="application/ecmascript" async="" src='/js/Blob.js')
+    //script(type="application/ecmascript" async="" src='/js/dropzone.js')
+
+    script(src='/js/snapshoot.js')
+    div#assignmentCanvas(overflow="auto")
+
+        -if (owner) {
+            #optionContainer.optionContainer
                 div(style="margin:10px 10px 10px 10px;")
+
                     label Share #{shared}
                     div.switch-toggle.well
                         input#public(type="radio", name="view",
                             onclick="toggleShare(true)")
-                        label(for="public") Public 
+                        label(for="public") Public
                         input#private(type="radio", name="view",
                             onclick="toggleShare(false)")
-                        label(for="private") Private 
+                        label(for="private") Private
                         a.btn.btn-primary
-                    ul.nav.nav-pills.nav-stacked
-                        li.nav-header 
-                            b Choose your representation
-                        li#nodelink
-                            a(onclick="setvis('nodelink')") Node-link diagram
-                        li#tree 
-                            a(onclick="setvis('tree')") Tree 
-                        li#queue
-                            a(onclick="setvis('queue')") Queue
-                    span upload thumbnail
-                    
+                    div
+                        button(class="optionButton", id="resize")
+                                    label Resize view
+
+                        button(class="optionButton", id="reset")
+                                    label Reset view
+
+                        //button(class="optionButton", id="snapshotPositions", onclick="saveSnapshot()")
+                        //    label Save Positions
+
+                    div
+                        // a.btn.btn-primary(class="optionButton", id="saveButton" onclick="snapImage()")
+                        // label(for="saveButton") Snapshoot
+                    div
+                        //form(action="users/sessions" class="dropzone" id="my-awesome-dropzone")
         -}
+
+           table.full
+            tr
+            td.left
+                button(class="minimize" id="min0" key="0")
+                    label -
+            td.right
+                #vis0.assignmentContainer(display="block")
+
 
 
 block footerjs
 
     script(src = '/components/d3/d3.min.js')
     script(src = '/components/jquery/dist/jquery.min.js')
-    
+
     script.
         var vistype = "#{vistype}"
         $("li").removeClass("active")
@@ -49,12 +76,12 @@ block footerjs
         else if (vistype=="queue") {
             $("#queue").addClass("active")
         }
-        else $("#nodelink").addClass("active")  
+        else $("#nodelink").addClass("active")
     script.
         var owner = "#{owner}"
         if (owner==="false") {
-             $("#vis").css("width","90%") 
-        } 
+             $("#vis").css("width","90%")
+        }
         var shared = "#{shared}"
         $("#private").prop('checked',false)
         $("#public").prop('checked',false)
@@ -65,8 +92,15 @@ block footerjs
 
     script.
         var data = !{JSON.stringify(data)}
-        
-        var assignmentID = !{JSON.stringify(assignmentID)}
+
+        var assignmentID = !{JSON.stringify(assignmentNumber)}
+
+    - if ( map )
+        #mapContainer.mapContainer
+        link(rel='stylesheet', href='/css/map.css')
+        script( src = '//d3js.org/topojson.v1.min.js' )
+        script( src = '/js/map.js' )
+
     - if (vistype == "nodelink")
         script(src = '/js/graph.js')
     - else if (vistype == "tree")
@@ -74,10 +108,12 @@ block footerjs
         script(src = '/js/bst/lib/bst.js')
     - else if (vistype == 'queue')
         script(src = '/js/queue.js')
-    - else  
+    - else if (vistype == 'AList')
+        script(src = '/js/array.js')
+    - else
         script.
             var error = !{JSON.stringify(data)}
-            $("#vis")
+            $("#vis0")
                 .html(error.error)
                 .css('color', '#eb6864')
                 .css('font-size', '24px')
@@ -85,17 +121,17 @@ block footerjs
     script(src = '/js/visconfig.js')
     script.
         function toggleShare (selected) {
-            var assignmentID = !{JSON.stringify(assignmentID)}
+            var assignmentID = !{JSON.stringify(assignmentNumber)}
             $.ajax({
                 url: "/assignments/"+assignmentID+"/share/"+selected,
                 type: "post"
             }).done(function() {
                 console.log("visibility updated")
             }).error(function(err){
-                console.log(err)    
-            });    
-            
-        }   
+                console.log(err)
+            });
+
+        }
         function setvis (selected) {
             var assignmentID = !{JSON.stringify(assignmentID)}
             $.ajax({
@@ -103,10 +139,12 @@ block footerjs
                 type:"post"
             }).done(function() {
                 location.reload()
-                console.log("visualization type updated")    
+                console.log("visualization type updated")
             }).error(function(err) {
                 errmsg = JSON.parse(err.responseText)
-                console.log("Error: "+errmsg.error) 
+                console.log("Error: "+errmsg.error)
             });
         }
-        
+        function saveSnapshot() {
+            console.log("save snapshot");
+        }
