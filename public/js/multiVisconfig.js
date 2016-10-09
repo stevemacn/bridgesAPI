@@ -43,7 +43,33 @@ for (var key in data) {
         d3.queue(d3, "#vis" + key, width, height, data[key].nodes);
     }
     else if (d3.array) {
-        d3.array(d3, "#vis" + key, width, height, data[key].nodes);
+        if(data[key].visual != "Array"){
+          switch (data[key].visual) {
+            case "DoublyLinkedList":
+                var orderedNodes = data[key];
+                var sortedNodes = sortDoublyListByLinks(orderedNodes,0);
+                d3.array(d3, "#vis" + key, width, height, sortedNodes);
+                break;
+            case "CircularDoublyLinkedList":
+                var orderedNodes = data[key];
+                var sortedNodes = sortDoublyListByLinks(orderedNodes,1);
+                d3.array(d3, "#vis" + key, width, height, sortedNodes);
+                break;
+            case "SinglyLinkedList":
+                var orderedNodes = data[key];
+                var sortedNodes = sortSinglyListByLinks(orderedNodes, 0);
+                d3.array(d3, "#vis" + key, width, height, sortedNodes);
+                break;
+            case "CircularSinglyLinkedList":
+                var orderedNodes = data[key];
+                var sortedNodes = sortSinglyListByLinks(orderedNodes, 1);
+                d3.array(d3, "#vis" + key, width, height, sortedNodes);
+                break;
+            default:
+          }
+        }else{
+          d3.array(d3, "#vis" + key, width, height, data[key].nodes);
+        }
     }
     else if (d3.graph) {
         d3.graph(d3, "#vis" + key, width, height, data[key]);
@@ -222,4 +248,92 @@ function savePositions () {
   }).done(function() {
       console.log('positions saved');
   });
+}
+
+
+//this methods sorts the SinglyLinkedList and CircularSinglyLinkedList nodes
+function sortSinglyListByLinks(unsortedNodes, iTer){
+    // console.log(orderedNodes);
+    var myNodes = unsortedNodes.nodes;
+    var myLinks = unsortedNodes.links;
+    var myNodesSize = myNodes.length-1;
+    var getSourceFromTarget = {};
+    var getTargetFromSource = {};
+    // var getTarget = {};
+    // var getSource = {};
+    var head = 0;
+    for(var i = iTer; i < myLinks.length; i++){
+        // getSource[myLinks[i].source] = myLinks[i].source;
+        // getTarget[myLinks[i].target] = myLinks[i].target;
+
+      // if( getSource[myLinks[i].source] != undefined || getTarget[myLinks[i].target] != undefined ){
+        getSourceFromTarget[myLinks[i].target] = myLinks[i].source;
+        getTargetFromSource[myLinks[i].source] = myLinks[i].target;
+      //}
+
+      if(parseInt(myLinks[i].target) >= myNodesSize){
+         alert(i+"head");
+      }
+
+    }
+
+    for(var i = 0; i < myNodes.length; i++){
+        if(getSourceFromTarget[i] == undefined){
+          head = i;
+        }
+    }
+
+    var sortedNodes = [];
+    sortedNodes.push(head);
+    for(var i = 0; i < Object.keys(getSourceFromTarget).length; i++){
+        sortedNodes.push(getTargetFromSource[head]);
+        head = getTargetFromSource[head];
+    }
+
+    var sortedNodesToReturn = [];
+    for(s in sortedNodes){
+        sortedNodesToReturn.push(myNodes[sortedNodes[s]]);
+    }
+
+    return sortedNodesToReturn;
+
+}
+
+//this methods sorts the DoublyLinkedList and CircularDoublyLinkedList nodes
+function sortDoublyListByLinks(unsortedNodes, iTer){
+    var myNodes = unsortedNodes.nodes;
+    var myLinks = unsortedNodes.links;
+    var myNodesSize = myNodes.length-1;
+    var getSourceFromTarget = {};
+    var getTargetFromSource = {};
+    var getTarget = {};
+    var getSource = {};
+    var head = 0;
+    for(var i = 0; i < myLinks.length - iTer; i++){
+        if( getSource[myLinks[i].source] != undefined || getTarget[myLinks[i].target] != undefined ){
+            getSourceFromTarget[myLinks[i].target] = myLinks[i].source;
+            getTargetFromSource[myLinks[i].source] = myLinks[i].target;
+        }
+        getSource[myLinks[i].source] = myLinks[i].source;
+        getTarget[myLinks[i].target] = myLinks[i].target;
+    }
+    for(var i = 0; i < myNodes.length; i++){
+        if(getSourceFromTarget[i] == undefined){
+          head = i;
+        }
+    }
+
+    var sortedNodes = [];
+    sortedNodes.push(head);
+    for(var i = 0; i < Object.keys(getSourceFromTarget).length; i++){
+        sortedNodes.push(getTargetFromSource[head]);
+        head = getTargetFromSource[head];
+    }
+
+    var sortedNodesToReturn = [];
+    for(s in sortedNodes){
+        sortedNodesToReturn.push(myNodes[sortedNodes[s]]);
+    }
+
+    return sortedNodesToReturn;
 }

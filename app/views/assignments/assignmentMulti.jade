@@ -5,6 +5,14 @@ block css
     link(rel='stylesheet',
          href='/css/assignment.css')
     link(rel='stylesheet', href='/components/css-toggle-switch/dist/toggle-switch.css')
+    
+    svg#svgdfs(height='0',display='block')
+        defs
+          marker#Triangle(viewbox='0 0 10 10', refx='0', refy='5', markerunits='strokeWidth', markerwidth='4', markerheight='3', orient='auto-start-reverse')
+            path(d='M 0 0 L 10 5 L 0 10 z')        
+        defs
+          marker#Circle(markerwidth='10', markerheight='10', refx='5', refy='5')
+            circle.marker(cx='5', cy='5', r='1.5')
 
 block scripts
     //script(type='application/ecmascript' async='' src='/js/html2canvas.js')
@@ -121,13 +129,29 @@ block footerjs
         //TODO
     - if (vistype == "nodelink")
         script(src = '/js/graph.js')
+
     - else if (vistype == 'tree')
         link(rel='stylesheet', href='/css/vis/tree.css')
         script(src = '/js/bst/lib/bst.js')
+        
     - else if (vistype == 'queue')
         script(src = '/js/queue.js')
-     - else if (vistype == "Alist")
+        
+    - else if (vistype == "Alist")
         script(src = '/js/array.js')
+        
+    - else if (vistype == "llist")
+        script(src = '/js/ll.js')
+        
+    - else if (vistype == "dllist")
+        script(src = '/js/dll.js')
+        
+    - else if (vistype == "c-llist")
+        script(src = '/js/c-ll.js')
+        
+    - else if (vistype == "c-dllist")
+        script(src = '/js/c-dll.js')
+            
     - else
         script.
             var error = !{JSON.stringify(data)}

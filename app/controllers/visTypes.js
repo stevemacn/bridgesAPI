@@ -9,10 +9,12 @@ exports.getVisType = function(toCheck) {
         "LinkedListStack":  "nodelink",
         "LinkedListQueue":  "nodelink",
 
-        "SinglyLinkedList": "nodelink",
-        "llist":            "nodelink",
-        "DoublyLinkedList": "nodelink",
-        "dllist":           "nodelink",
+        "SinglyLinkedList": "llist",
+        "llist":            "llist",
+        "DoublyLinkedList": "dllist",
+        "dllist":           "dllist",
+        "CircularSinglyLinkedList": "c-llist",
+        "CircularDoublyLinkedList": "c-dllist",
 
         "Tree":             "tree",
         "BinaryTree":       "tree",

@@ -12,14 +12,28 @@ block content
                 p Public Gallery for assignments with number '#{assignmentNumber}'
 
     div(style="margin:5%")
-
-        - for (var x = 0; x < usernames.length; x++)
+        - for (var x = 0; x < assignments.length; x++)
             - console.log(assignmentNumber)
-            a(href="/assignments/"+assignmentNumber+"/"+usernames[x], style="float:left;width:100px; margin-left:50px")
+            a(href="/assignments/"+assignmentNumber+"/"+assignments[x].username, style="float:left;width:100px; margin-left:50px")
               if(assignments[x].vistype == 'graph')
                   img(src='/img/graph.png' title=assignments[x].vistype)
               else if((assignments[x].vistype == 'tree'))
                   img(src='/img/tree.png' title=assignments[x].vistype)
+              else if((assignments[x].vistype == 'tree'))
+                  img(src='/img/tree.png' title=assignments[x].vistype)
               else
                   img(src='/img/LList.png' title=assignments[x].vistype)
-              h4(style="text-align: center") #{usernames[x]}
+              h4(style="text-align: center") #{assignments[x].username}
+              h6(style="text-align: center") #{assignments[x].vistype}
+              h6(style="text-align: center") #{assignments[x].data[0].visual}
+              - console.log(assignments[x]);
+        //- - for (var x = 0; x < usernames.length; x++)
+        //-     - console.log(assignmentNumber)
+        //-     a(href="/assignments/"+assignmentNumber+"/"+usernames[x], style="float:left;width:100px; margin-left:50px")
+        //-       if(assignments[x].vistype == 'graph')
+        //-           img(src='/img/graph.png' title=assignments[x].vistype)
+        //-       else if((assignments[x].vistype == 'tree'))
+        //-           img(src='/img/tree.png' title=assignments[x].vistype)
+        //-       else
+        //-           img(src='/img/LList.png' title=assignments[x].vistype)
+        //-       h4(style="text-align: center") #{usernames[x]}
