@@ -27,37 +27,41 @@ d3.array = function(d3, canvasID, w, h, data) {
 
     var finalTranslate = [50, -5];
     var finalScale = 0.36;
-    if(w > 1200){ myScale = 0.28;}
-    var cname = "vis"+visID+"-"+location.pathname;
-    var cookieValue = getTranslateScaleCookie(cname).split(" ");
-    console.log(cookieValue);
 
-    if (cookieValue && cookieValue != "") {
-        try{
-          finalTranslate = [ parseFloat(cookieValue[0].split(",")[0]) , parseFloat(cookieValue[0].split(",")[1]) ];
-          console.log(finalTranslate);
-          finalScale = parseFloat(cookieValue[cookieValue.length-1]);
-          console.log(finalScale);
-        }catch(err){
-          console.log(err);
-        }
+    // if(w > 1200){ finalScale = 0.28;}
+
+    var cname = "vis"+visID+"-"+location.pathname;
+    var cookieStringValue = getTranslateScaleCookie(cname);
+    var cookieJSONValue;
+    try{
+        cookieJSONValue = JSON.parse(cookieStringValue);
+    }catch(err){
+        console.log(err);
     }
 
+    if(cookieJSONValue){
+      if(cookieJSONValue.hasOwnProperty("translatex") &&
+         cookieJSONValue.hasOwnProperty("translatey") &&
+         cookieJSONValue.hasOwnProperty("scale")){
+           finalTranslate = [cookieJSONValue.translatex, cookieJSONValue.translatey];
+           finalScale = [cookieJSONValue.scale];
+      }
+    }
 
-  d3.selection.prototype.moveToFront = function() {
-      return this.each(function(){
-        this.parentNode.appendChild(this);
-      });
-  };
+    d3.selection.prototype.moveToFront = function() {
+        return this.each(function(){
+          this.parentNode.appendChild(this);
+        });
+    };
 
-  d3.selection.prototype.moveToBack = function() {
-      return this.each(function() {
-          var firstChild = this.parentNode.firstChild;
-          if (firstChild) {
-              this.parentNode.insertBefore(this, firstChild);
-          }
-      });
-  };
+    d3.selection.prototype.moveToBack = function() {
+        return this.each(function() {
+            var firstChild = this.parentNode.firstChild;
+            if (firstChild) {
+                this.parentNode.insertBefore(this, firstChild);
+            }
+        });
+    };
 
     // var spacing = 5;        // spacing between elements
     var spacing = 115;
