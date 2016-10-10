@@ -21,7 +21,7 @@ exports.view = function(req, res) {
             })
     }
 
-    var getAssignmentsWithUsernames = function(users, usernamesmap, cb) {
+    var getAssignmentsEmailAndUsernameMap = function(users, usernamesmap, cb) {
         if (users.length == 0) return cb(usernamesmap)
         var user = users.pop()
         User
@@ -34,7 +34,7 @@ exports.view = function(req, res) {
                   // usernames.push(user.username)
                   usernamesmap[user.email] = user.username
                 }
-                getAssignmentsWithUsernames(users, usernamesmap, cb)
+                getAssignmentsEmailAndUsernameMap(users, usernamesmap, cb)
             })
     }
 
@@ -87,12 +87,14 @@ exports.view = function(req, res) {
               // })
 
               var usernamesmap = {};
-              getAssignmentsWithUsernames(users, usernamesmap, function(usernamesmap) {
+              getAssignmentsEmailAndUsernameMap(users, usernamesmap, function(usernamesmap) {
+
                   for(assignmentResultItem in assignmentResult){
                       assignmentResult[assignmentResultItem]['username'] = usernamesmap[assignmentResult[assignmentResultItem]['email']];
                       assignmentResult[assignmentResultItem]['vistype'] = visTypes.getVisType(assignmentResult[assignmentResultItem]['data'][0].visual);
                       // assignmentResult[assignmentResultItem]['thumbnail'] = assignmentResult[assignmentResultItem]['vistype'];
                   }
+                  
                   return res.render('assignments/gallery', {
                       "title": "Assignment gallery",
                       "user":req.user,
