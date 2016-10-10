@@ -46,6 +46,12 @@ block content
                   button#savePosition.optionButton(
                           onclick='savePositions()')
                           label Save Positions
+                          
+                if (vistype == "llist" || vistype == "dllist" || vistype == "c-llist" || vistype == "c-dllist")
+                  button#savePosition.optionButton(
+                          onclick='saveListPositions()')
+                          label Save Positions
+                  p#updateStatus Position saved locally!
 
 
                 div#assignmentDescription #{assignmentDescription}
@@ -181,8 +187,20 @@ block footerjs
             console.log("save snapshot");
         }
         
-        $(document).mouseup(saveVisStatesAsCookies);//for testing purposes
+        $("svg").mouseup(callSaveVisStatesAsCookies);//for testing purposes
+          
+        $("svg").on('wheel',callSaveVisStatesAsCookies);//for testing purposes
         
+        function callSaveVisStatesAsCookies(){
+            switch(vistype){
+                case "nodelink":
+                case "tree":
+                case "Alist":
+                  break;
+                default:
+                  saveVisStatesAsCookies();
+            }
+         }
         
         function saveVisStatesAsCookies(){
             var exdays = 30;
@@ -204,36 +222,13 @@ block footerjs
                       var expires = "expires=" + d.toGMTString();
                       document.cookie = cookieName+"="+cookieValue+"; "+expires;
                   }
+               var today = new Date().toLocaleTimeString()+" - "+new Date().toLocaleDateString();
+               $("#updateStatus").html("Position saved locally!"+"<br>"+today);
+               $("#updateStatus").show();
+               setTimeout(function(){
+                  $("#updateStatus").hide();
+               },2500);
             }catch(err){
               console.log(err);
             }
         }
-        
-        //Asynchronously update the vis transform values
-        //this method is just for testing, if approved, it still needs the ajax call and routing set up as well as the dabatase.
-        //- function saveVisStatesInDB(){
-        //-     var visTransforms = [];
-        //-     for (var key in data) {
-        //-         var my_transform = d3.transform(d3.select("#vis"+key).select("g").attr("transform"));
-        //-         var my_translateX = my_transform.translate[0];
-        //-         var my_translateY = my_transform.translate[1];
-        //-         var my_scale = my_transform.scale[0];
-        //-         var visTransform = JSON.stringify({
-        //-                                                    "id":key,
-        //-                                                 "scale":my_scale,
-        //-                                            "translatex":my_translateX,
-        //-                                            "translatey":my_translateY
-        //-                                            });
-        //-         visTransforms.push(visTransform);
-        //-     }
-        //-     console.log(visTransforms);
-        //-     // send fixed node indices to the server to save
-        //-     //- $.ajax({
-        //-     //-     url: "/assignments/updatePositions/"+assignmentNumber,
-        //-     //-     type: "post",
-        //-     //-     data: updateTheseNodes
-        //-     //- }).done(function() {
-        //-     //-     console.log('positions saved');
-        //-     //- });
-        //-       
-        //- }

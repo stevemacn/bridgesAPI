@@ -27,6 +27,7 @@ var map = map || null;
 if( map )
   map( mapData );
 
+console.log(data);
 /* create new assignments  */
 for (var key in data) {
   if (data.hasOwnProperty(key)) {
@@ -48,27 +49,27 @@ for (var key in data) {
             case "DoublyLinkedList":
                 var orderedNodes = data[key];
                 var sortedNodes = sortDoublyListByLinks(orderedNodes,0);
-                d3.array(d3, "#vis" + key, width, height, sortedNodes);
+                d3.array(d3, "#vis" + key, width, height, sortedNodes, data[key].transform);
                 break;
             case "CircularDoublyLinkedList":
                 var orderedNodes = data[key];
                 var sortedNodes = sortDoublyListByLinks(orderedNodes,1);
-                d3.array(d3, "#vis" + key, width, height, sortedNodes);
+                d3.array(d3, "#vis" + key, width, height, sortedNodes, data[key].transform);
                 break;
             case "SinglyLinkedList":
                 var orderedNodes = data[key];
                 var sortedNodes = sortSinglyListByLinks(orderedNodes, 0);
-                d3.array(d3, "#vis" + key, width, height, sortedNodes);
+                d3.array(d3, "#vis" + key, width, height, sortedNodes, data[key].transform);
                 break;
             case "CircularSinglyLinkedList":
                 var orderedNodes = data[key];
                 var sortedNodes = sortSinglyListByLinks(orderedNodes, 1);
-                d3.array(d3, "#vis" + key, width, height, sortedNodes);
+                d3.array(d3, "#vis" + key, width, height, sortedNodes, data[key].transform);
                 break;
             default:
           }
         }else{
-          d3.array(d3, "#vis" + key, width, height, data[key].nodes);
+          d3.array(d3, "#vis" + key, width, height, data[key].nodes, data[key].transform);
         }
     }
     else if (d3.graph) {
@@ -248,6 +249,53 @@ function savePositions () {
   }).done(function() {
       console.log('positions saved');
   });
+}
+
+
+//Asynchronously update the vis transform values
+//this method is just for testing, if approved, it still needs the ajax call and routing set up as well as the dabatase.
+//It also can be used with the tree visualization
+function saveListPositions(){
+    var visTransforms = {};
+    for (var key in data) {
+        var my_transform = d3.transform(d3.select("#vis"+key).select("g").attr("transform"));
+        var my_translateX = my_transform.translate[0];
+        var my_translateY = my_transform.translate[1];
+        var my_scale = my_transform.scale[0];
+        var visTransform = {
+                                  // "id":key,
+                                "scale":my_scale,
+                           "translatex":my_translateX,
+                           "translatey":my_translateY
+                           };
+        visTransforms[key] = visTransform;
+    }
+
+    console.log(visTransforms);
+    // send fixed node indices to the server to save
+    $.ajax({
+        url: "/assignments/updateListPositions/"+assignmentNumber,
+        type: "post",
+        data: visTransforms
+    }).done(function(status) {
+        if(status == 'OK'){
+            var today = new Date().toLocaleTimeString()+" - "+new Date().toLocaleDateString();
+            $("#updateStatus").html("Saved!"+"<br>"+today);
+            $("#updateStatus").show();
+            setTimeout(function(){
+               $("#updateStatus").hide();
+            },3000);
+        }else{
+            $("#updateStatus").html("Try again!");
+            $("#updateStatus").css("color","red");
+            $("#updateStatus").show();
+            setTimeout(function(){
+               $("#updateStatus").hide();
+               $("#updateStatus").css("color","green");
+            },2500);
+        }
+    });
+
 }
 
 

@@ -29,7 +29,7 @@
     padding-bottom: 5px;
     margin-top: 5px;
     min-height: 250px;
-    overflow: scroll;
+    overflow: auto;/*hide the scrollbar if not needed, chrome and ie tested*/
 }
 
 .assignmentContainerMinimized {
@@ -52,13 +52,13 @@
     width:70%;
     height:90%;
     position:absolute;
-    overflow: scroll;
+    overflow: auto;/*hide the scrollbar if not needed, chrome and ie tested*/
     float:left;
 }
 
 .vis{
     width:70%;
-    overflow: scroll;
+    overflow: auto;/*hide the scrollbar if not needed, chrome and ie tested*/
     float:left;
 }
 
@@ -222,5 +222,14 @@ td.right {
     font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
     font-size: 100%;
     /*max-width: 95%;*/
+}
 
+#updateStatus{
+    text-align: -webkit-center;
+    text-align: center;
+    display: none;
+    color: green;
+    position: absolute;
+    width: 50%;
+    left: 25%;
 }

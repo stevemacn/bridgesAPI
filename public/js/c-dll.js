@@ -3,7 +3,8 @@
 Circular Doubly Linked List visualization for Bridges
 
 */
-d3.array = function(d3, canvasID, w, h, data) {
+d3.array = function(d3, canvasID, w, h, data, transformObject) {
+
 
     function getTranslateScaleCookie(cname) {
         var name = cname + "=";
@@ -25,24 +26,31 @@ d3.array = function(d3, canvasID, w, h, data) {
     var finalTranslate = [50, -5];
     var finalScale = 0.36;
 
-    // if(w > 1200){ finalScale = 0.28;}
+    // if(transformObject.transform.translatex != undefined && transformObject.transform.translatey != undefined && transformObject.transform.scale != undefined){
+    // console.log(transformObject);
+    if(transformObject != undefined && transformObject.hasOwnProperty('translatex') && transformObject.hasOwnProperty('translatey') && transformObject.hasOwnProperty('scale')){
+        finalTranslate = [transformObject.translatex, transformObject.translatey];
+        finalScale = transformObject.scale;
+        console.log("fromDB");
+    }else{
+        console.log("fromCookie");
+        var cname = "vis"+visID+"-"+location.pathname;
+        var cookieStringValue = getTranslateScaleCookie(cname);
+        var cookieJSONValue;
+        try{
+            cookieJSONValue = JSON.parse(cookieStringValue);
+        }catch(err){
+            console.log(err);
+        }
 
-    var cname = "vis"+visID+"-"+location.pathname;
-    var cookieStringValue = getTranslateScaleCookie(cname);
-    var cookieJSONValue;
-    try{
-        cookieJSONValue = JSON.parse(cookieStringValue);
-    }catch(err){
-        console.log(err);
-    }
-
-    if(cookieJSONValue){
-      if(cookieJSONValue.hasOwnProperty("translatex") &&
-         cookieJSONValue.hasOwnProperty("translatey") &&
-         cookieJSONValue.hasOwnProperty("scale")){
-           finalTranslate = [cookieJSONValue.translatex, cookieJSONValue.translatey];
-           finalScale = [cookieJSONValue.scale];
-      }
+        if(cookieJSONValue){
+          if(cookieJSONValue.hasOwnProperty("translatex") &&
+             cookieJSONValue.hasOwnProperty("translatey") &&
+             cookieJSONValue.hasOwnProperty("scale")){
+               finalTranslate = [cookieJSONValue.translatex, cookieJSONValue.translatey];
+               finalScale = [cookieJSONValue.scale];
+          }
+        }
     }
 
     d3.selection.prototype.moveToFront = function() {
@@ -68,8 +76,8 @@ d3.array = function(d3, canvasID, w, h, data) {
 
 
 
-    var myScale = 0.36;
-    if(w > 1200){ myScale = 0.28;}
+    // var myScale = 0.36;
+    // if(w > 1200){ myScale = 0.28;}
 
     // error when zooming directly after pan on OSX
     // https://github.com/mbostock/d3/issues/2205

@@ -407,6 +407,29 @@ exports.savePositions = function(req, res) {
     res.send("OK");
 };
 
+/* Update the nodes of the given assignment */
+exports.saveListPositions = function(req, res) {
+    Assignment
+        .find({
+          "assignmentNumber": req.params.assignmentNumber,
+          "email": req.user.email
+        })
+        .exec(function(err, assign) {
+            if (err) return next(err);
+
+            // handle each assignment
+            for(var i in assign) {
+              // update the transform object in assign[i].data[0]
+              assign[i].data[0]['transform'] = req.body[i];
+
+              // save the updated data
+              assign[i].markModified('data'); //http://mongoosejs.com/docs/faq.html
+              assign[i].save();
+            }
+        });
+    res.send("OK");
+};
+
 exports.deleteAssignment = function (req, res) {
     Assignment
         .find({
