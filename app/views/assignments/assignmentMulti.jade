@@ -42,18 +42,23 @@ block content
                 button(class='optionButton', id='reset')
                         label Reset view
 
-                if (vistype == "nodelink")
+                if (vistype == "nodelink" || defaultvistype == "nodelink")
                   button#savePosition.optionButton(
                           onclick='savePositions()')
                           label Save Positions
                           
                 if (vistype == "llist" || vistype == "dllist" || vistype == "c-llist" || vistype == "c-dllist")
-                  button#savePosition.optionButton(
-                          onclick='saveListPositions()')
-                          label Save Positions
-                  p#updateStatus Position saved locally!
-
-
+                  if(defaultvistype != 'nodelink')
+                      button#savePosition.optionButton(
+                              onclick='saveListPositions()')
+                              label Save Positions
+                      p#updateStatus Position saved locally!
+                      img.visdefaultoption.visdefaultoption-active(onclick='setDefaultVisType("#{vistype}",this)' src='/img/'+vistype+'.png')
+                      img.visdefaultoption(onclick='setDefaultVisType("nodelink",this)' src='/img/graphllist.png')
+                  else
+                      img.visdefaultoption(onclick='setDefaultVisType("#{vistype}",this)' src='/img/'+vistype+'.png')
+                      img.visdefaultoption.visdefaultoption-active(onclick='setDefaultVisType("nodelink"),this' src='/img/graphllist.png')
+                  
                 div#assignmentDescription #{assignmentDescription}
 
                 form(action="/assignments/"+assignmentNumber, method='post')
@@ -101,12 +106,18 @@ block footerjs
 
     script(src = '/components/d3/d3.min.js')
     script(src = '/components/jquery/dist/jquery.min.js')
+    
+    script.
+        $(".visdefaultoption").on("error",function(x){
+            $(this).attr("src","/img/llist.png");
+        });
 
     script.
         var owner = '#{owner}'
         if ( owner=="false" && '#{assignmentDescription}'.length <= 0 ) {
              $('.vis').css('width','99%') // adjust assignment width for public assignments
         }
+        
         var shared = '#{shared}'
         $('#private').prop('checked',false)
         $('#public').prop('checked',false)
@@ -119,10 +130,10 @@ block footerjs
         var data = !{JSON.stringify(data)}
         var assignmentNumber = !{JSON.stringify(assignmentNumber)}
 
-        var vistype = "#{vistype}"
+        var vistype = "#{vistype}";
+        var defaultvistype = "#{defaultvistype}";
         var mapData =  !{JSON.stringify(mapData)};
         var createMap =  !{JSON.stringify(createMap)};
-
         var BridgesVisualizer = {};
 
     // Map demonstrating locations in the assignment
@@ -131,9 +142,12 @@ block footerjs
         link(rel='stylesheet', href='/css/map.css')
         script( src = '//d3js.org/topojson.v1.min.js' )
         script( src = '/js/map.js' )
-
+    
         //TODO
-    - if (vistype == "nodelink")
+    - if(defaultvistype == "nodelink")
+        script(src = '/js/graph.js')
+              
+    - else if (vistype == "nodelink")
         script(src = '/js/graph.js')
 
     - else if (vistype == 'tree')
@@ -147,16 +161,16 @@ block footerjs
         script(src = '/js/array.js')
         
     - else if (vistype == "llist")
-        script(src = '/js/ll.js')
+        script(src = '/js/llist.js')
         
     - else if (vistype == "dllist")
-        script(src = '/js/dll.js')
+        script(src = '/js/dllist.js')
         
-    - else if (vistype == "c-llist")
-        script(src = '/js/c-ll.js')
+    - else if (vistype == "cllist")
+        script(src = '/js/cllist.js')
         
-    - else if (vistype == "c-dllist")
-        script(src = '/js/c-dll.js')
+    - else if (vistype == "cdllist")
+        script(src = '/js/cdllist.js')
             
     - else
         script.
@@ -187,48 +201,3 @@ block footerjs
             console.log("save snapshot");
         }
         
-        $("svg").mouseup(callSaveVisStatesAsCookies);//for testing purposes
-          
-        $("svg").on('wheel',callSaveVisStatesAsCookies);//for testing purposes
-        
-        function callSaveVisStatesAsCookies(){
-            switch(vistype){
-                case "nodelink":
-                case "tree":
-                case "Alist":
-                  break;
-                default:
-                  saveVisStatesAsCookies();
-            }
-         }
-        
-        function saveVisStatesAsCookies(){
-            var exdays = 30;
-            try{
-                  for (var key in data) {
-                      var cookieName = "vis"+key+"-"+location.pathname;
-                      var my_transform = d3.transform(d3.select("#vis"+key).select("g").attr("transform"));
-                      var my_translateX = my_transform.translate[0];
-                      var my_translateY = my_transform.translate[1];
-                      var my_scale = my_transform.scale[0];
-                      var cookieValue = JSON.stringify(
-                                    {
-                                            "scale":my_scale,
-                                       "translatex":my_translateX,
-                                       "translatey":my_translateY
-                                    });
-                      var d = new Date();
-                      d.setTime(d.getTime() + (exdays*24*60*60*1000));
-                      var expires = "expires=" + d.toGMTString();
-                      document.cookie = cookieName+"="+cookieValue+"; "+expires;
-                  }
-               var today = new Date().toLocaleTimeString()+" - "+new Date().toLocaleDateString();
-               $("#updateStatus").html("Position saved locally!"+"<br>"+today);
-               $("#updateStatus").show();
-               setTimeout(function(){
-                  $("#updateStatus").hide();
-               },2500);
-            }catch(err){
-              console.log(err);
-            }
-        }

@@ -183,6 +183,12 @@ module.exports = function(app, passport, streamable) {
     //  save all the visualization positions for any given assignment. For example, #vis0, #vis1, #vis2
     app.post('/assignments/updateListPositions/:assignmentNumber', isLoggedIn, assignments.saveListPositions);
 
+    // update the assignment specified for the current user
+    //  save all the visualization positions for any given assignment. For example, #vis0, #vis1, #vis2
+    app.post('/assignments/setdefaultvistype/:assignmentNumber', isLoggedIn, assignments.setDefaultVisType);
+
+
+
     // delete the assignment specified for the current user
     app.delete('/assignments/:assignmentNumber', isLoggedIn, assignments.deleteAssignment);
 

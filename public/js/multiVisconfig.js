@@ -27,7 +27,6 @@ var map = map || null;
 if( map )
   map( mapData );
 
-console.log(data);
 /* create new assignments  */
 for (var key in data) {
   if (data.hasOwnProperty(key)) {
@@ -40,37 +39,31 @@ for (var key in data) {
         tempAddChildNode(data[key]);
         bst.make(data[key]);
     }
+    else if(d3.dllist){
+        var orderedNodes = data[key];
+        var sortedNodes = sortDoublyListByLinks(orderedNodes,0);
+        d3.dllist(d3, "#vis" + key, width, height, sortedNodes, data[key].transform);
+    }
+    else if(d3.cdllist){//these visualization must be tested against an assigment that contains links with different colors. IE ../assignments/31/kalpathi60
+        var orderedNodes = data[key];
+        var sortedNodes = sortDoublyListByLinks(orderedNodes,1);
+        d3.cdllist(d3, "#vis" + key, width, height, sortedNodes, data[key].transform);
+    }
+    else if(d3.sllist){
+        var orderedNodes = data[key];
+        var sortedNodes = sortSinglyListByLinks(orderedNodes, 0);
+        d3.sllist(d3, "#vis" + key, width, height, sortedNodes, data[key].transform);
+    }
+    else if(d3.csllist){
+        var orderedNodes = data[key];
+        var sortedNodes = sortSinglyListByLinks(orderedNodes, 1);
+        d3.csllist(d3, "#vis" + key, width, height, sortedNodes, data[key].transform);
+    }
     else if (d3.queue) {
         d3.queue(d3, "#vis" + key, width, height, data[key].nodes);
     }
     else if (d3.array) {
-        if(data[key].visual != "Array"){
-          switch (data[key].visual) {
-            case "DoublyLinkedList":
-                var orderedNodes = data[key];
-                var sortedNodes = sortDoublyListByLinks(orderedNodes,0);
-                d3.array(d3, "#vis" + key, width, height, sortedNodes, data[key].transform);
-                break;
-            case "CircularDoublyLinkedList":
-                var orderedNodes = data[key];
-                var sortedNodes = sortDoublyListByLinks(orderedNodes,1);
-                d3.array(d3, "#vis" + key, width, height, sortedNodes, data[key].transform);
-                break;
-            case "SinglyLinkedList":
-                var orderedNodes = data[key];
-                var sortedNodes = sortSinglyListByLinks(orderedNodes, 0);
-                d3.array(d3, "#vis" + key, width, height, sortedNodes, data[key].transform);
-                break;
-            case "CircularSinglyLinkedList":
-                var orderedNodes = data[key];
-                var sortedNodes = sortSinglyListByLinks(orderedNodes, 1);
-                d3.array(d3, "#vis" + key, width, height, sortedNodes, data[key].transform);
-                break;
-            default:
-          }
-        }else{
-          d3.array(d3, "#vis" + key, width, height, data[key].nodes, data[key].transform);
-        }
+          d3.array(d3, "#vis" + key, width, height, data[key].nodes);
     }
     else if (d3.graph) {
         d3.graph(d3, "#vis" + key, width, height, data[key]);
@@ -121,6 +114,10 @@ function reset() {
 
         /* set default translate based on visualization type */
         if(d3.array) zoom.translate([20, 200]);
+        if(d3.dllist || d3.sllist || d3.cdllist || d3.csllist){
+            zoom.translate([50, -5]);
+            zoom.scale(0.36);
+        }
         else if(d3.bst) zoom.translate([(d3.select("#svg0").attr("width")/2), 0]);
         else zoom.translate([0, 0]);
 
@@ -301,23 +298,20 @@ function saveListPositions(){
 
 //this methods sorts the SinglyLinkedList and CircularSinglyLinkedList nodes
 function sortSinglyListByLinks(unsortedNodes, iTer){
-    // console.log(orderedNodes);
     var myNodes = unsortedNodes.nodes;
     var myLinks = unsortedNodes.links;
     var myNodesSize = myNodes.length-1;
     var getSourceFromTarget = {};
     var getTargetFromSource = {};
-    // var getTarget = {};
-    // var getSource = {};
+    var getSourceColor = {};
+    var getTargetColor = {};
     var head = 0;
     for(var i = iTer; i < myLinks.length; i++){
-        // getSource[myLinks[i].source] = myLinks[i].source;
-        // getTarget[myLinks[i].target] = myLinks[i].target;
-
-      // if( getSource[myLinks[i].source] != undefined || getTarget[myLinks[i].target] != undefined ){
         getSourceFromTarget[myLinks[i].target] = myLinks[i].source;
         getTargetFromSource[myLinks[i].source] = myLinks[i].target;
-      //}
+
+        getSourceColor[myLinks[i].source] = BridgesVisualizer.getColor(myLinks[i].color);
+        getTargetColor[myLinks[i].target] = BridgesVisualizer.getColor(myLinks[i].color);
 
       if(parseInt(myLinks[i].target) >= myNodesSize){
          alert(i+"head");
@@ -340,6 +334,8 @@ function sortSinglyListByLinks(unsortedNodes, iTer){
 
     var sortedNodesToReturn = [];
     for(s in sortedNodes){
+        myNodes[sortedNodes[s]]['linksourcecolor'] = getSourceColor[sortedNodes[s]];
+        myNodes[sortedNodes[s]]['linktargetcolor'] = getTargetColor[sortedNodes[s]];
         sortedNodesToReturn.push(myNodes[sortedNodes[s]]);
     }
 
@@ -356,6 +352,8 @@ function sortDoublyListByLinks(unsortedNodes, iTer){
     var getTargetFromSource = {};
     var getTarget = {};
     var getSource = {};
+    var getSourceColor = {};
+    var getTargetColor = {};
     var head = 0;
     for(var i = 0; i < myLinks.length - iTer; i++){
         if( getSource[myLinks[i].source] != undefined || getTarget[myLinks[i].target] != undefined ){
@@ -364,6 +362,10 @@ function sortDoublyListByLinks(unsortedNodes, iTer){
         }
         getSource[myLinks[i].source] = myLinks[i].source;
         getTarget[myLinks[i].target] = myLinks[i].target;
+
+        getSourceColor[myLinks[i].source] = BridgesVisualizer.getColor(myLinks[i].color);
+        getTargetColor[myLinks[i].target] = BridgesVisualizer.getColor(myLinks[i].color);
+        console.log(BridgesVisualizer.getColor(myLinks[i].color));
     }
     for(var i = 0; i < myNodes.length; i++){
         if(getSourceFromTarget[i] == undefined){
@@ -380,8 +382,83 @@ function sortDoublyListByLinks(unsortedNodes, iTer){
 
     var sortedNodesToReturn = [];
     for(s in sortedNodes){
+        console.log(getTargetColor[sortedNodes[s]]);
+        myNodes[sortedNodes[s]]['linktargetcolor'] = getTargetColor[sortedNodes[s]];
+        myNodes[sortedNodes[s]]['linksourcecolor'] = getSourceColor[sortedNodes[s]];
+        console.log(s);
+        console.log(BridgesVisualizer.getColor(myLinks[sortedNodes[s]].color ));
+        console.log(myNodes[sortedNodes[s]]);
+        console.log('');
         sortedNodesToReturn.push(myNodes[sortedNodes[s]]);
     }
 
     return sortedNodesToReturn;
+}
+
+// send the defaultVisType chosen by the user
+function setDefaultVisType(defaultVistype,elem){
+    $(".visdefaultoption").removeClass("visdefaultoption-active");
+    $(elem).addClass("visdefaultoption-active");
+    $.ajax({
+        url: "/assignments/setdefaultvistype/"+assignmentNumber,
+        type: "post",
+        data: {"defaultvistype":defaultVistype}
+    }).done(function() {
+        console.log('positions saved');
+        location.reload();
+    });
+}
+
+//this method handles what visualization supports saveVisStatesAsCookies()
+//the default case is reached when an allow type is met
+function callSaveVisStatesAsCookies(){
+    switch(vistype){
+        case "nodelink":
+        case "tree":
+        case "Alist":
+          break;
+        default:
+          saveVisStatesAsCookies();
+    }
+ }
+
+//this method saved an transform object('translate and scale') of every visualization in an assignemts
+function saveVisStatesAsCookies(){
+    var exdays = 30;
+    try{
+          for (var key in data) {
+              var cookieName = "vis"+key+"-"+location.pathname;
+              var my_transform = d3.transform(d3.select("#vis"+key).select("g").attr("transform"));
+              var my_translateX = my_transform.translate[0];
+              var my_translateY = my_transform.translate[1];
+              var my_scale = my_transform.scale[0];
+              var cookieValue = JSON.stringify(
+                            {
+                                    "scale":my_scale,
+                               "translatex":my_translateX,
+                               "translatey":my_translateY
+                            });
+              var d = new Date();
+              d.setTime(d.getTime() + (exdays*24*60*60*1000));
+              var expires = "expires=" + d.toGMTString();
+              document.cookie = cookieName+"="+cookieValue+"; "+expires;
+          }
+       var today = new Date().toLocaleTimeString()+" - "+new Date().toLocaleDateString();
+       $("#updateStatus").html("Position saved locally!"+"<br>"+today);
+       $("#updateStatus").show();
+       setTimeout(function(){
+          $("#updateStatus").hide();
+       },2500);
+    }catch(err){
+      console.log(err);
+    }
+}
+
+if(owner == 'false'){
+    try{
+        $("svg").mouseup(callSaveVisStatesAsCookies);//for testing purposes
+        $("svg").on('wheel',callSaveVisStatesAsCookies);//for testing purposes
+    }catch(err){
+        console.log(err);
+    }
 }

@@ -1,5 +1,6 @@
 var mongoose = require('mongoose'),
-    Assignment = mongoose.model('Assignment');
+    Assignment = mongoose.model('Assignment'),
+    visTypes = require('./visTypes.js');
 
 exports.view = function(req, res, next) {
   Assignment
@@ -25,6 +26,10 @@ exports.view = function(req, res, next) {
           assignmentResult.sort(function(a, b) {
               return parseFloat(a.assignmentID) - parseFloat(b.assignmentID);
           });
+
+          for(var assignmentResultItem in assignmentResult){
+              assignmentResult[assignmentResultItem]['vistype'] = visTypes.getVisType(assignmentResult[assignmentResultItem]['data'][0]['visual']);
+          }
 
           return res.render('assignments/userGallery', {
             "title": "Assignment gallery",

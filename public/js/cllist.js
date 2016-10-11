@@ -3,7 +3,7 @@
 Circular Linked List visualization for Bridges
 
 */
-d3.array = function(d3, canvasID, w, h, data, transformObject) {
+d3.csllist = function(d3, canvasID, w, h, data, transformObject) {
 
 
     function getTranslateScaleCookie(cname) {
@@ -226,7 +226,9 @@ d3.array = function(d3, canvasID, w, h, data, transformObject) {
             return 225;
           }
         })
-        .attr("stroke","black")
+        .attr("stroke",function(d,i){
+            return d.linksourcecolor || "black";
+        })
         .attr("stroke-width",5)
         .attr("marker-end",function(d,i){
           if(i % elementsPerRow == (elementsPerRow-1) && (i != Object.keys(data).length-1) ){
@@ -305,6 +307,9 @@ d3.array = function(d3, canvasID, w, h, data, transformObject) {
     last_g
         .select(".last-vertical-line")
         .attr("marker-start","")
+        .attr("stroke",function(d,i){
+          return d.linktargetcolor || "black";
+        })
         .attr("marker-end","url('#Circle')")
         .attr("x1",145)
         .attr("x2",145)
@@ -354,7 +359,9 @@ d3.array = function(d3, canvasID, w, h, data, transformObject) {
         .attr("y2", function(d,i){
               return parseFloat(d3.select(this.parentNode).select(".last-vertical-line").attr("y1")) - 3;
         })
-        .attr("stroke","black")
+        .attr("stroke",function(d,i){
+            return d.linktargetcolor || "black";
+        })
         // .attr("stroke","red")
         .attr("stroke-width",5);
 
@@ -379,8 +386,9 @@ d3.array = function(d3, canvasID, w, h, data, transformObject) {
                 // number_of_rows_left = ( parseInt(Object.keys(data).length) / elementsPerRow) + elementsPerRow;
                 return parseFloat(d3.select(this.parentNode).select(".last-g-horizontal-line").attr("y1"));
           })
-          // .attr("stroke","blue")
-          .attr("stroke","black")
+          .attr("stroke",function(d,i){
+              return d.linktargetcolor || "black";
+          })
           .attr("stroke-width",5);
 
 
@@ -398,7 +406,9 @@ d3.array = function(d3, canvasID, w, h, data, transformObject) {
           .attr("y2", function(d,i){
                 return parseInt(d3.select(this.parentNode).select(".last-g-vertical-line").attr("y1"));
           })
-          .attr("stroke","black")
+          .attr("stroke",function(d,i){
+              return d.linktargetcolor || "black";
+          })
           // .attr("stroke","yellow")
           .attr("stroke-width",5)
           .attr("marker-start","url('#Triangle')");

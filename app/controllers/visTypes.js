@@ -3,6 +3,7 @@
 //    and returns the appropriate visualization type to display
 exports.getVisType = function(toCheck) {
   var validTypes = {
+        "ALIST":            "Alist",
         "Array":            "Alist",
         "Array_Stack":      "Alist",
         "Array_Queue":      "Alist",
@@ -13,9 +14,10 @@ exports.getVisType = function(toCheck) {
         "llist":            "llist",
         "DoublyLinkedList": "dllist",
         "dllist":           "dllist",
-        "CircularSinglyLinkedList": "c-llist",
-        "CircularDoublyLinkedList": "c-dllist",
+        "CircularSinglyLinkedList": "cllist",
+        "CircularDoublyLinkedList": "cdllist",
 
+        "tree":             "tree",
         "Tree":             "tree",
         "BinaryTree":       "tree",
         "BinarySearchTree": "tree",
@@ -27,6 +29,8 @@ exports.getVisType = function(toCheck) {
 
     if( toCheck && validTypes[toCheck] )
       return validTypes[toCheck];
+    else if( toCheck && validTypes[toCheck.toString().toUpperCase()] )
+      return validTypes[toCheck.toString().toUpperCase()];
     else
         return "nodelink";
 };

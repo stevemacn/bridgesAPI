@@ -233,3 +233,14 @@ td.right {
     width: 50%;
     left: 25%;
 }
+
+.visdefaultoption{
+  width: 50%;
+  padding: 10%;
+  cursor: pointer;
+}
+
+.visdefaultoption-active{
+  border-bottom: 5px solid steelblue;
+  border-radius: 5%;
+}

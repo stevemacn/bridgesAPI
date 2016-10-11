@@ -3,7 +3,7 @@
 Doubly Linked List visualization for Bridges
 
 */
-d3.array = function(d3, canvasID, w, h, data, transformObject) {
+d3.dllist = function(d3, canvasID, w, h, data, transformObject) {
 
     function getTranslateScaleCookie(cname) {
         var name = cname + "=";
@@ -228,7 +228,9 @@ d3.array = function(d3, canvasID, w, h, data, transformObject) {
             return 225;
           }
         })
-        .attr("stroke","black")
+        .attr("stroke",function(d,i){
+            return d.linktargetcolor || "black";
+        })
         .attr("stroke-width",5)
         .attr("marker-end",function(d,i){
           if(i % elementsPerRow == (elementsPerRow-1) && (i != Object.keys(data).length-1) ){
@@ -283,7 +285,9 @@ d3.array = function(d3, canvasID, w, h, data, transformObject) {
             return 232;
           }
         })
-        .attr("stroke","black")
+        .attr("stroke",function(d,i){
+            return d.linksourcecolor || "black";
+        })
         // .attr("stroke","pink")
         .attr("stroke-width",5)
         .attr("marker-end",function(d,i){
@@ -308,7 +312,9 @@ d3.array = function(d3, canvasID, w, h, data, transformObject) {
             d3.select(d3.select("#svg"+visID+"pointer-arrow-"+qq)[0][0].parentNode)
                 .append("line")
                 .attr("class","last-horizontal-line")
-                .attr("stroke","black")
+                .attr("stroke",function(d,i){
+                    return d.linksourcecolor || "black";
+                })
                 .attr("stroke-width",5)
                 .attr("y1", function(d,i){
                   return d3.select(this.parentNode).select(".last-vertical-line").attr("y1");
@@ -332,7 +338,9 @@ d3.array = function(d3, canvasID, w, h, data, transformObject) {
             d3.select(d3.select("#svg"+visID+"pointer-arrow-two"+qq)[0][0].parentNode)
                 .append("line")
                 .attr("class","last-horizontal-line-two")
-                .attr("stroke","black")
+                .attr("stroke",function(d,i){
+                    return d.linksourcecolor || "black";
+                })
                 .attr("stroke-width",5)
                 .attr("y1", function(d,i){
                   // console.log(  );
@@ -412,18 +420,23 @@ d3.array = function(d3, canvasID, w, h, data, transformObject) {
     var last_g = svgGroup.select("#svg"+visID+"g"+parseInt(Object.keys(data).length-1));
 
     first_g.append("line")
-        .attr("stroke","black")
-        .attr("class","nullarrowpointer")
+        .attr("class","nullstartarrowpointer")
         .attr("stroke-width",5)
         .attr("marker-start","url('#Circle')")
         .attr("marker-end","url('#Triangle')")
+        .attr("stroke",function(d,i){
+            return "black";
+        })
         .attr("x1",15)
         .attr("x2",-65)
         .attr("y1",70)
         .attr("y2",70);
 
     last_g.select(".last-vertical-line")
-        .attr("class","nullarrowpointer")
+        .attr("class","nullendarrowpointer")
+        .attr("stroke",function(d,i){
+            return "black";
+        })        
         .attr("marker-start","url('#Circle')")
         .attr("marker-end","url('#Triangle')")
         .attr("x1",145)
@@ -444,7 +457,7 @@ d3.array = function(d3, canvasID, w, h, data, transformObject) {
               return squareSize;
           })
           .attr("x", function(d,i){
-              return parseFloat( d3.select(this.parentNode).select(".nullarrowpointer").attr("x2") ) - squareSize;
+              return parseFloat( d3.select(this.parentNode).select(".nullstartarrowpointer").attr("x2") ) - squareSize;
           })
           .attr("y", function(d,i){
               return squareSize - (squareSize/3);
@@ -465,7 +478,7 @@ d3.array = function(d3, canvasID, w, h, data, transformObject) {
               return squareSize;
           })
           .attr("x",function(d,i){
-              return parseFloat( d3.select(this.parentNode).select(".nullarrowpointer").attr("x2") );
+              return parseFloat( d3.select(this.parentNode).select(".nullendarrowpointer").attr("x2") );
           })
           .attr("y", function(d,i){
               return 0;
@@ -479,7 +492,7 @@ d3.array = function(d3, canvasID, w, h, data, transformObject) {
         .text("X")
         .attr("font-size","83px")
         .attr("x",function(d,i){
-              return parseFloat( d3.select(this.parentNode).select(".nullarrowpointer").attr("x2") ) + 2;
+              return parseFloat( d3.select(this.parentNode).select(".nullendarrowpointer").attr("x2") ) + 2;
         })
         .attr("y",squareSize)
         .attr("width",40)

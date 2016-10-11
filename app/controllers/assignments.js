@@ -292,7 +292,6 @@ exports.show = function (req, res, next) {
 
         /* parse and store all subassignments */
         for(var i = 0; i < assignments.length; i++) {
-
             data = assignments[i].data.toObject()[0];
 
             // pull out all coordinates from JSON
@@ -316,11 +315,17 @@ exports.show = function (req, res, next) {
         }
 
         var finalVistype;
+        var defaultvistype;
+        if(assignments[0].toObject()['defaultvistype']){
+            defaultvistype = assignments[0].toObject()['defaultvistype'];
+        }
+
         if(data.visual){
             finalVistype = visTypes.getVisType(data.visual);
         }else{
             finalVistype = assignments[0].vistype;
         }
+
         return res.render ('assignments/assignmentMulti', {
             "title":"Assignment " + assignmentNumber,
             "assignmentTitle": assignments[0].title,
@@ -331,8 +336,8 @@ exports.show = function (req, res, next) {
             "assignmentNumber":assignmentNumber,
             "schoolID":assignments[0].schoolID,
             "classID":assignments[0].classID,
-            // "vistype":assignments[0].vistype,
             "vistype":finalVistype,
+            "defaultvistype":defaultvistype,
             "shared":assignments[0].shared,
             "owner":owner,
             "createMap": (function() { return (mapData.length > 0) ? true : false; })(),
@@ -424,6 +429,30 @@ exports.saveListPositions = function(req, res) {
 
               // save the updated data
               assign[i].markModified('data'); //http://mongoosejs.com/docs/faq.html
+              assign[i].save();
+            }
+        });
+    res.send("OK");
+};
+
+/* Update the defaultvistype of the given assignment */
+exports.setDefaultVisType = function(req, res) {
+    Assignment
+        .find({
+          "assignmentNumber": req.params.assignmentNumber,
+          "email": req.user.email
+        })
+        .exec(function(err, assign) {
+            if (err) return next(err);
+
+            // handle each assignment
+            for(var i in assign) {
+              // set the defaultvisualization type for the linkedlists.
+              // now the user can choose how s/he wants to see the linkedlists
+              assign[i]["defaultvistype"] = req.body["defaultvistype"];
+
+              // save the updated defaultvistype
+              assign[i].markModified('defaultvistype'); //http://mongoosejs.com/docs/faq.html
               assign[i].save();
             }
         });

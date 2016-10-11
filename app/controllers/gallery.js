@@ -62,7 +62,7 @@ exports.view = function(req, res) {
                   return res.render('assignments/gallery', {
                       "title": "Assignment gallery",
                       "user":req.user,
-                      "usernames": "",
+                      "assignments": "",
                       "assignmentNumber":-1
                   })
               }
@@ -94,7 +94,7 @@ exports.view = function(req, res) {
                       assignmentResult[assignmentResultItem]['vistype'] = visTypes.getVisType(assignmentResult[assignmentResultItem]['data'][0].visual);
                       // assignmentResult[assignmentResultItem]['thumbnail'] = assignmentResult[assignmentResultItem]['vistype'];
                   }
-                  
+
                   return res.render('assignments/gallery', {
                       "title": "Assignment gallery",
                       "user":req.user,
