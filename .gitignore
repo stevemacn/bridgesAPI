@@ -45,4 +45,5 @@ Thumbs.db
 .*
 config/config.js
 
+app/views/users/forgot.jade
 public/js/oldGraph.js
