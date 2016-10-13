@@ -40,23 +40,19 @@ for (var key in data) {
         bst.make(data[key]);
     }
     else if(d3.dllist){
-        var orderedNodes = data[key];
-        var sortedNodes = sortDoublyListByLinks(orderedNodes,0);
+        var sortedNodes = sortListByLinks(data[key]);
         d3.dllist(d3, "#vis" + key, width, height, sortedNodes, data[key].transform);
     }
-    else if(d3.cdllist){//these visualization must be tested against an assigment that contains links with different colors. IE ../assignments/31/kalpathi60
-        var orderedNodes = data[key];
-        var sortedNodes = sortDoublyListByLinks(orderedNodes,1);
+    else if(d3.cdllist){
+        var sortedNodes = sortListByLinks(data[key]);
         d3.cdllist(d3, "#vis" + key, width, height, sortedNodes, data[key].transform);
     }
     else if(d3.sllist){
-        var orderedNodes = data[key];
-        var sortedNodes = sortSinglyListByLinks(orderedNodes, 0);
+        var sortedNodes = sortListByLinks(data[key]);
         d3.sllist(d3, "#vis" + key, width, height, sortedNodes, data[key].transform);
     }
     else if(d3.csllist){
-        var orderedNodes = data[key];
-        var sortedNodes = sortSinglyListByLinks(orderedNodes, 1);
+        var sortedNodes = sortListByLinks(data[key]);
         d3.csllist(d3, "#vis" + key, width, height, sortedNodes, data[key].transform);
     }
     else if (d3.queue) {
@@ -295,105 +291,30 @@ function saveListPositions(){
 
 }
 
+//this methods sorts any linkedlist by links
+function sortListByLinks(unsortedNodes){
+    var getTargetFromSource = {}, getLinkFromSource = {}, sortedNodes = [], head;
+    var links = unsortedNodes.links;
+    var nodes = unsortedNodes.nodes;
 
-//this methods sorts the SinglyLinkedList and CircularSinglyLinkedList nodes
-function sortSinglyListByLinks(unsortedNodes, iTer){
-    var myNodes = unsortedNodes.nodes;
-    var myLinks = unsortedNodes.links;
-    var myNodesSize = myNodes.length-1;
-    var getSourceFromTarget = {};
-    var getTargetFromSource = {};
-    var getSourceColor = {};
-    var getTargetColor = {};
-    var head = 0;
-    for(var i = iTer; i < myLinks.length; i++){
-        getSourceFromTarget[myLinks[i].target] = myLinks[i].source;
-        getTargetFromSource[myLinks[i].source] = myLinks[i].target;
-
-        getSourceColor[myLinks[i].source] = BridgesVisualizer.getColor(myLinks[i].color);
-        getTargetColor[myLinks[i].target] = BridgesVisualizer.getColor(myLinks[i].color);
-
-      if(parseInt(myLinks[i].target) >= myNodesSize){
-         alert(i+"head");
-      }
-
+    for(var i = 0; i < links.length; i++){
+        getTargetFromSource[links[i].source] = links[i].target;//assigning the link source as the key and the target as the value
+        getLinkFromSource[links[i].source+"-"+links[i].target] = links[i];//creating a unique identifier for every link
     }
 
-    for(var i = 0; i < myNodes.length; i++){
-        if(getSourceFromTarget[i] == undefined){
-          head = i;
-        }
+    head = unsortedNodes.head || Object.keys(unsortedNodes.nodes).length-1;
+    for(var h in unsortedNodes.nodes){//looping through the length of the nodes
+        var key = head + "-" + getTargetFromSource[head];//link from source to target
+        var yek = getTargetFromSource[head] + "-" + head;//link from target to source
+        if(getLinkFromSource[key]) nodes[head]['linkone'] = getLinkFromSource[key];//if there is a link, insert in the nodes
+        if(getLinkFromSource[yek]) nodes[head]['linktwo'] = getLinkFromSource[yek];//if there is a link, insert in the nodes
+        sortedNodes.push(nodes[head]);
+        head = getTargetFromSource[head];//getting the next target
     }
-
-    var sortedNodes = [];
-    sortedNodes.push(head);
-    for(var i = 0; i < Object.keys(getSourceFromTarget).length; i++){
-        sortedNodes.push(getTargetFromSource[head]);
-        head = getTargetFromSource[head];
-    }
-
-    var sortedNodesToReturn = [];
-    for(s in sortedNodes){
-        myNodes[sortedNodes[s]]['linksourcecolor'] = getSourceColor[sortedNodes[s]];
-        myNodes[sortedNodes[s]]['linktargetcolor'] = getTargetColor[sortedNodes[s]];
-        sortedNodesToReturn.push(myNodes[sortedNodes[s]]);
-    }
-
-    return sortedNodesToReturn;
-
+    // links = nodes = undefined; console.log(sortedNodes);
+    return sortedNodes;
 }
 
-//this methods sorts the DoublyLinkedList and CircularDoublyLinkedList nodes
-function sortDoublyListByLinks(unsortedNodes, iTer){
-    var myNodes = unsortedNodes.nodes;
-    var myLinks = unsortedNodes.links;
-    var myNodesSize = myNodes.length-1;
-    var getSourceFromTarget = {};
-    var getTargetFromSource = {};
-    var getTarget = {};
-    var getSource = {};
-    var getSourceColor = {};
-    var getTargetColor = {};
-    var head = 0;
-    for(var i = 0; i < myLinks.length - iTer; i++){
-        if( getSource[myLinks[i].source] != undefined || getTarget[myLinks[i].target] != undefined ){
-            getSourceFromTarget[myLinks[i].target] = myLinks[i].source;
-            getTargetFromSource[myLinks[i].source] = myLinks[i].target;
-        }
-        getSource[myLinks[i].source] = myLinks[i].source;
-        getTarget[myLinks[i].target] = myLinks[i].target;
-
-        getSourceColor[myLinks[i].source] = BridgesVisualizer.getColor(myLinks[i].color);
-        getTargetColor[myLinks[i].target] = BridgesVisualizer.getColor(myLinks[i].color);
-        console.log(BridgesVisualizer.getColor(myLinks[i].color));
-    }
-    for(var i = 0; i < myNodes.length; i++){
-        if(getSourceFromTarget[i] == undefined){
-          head = i;
-        }
-    }
-
-    var sortedNodes = [];
-    sortedNodes.push(head);
-    for(var i = 0; i < Object.keys(getSourceFromTarget).length; i++){
-        sortedNodes.push(getTargetFromSource[head]);
-        head = getTargetFromSource[head];
-    }
-
-    var sortedNodesToReturn = [];
-    for(s in sortedNodes){
-        console.log(getTargetColor[sortedNodes[s]]);
-        myNodes[sortedNodes[s]]['linktargetcolor'] = getTargetColor[sortedNodes[s]];
-        myNodes[sortedNodes[s]]['linksourcecolor'] = getSourceColor[sortedNodes[s]];
-        console.log(s);
-        console.log(BridgesVisualizer.getColor(myLinks[sortedNodes[s]].color ));
-        console.log(myNodes[sortedNodes[s]]);
-        console.log('');
-        sortedNodesToReturn.push(myNodes[sortedNodes[s]]);
-    }
-
-    return sortedNodesToReturn;
-}
 
 // send the defaultVisType chosen by the user
 function setDefaultVisType(defaultVistype,elem){
@@ -429,9 +350,9 @@ function saveVisStatesAsCookies(){
           for (var key in data) {
               var cookieName = "vis"+key+"-"+location.pathname;
               var my_transform = d3.transform(d3.select("#vis"+key).select("g").attr("transform"));
-              var my_translateX = my_transform.translate[0];
-              var my_translateY = my_transform.translate[1];
-              var my_scale = my_transform.scale[0];
+              var my_translateX = parseFloat(my_transform.translate[0]);
+              var my_translateY = parseFloat(my_transform.translate[1]);
+              var my_scale = parseFloat(my_transform.scale[0]);
               var cookieValue = JSON.stringify(
                             {
                                     "scale":my_scale,

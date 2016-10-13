@@ -326,6 +326,7 @@ exports.show = function (req, res, next) {
             finalVistype = assignments[0].vistype;
         }
 
+
         return res.render ('assignments/assignmentMulti', {
             "title":"Assignment " + assignmentNumber,
             "assignmentTitle": assignments[0].title,

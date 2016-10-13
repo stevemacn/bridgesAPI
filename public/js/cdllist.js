@@ -230,7 +230,8 @@ d3.cdllist = function(d3, canvasID, w, h, data, transformObject) {
             }
           })
           .attr("stroke",function(d,i){
-              return d.linksourcecolor || "black";
+              if(d.linkone) return BridgesVisualizer.getColor(d.linkone.color);
+              else "black";
           })
           .attr("stroke-width",5)
           .attr("marker-end",function(d,i){
@@ -287,7 +288,8 @@ d3.cdllist = function(d3, canvasID, w, h, data, transformObject) {
         })
         // .attr("stroke","pink")
         .attr("stroke",function(d,i){
-            return d.linktargetcolor || "black";
+            if(d.linktwo != undefined && d.linktwo.color) return BridgesVisualizer.getColor(d.linktwo.color);
+            else return "black";
         })
         .attr("stroke-width",5)
         .attr("marker-end",function(d,i){
@@ -430,9 +432,9 @@ d3.cdllist = function(d3, canvasID, w, h, data, transformObject) {
     var last_g = svgGroup.select("#svg"+visID+"g"+parseInt(Object.keys(data).length-1));
 
     last_g.select(".last-vertical-line")
-        .attr("stroke",function(d,i){
-            return d.linktargetcolor || "black";
-        })
+        // .attr("stroke",function(d,i){
+        //     return d.linktargetcolor || "black";
+        // })
         .attr("marker-start","")
         .attr("marker-end","url('#Circle')")
         .attr("x1",135)
@@ -441,9 +443,9 @@ d3.cdllist = function(d3, canvasID, w, h, data, transformObject) {
         .attr("y2",defaultSize / 2);
 
     last_g.select(".last-vertical-line-two")
-        .attr("stroke",function(d,i){
-            return d.linktargetcolor || "black";
-        })
+        // .attr("stroke",function(d,i){
+        //     return d.linktargetcolor || "black";
+        // })
         .attr("marker-start","")
         .attr("marker-end","url('#Circle')")
         .attr("x1",155)
@@ -478,7 +480,8 @@ d3.cdllist = function(d3, canvasID, w, h, data, transformObject) {
               return parseFloat(d3.select(this.parentNode).select(".last-vertical-line").attr("y1")) - 3;
         })
         .attr("stroke",function(d,i){
-            return d.linktargetcolor || "black";
+            return d3.select(this.parentNode).select(".last-vertical-line").attr("stroke");
+            // return d.linktargetcolor || "black";
         })
         // .attr("stroke","pink")
         .attr("stroke-width",5);
@@ -505,7 +508,8 @@ d3.cdllist = function(d3, canvasID, w, h, data, transformObject) {
         })
         // .attr("stroke","blue")
         .attr("stroke",function(d,i){
-            return d.linktargetcolor || "black";
+            return d3.select(this.parentNode).select(".last-vertical-line").attr("stroke");
+            // return d.linktargetcolor || "black";
         })
         .attr("stroke-width",5);
 
@@ -526,7 +530,8 @@ d3.cdllist = function(d3, canvasID, w, h, data, transformObject) {
         })
         // .attr("stroke","yellow")
         .attr("stroke",function(d,i){
-            return d.linktargetcolor || "black";
+          return d3.select(this.parentNode).select(".last-vertical-line").attr("stroke");
+            // return d.linktargetcolor || "black";
         })
         .attr("stroke-width",5)
         .attr("marker-start","url('#Circle')");
@@ -559,7 +564,8 @@ d3.cdllist = function(d3, canvasID, w, h, data, transformObject) {
               return parseFloat(d3.select(this.parentNode).select(".last-vertical-line-two").attr("y1")) - 3;
         })
         .attr("stroke",function(d,i){
-            return d.linktargetcolor || "black";
+          return d3.select(this.parentNode).select(".last-vertical-line-two").attr("stroke");
+            // return d.linktargetcolor || "black";
         })
         // .attr("stroke","red")
         .attr("stroke-width",5);
@@ -587,7 +593,8 @@ d3.cdllist = function(d3, canvasID, w, h, data, transformObject) {
         })
         // .attr("stroke","yellow")
         .attr("stroke",function(d,i){
-            return d.linktargetcolor || "black";
+          return d3.select(this.parentNode).select(".last-vertical-line-two").attr("stroke");
+            // return d.linktargetcolor || "black";
         })
         .attr("stroke-width",5);
 
@@ -606,7 +613,8 @@ d3.cdllist = function(d3, canvasID, w, h, data, transformObject) {
               return parseInt(d3.select(this.parentNode).select(".last-g-vertical-line-two").attr("y1"));
         })
         .attr("stroke",function(d,i){
-            return d.linktargetcolor || "black";
+          return d3.select(this.parentNode).select(".last-vertical-line-two").attr("stroke");
+            // return d.linktargetcolor || "black";
         })
         // .attr("stroke","yellow")
         .attr("stroke-width",5)
@@ -614,8 +622,6 @@ d3.cdllist = function(d3, canvasID, w, h, data, transformObject) {
 
     last_g.select(".last-vertical-line").attr("y2",80).attr("marker-end","url('#Triangle')");
     last_g.select(".last-vertical-line-two").attr("y2",30);
-
-
 
 
     // bind linebreaks to text elements
