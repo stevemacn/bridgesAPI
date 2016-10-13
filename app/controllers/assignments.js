@@ -143,8 +143,6 @@ exports.upload = function (req, res, next) {
           assignment.subAssignment = subAssignment;
           assignment.schoolID = req.params.schoolID || "";
           assignment.classID = req.params.classID || "";
-          assignment.title = "Test Title"; // get title from raw body?
-          assignment.description = "Herein lies a brief description of this particular assignment. Note the fine craftsmanship of the data structure. The quick brown fox jumped over the lazy dog. I'm trapped in a computer, pls help!"; // get description from raw body?
           assignment.save();
 
           User.findOne({
@@ -352,8 +350,6 @@ exports.testJSON = function (req, res, next) {
         "data":[JSONdata.nodes[0]],
         "extent":1,
         "assignmentNumber":1,
-        "schoolID":null,
-        "classID":null,
         "vistype":"tree",
         "shared":false,
         "owner":"test",
