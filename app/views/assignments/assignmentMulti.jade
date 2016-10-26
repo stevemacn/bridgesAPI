@@ -129,25 +129,25 @@ block footerjs
 
     - else if (vistype == 'tree')
         link(rel='stylesheet', href='/css/vis/tree.css')
-        script(src = '/js/bst/lib/bst.js')
+        script(src = '/js/tree/lib/bst.js')
 
     - else if (vistype == 'queue')
         script(src = '/js/queue.js')
 
     - else if (vistype == "Alist")
-        script(src = '/js/array.js')
+        script(src = '/js/array/array.js')
 
     - else if (vistype == "llist")
-        script(src = '/js/llist.js')
+        script(src = '/js/list/llist.js')
 
     - else if (vistype == "dllist")
-        script(src = '/js/dllist.js')
+        script(src = '/js/list/dllist.js')
 
     - else if (vistype == "cllist")
-        script(src = '/js/cllist.js')
+        script(src = '/js/list/cllist.js')
 
     - else if (vistype == "cdllist")
-        script(src = '/js/cdllist.js')
+        script(src = '/js/list/cdllist.js')
 
     - else
         script.
