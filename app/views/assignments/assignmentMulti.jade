@@ -42,22 +42,10 @@ block content
                 button(class='optionButton', id='reset')
                         label Reset view
 
-                if (vistype == "nodelink" || defaultvistype == "nodelink")
+                if (vistype == "nodelink")
                   button#savePosition.optionButton(
                           onclick='savePositions()')
                           label Save Positions
-                          
-                if (vistype == "llist" || vistype == "dllist" || vistype == "cllist" || vistype == "cdllist")
-                  if(defaultvistype != 'nodelink')
-                      button#savePosition.optionButton(
-                              onclick='saveListPositions()')
-                              label Save Positions
-                      p#updateStatus Position saved locally!
-                      img.visdefaultoption.visdefaultoption-active(onclick='setDefaultVisType("#{vistype}",this)' src='/img/'+vistype+'.png')
-                      img.visdefaultoption(onclick='setDefaultVisType("nodelink",this)' src='/img/graphllist.png')
-                  else
-                      img.visdefaultoption(onclick='setDefaultVisType("#{vistype}",this)' src='/img/'+vistype+'.png')
-                      img.visdefaultoption.visdefaultoption-active(onclick='setDefaultVisType("nodelink"),this' src='/img/graphllist.png')
                   
                 div#assignmentDescription #{assignmentDescription}
 
@@ -106,10 +94,15 @@ block footerjs
 
     script(src = '/components/d3/d3.min.js')
     script(src = '/components/jquery/dist/jquery.min.js')
+
     
     script.
+        var breakIfImageError = false;
         $(".visdefaultoption").on("error",function(x){
-            $(this).attr("src","/img/llist.png");
+            if(!breakIfImageError){
+              $(this).attr("src","/img/llist.png");
+              breakIfImageError = true;
+            }
         });
 
     script.
@@ -125,16 +118,25 @@ block footerjs
             $('#public').prop('checked',true)
         else
             $('#private').prop('checked',true)
-
+            
     script.
-        var data = !{JSON.stringify(data)}
-        var assignmentNumber = !{JSON.stringify(assignmentNumber)}
-
+        var data = !{JSON.stringify(data)};
+        var assignmentNumber = !{JSON.stringify(assignmentNumber)};
         var vistype = "#{vistype}";
         var defaultvistype = "#{defaultvistype}";
         var mapData =  !{JSON.stringify(mapData)};
         var createMap =  !{JSON.stringify(createMap)};
         var BridgesVisualizer = {};
+    
+    -var is1D = vistype == "Alist";
+    -if(data[0].dims)
+        - var dimOne = parseInt(data[0].dims[0]);
+        - var dimTwo = parseInt(data[0].dims[1]);
+        - var dimThree = parseInt(data[0].dims[2]);
+        - var is2D = vistype == "Alist" && dimTwo > 1 && dimThree == 1;
+        - var is3D = vistype == "Alist" && dimTwo > 1 && dimThree > 1;
+        - var is1D = vistype == "Alist" && !is2D && !is3D;
+        - console.log(is1D);
 
     // Map demonstrating locations in the assignment
     - if ( createMap )
@@ -143,11 +145,8 @@ block footerjs
         script( src = '//d3js.org/topojson.v1.min.js' )
         script( src = '/js/map.js' )
     
-        //TODO
-    - if(defaultvistype == "nodelink")
-        script(src = '/js/graph.js')
-              
-    - else if (vistype == "nodelink")
+        //TODO  
+    - if (vistype == "nodelink")
         script(src = '/js/graph.js')
 
     - else if (vistype == 'tree')
@@ -157,8 +156,21 @@ block footerjs
     - else if (vistype == 'queue')
         script(src = '/js/queue.js')
         
-    - else if (vistype == "Alist")
+    - else if (is1D)
         script(src = '/js/array.js')
+        script.
+            console.log("is1D");
+    
+    - else if (is2D)
+        script(src = '/js/array2d.js')
+        script.
+            console.log("is2D");
+    
+    - else if (is3D)
+        script(src = '/js/lib/d3tip.js')  
+        script(src = '/js/array3d.js')  
+        script.
+            console.log("is3D");
         
     - else if (vistype == "llist")
         script(src = '/js/llist.js')
@@ -174,7 +186,7 @@ block footerjs
             
     - else
         script.
-            var error = !{JSON.stringify(data)}
+            var error = !{JSON.stringify(data)};
             $("#vis0")
                 .html(error.error)
                 .css('color', '#eb6864')

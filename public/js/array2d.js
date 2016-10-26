@@ -3,9 +3,9 @@
 Array visualization for Bridges
 
 */
-d3.array = function(d3, canvasID, w, h, data) {
+d3.array2d = function(d3, canvasID, w, h, data, dimensions) {
 
-    // var spacing = 5;        // spacing between elements
+    var elementsPerRow = dimensions[0];
     var spacing = 40;        // spacing between elements
     var marginLeft = 20;
     var defaultSize = 100;  // default size of each element box
@@ -37,8 +37,6 @@ d3.array = function(d3, canvasID, w, h, data) {
     svgGroup.attr('transform', 'translate(' + zoom.translate() + ') scale(' + zoom.scale() + ')');
     allSVG.push(svgGroup);
 
-    var elementsPerRow = parseInt( Math.sqrt(Object.keys(data).length) );
-    // var elementsPerRow = data.dimensions.rowsCount || parseInt( Math.sqrt(Object.keys(data).length) );
 
     // Bind nodes to array elements
     var nodes = svgGroup.selectAll("nodes")

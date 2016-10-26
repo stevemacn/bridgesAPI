@@ -24,7 +24,6 @@ var Assignment = new Schema ({
     dateCreated:        {type: Date, default: Date.now()},
     shared:             {type: Boolean, default: 'true'}, //public or private
     vistype:            {type: String, default:'nodelink'},
-    defaultvistype:            {type: String, default:''},
     thumbnail:          {type: String, default:'nodelink'},
     //use mongoose thumbnail right here....
 

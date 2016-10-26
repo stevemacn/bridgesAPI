@@ -315,10 +315,10 @@ exports.show = function (req, res, next) {
         }
 
         var finalVistype;
-        var defaultvistype;
-        if(assignments[0].toObject()['defaultvistype']){
-            defaultvistype = assignments[0].toObject()['defaultvistype'];
-        }
+        // var defaultvistype;
+        // if(assignments[0].toObject()['defaultvistype']){
+        //     defaultvistype = assignments[0].toObject()['defaultvistype'];
+        // }
 
         if(data.visual){
             finalVistype = visTypes.getVisType(data.visual);
@@ -338,7 +338,7 @@ exports.show = function (req, res, next) {
             "schoolID":assignments[0].schoolID,
             "classID":assignments[0].classID,
             "vistype":finalVistype,
-            "defaultvistype":defaultvistype,
+            // "defaultvistype":defaultvistype,
             "shared":assignments[0].shared,
             "owner":owner,
             "createMap": (function() { return (mapData.length > 0) ? true : false; })(),
@@ -413,28 +413,28 @@ exports.savePositions = function(req, res) {
     res.send("OK");
 };
 
-/* Update the nodes of the given assignment */
-exports.saveListPositions = function(req, res) {
-    Assignment
-        .find({
-          "assignmentNumber": req.params.assignmentNumber,
-          "email": req.user.email
-        })
-        .exec(function(err, assign) {
-            if (err) return next(err);
-
-            // handle each assignment
-            for(var i in assign) {
-              // update the transform object in assign[i].data[0]
-              assign[i].data[0]['transform'] = req.body[i];
-
-              // save the updated data
-              assign[i].markModified('data'); //http://mongoosejs.com/docs/faq.html
-              assign[i].save();
-            }
-        });
-    res.send("OK");
-};
+// /* Update the nodes of the given assignment */
+// exports.saveListPositions = function(req, res) {
+//     Assignment
+//         .find({
+//           "assignmentNumber": req.params.assignmentNumber,
+//           "email": req.user.email
+//         })
+//         .exec(function(err, assign) {
+//             if (err) return next(err);
+//
+//             // handle each assignment
+//             for(var i in assign) {
+//               // update the transform object in assign[i].data[0]
+//               assign[i].data[0]['transform'] = req.body[i];
+//
+//               // save the updated data
+//               assign[i].markModified('data'); //http://mongoosejs.com/docs/faq.html
+//               assign[i].save();
+//             }
+//         });
+//     res.send("OK");
+// };
 
 /* Update the defaultvistype of the given assignment */
 exports.setDefaultVisType = function(req, res) {

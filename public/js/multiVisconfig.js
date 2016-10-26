@@ -11,6 +11,42 @@ BridgesVisualizer.getColor = function(color) {
   return color;
 };
 
+// function to return the transformObject saved positions
+BridgesVisualizer.getTransformObjectFromCookie = function(visID) {
+        var name = "vis"+visID+"-"+location.pathname + "=";
+        // var name = cname + "=";
+        var ca = document.cookie.split(';');
+        for(var i=0; i<ca.length; i++) {
+            var c = ca[i];
+            while (c.charAt(0)==' ') {
+                c = c.substring(1);
+            }
+            if (c.indexOf(name) == 0) {
+                // return c.substring(name.length, c.length);
+                var cookieStringValue = c.substring(name.length, c.length);
+                var cookieJSONValue;
+                try{
+                    cookieJSONValue = JSON.parse(cookieStringValue);
+                }catch(err){
+                    // console.log(err);
+                }
+
+                if(cookieJSONValue){
+                  if(cookieJSONValue.hasOwnProperty("translatex") &&
+                     cookieJSONValue.hasOwnProperty("translatey") &&
+                     cookieJSONValue.hasOwnProperty("scale")){
+                       var finalTranslate = [parseFloat(cookieJSONValue.translatex), parseFloat(cookieJSONValue.translatey)];
+                       var finalScale = [parseFloat(cookieJSONValue.scale)];
+                       return {"translate":finalTranslate, "scale":finalScale};
+                  }
+                }else{
+                  return undefined;
+                }
+            }
+        }
+        return "";
+};
+
 // bind event handlers for ui
 d3.selectAll(".minimize").on("click", minimize);
 d3.select("#reset").on("click", reset);
@@ -31,8 +67,8 @@ if( map )
 for (var key in data) {
   if (data.hasOwnProperty(key)) {
     var ele = document.getElementById("vis" + key),
-    width = ele.clientWidth - 15,
-    height = ele.clientHeight + 15;
+        width = ele.clientWidth - 15,
+        height = ele.clientHeight + 15;
 
     if (d3.bst) {
         bst = d3.bst(d3, "#vis" + key, width, height);
@@ -49,7 +85,7 @@ for (var key in data) {
     }
     else if(d3.sllist){
         var sortedNodes = sortListByLinks(data[key]);
-        d3.sllist(d3, "#vis" + key, width, height, sortedNodes, data[key].transform);
+        d3.sllist(d3, "#vis" + key, width, height, sortedNodes);
     }
     else if(d3.csllist){
         var sortedNodes = sortListByLinks(data[key]);
@@ -61,6 +97,12 @@ for (var key in data) {
     else if (d3.array) {
           d3.array(d3, "#vis" + key, width, height, data[key].nodes);
     }
+    else if (d3.array2d) {
+          d3.array2d(d3, "#vis" + key, width, height, data[key].nodes, data[key].dims);
+    }
+    else if (d3.array3d) {
+          d3.array3d(d3, "#vis" + key, width, height, data[key].nodes, data[key].dims);
+    }
     else if (d3.graph) {
         d3.graph(d3, "#vis" + key, width, height, data[key]);
     }
@@ -68,7 +110,6 @@ for (var key in data) {
         console.log("unknown data type");
         d3.graph(d3, "#vis" + key, width, height, data[key]);
     }
-
     visCount++;
     maximizedCount++;
   }
@@ -245,51 +286,51 @@ function savePositions () {
 }
 
 
-//Asynchronously update the vis transform values
-//this method is just for testing, if approved, it still needs the ajax call and routing set up as well as the dabatase.
-//It also can be used with the tree visualization
-function saveListPositions(){
-    var visTransforms = {};
-    for (var key in data) {
-        var my_transform = d3.transform(d3.select("#vis"+key).select("g").attr("transform"));
-        var my_translateX = my_transform.translate[0];
-        var my_translateY = my_transform.translate[1];
-        var my_scale = my_transform.scale[0];
-        var visTransform = {
-                                  // "id":key,
-                                "scale":my_scale,
-                           "translatex":my_translateX,
-                           "translatey":my_translateY
-                           };
-        visTransforms[key] = visTransform;
-    }
-
-    console.log(visTransforms);
-    // send fixed node indices to the server to save
-    $.ajax({
-        url: "/assignments/updateListPositions/"+assignmentNumber,
-        type: "post",
-        data: visTransforms
-    }).done(function(status) {
-        if(status == 'OK'){
-            var today = new Date().toLocaleTimeString()+" - "+new Date().toLocaleDateString();
-            $("#updateStatus").html("Saved!"+"<br>"+today);
-            $("#updateStatus").show();
-            setTimeout(function(){
-               $("#updateStatus").hide();
-            },3000);
-        }else{
-            $("#updateStatus").html("Try again!");
-            $("#updateStatus").css("color","red");
-            $("#updateStatus").show();
-            setTimeout(function(){
-               $("#updateStatus").hide();
-               $("#updateStatus").css("color","green");
-            },2500);
-        }
-    });
-
-}
+// //Asynchronously update the vis transform values
+// //this method is just for testing, if approved, it still needs the ajax call and routing set up as well as the dabatase.
+// //It also can be used with the tree visualization
+// function saveListPositions(){
+//     var visTransforms = {};
+//     for (var key in data) {
+//         var my_transform = d3.transform(d3.select("#vis"+key).select("g").attr("transform"));
+//         var my_translateX = my_transform.translate[0];
+//         var my_translateY = my_transform.translate[1];
+//         var my_scale = my_transform.scale[0];
+//         var visTransform = {
+//                                   // "id":key,
+//                                 "scale":my_scale,
+//                            "translatex":my_translateX,
+//                            "translatey":my_translateY
+//                            };
+//         visTransforms[key] = visTransform;
+//     }
+//
+//     console.log(visTransforms);
+//     // send fixed node indices to the server to save
+//     $.ajax({
+//         url: "/assignments/updateListPositions/"+assignmentNumber,
+//         type: "post",
+//         data: visTransforms
+//     }).done(function(status) {
+//         if(status == 'OK'){
+//             var today = new Date().toLocaleTimeString()+" - "+new Date().toLocaleDateString();
+//             $("#updateStatus").html("Saved!"+"<br>"+today);
+//             $("#updateStatus").show();
+//             setTimeout(function(){
+//                $("#updateStatus").hide();
+//             },3000);
+//         }else{
+//             $("#updateStatus").html("Try again!");
+//             $("#updateStatus").css("color","red");
+//             $("#updateStatus").show();
+//             setTimeout(function(){
+//                $("#updateStatus").hide();
+//                $("#updateStatus").css("color","green");
+//             },2500);
+//         }
+//     });
+//
+// }
 
 //this methods sorts any linkedlist by links
 function sortListByLinks(unsortedNodes){
@@ -302,41 +343,43 @@ function sortListByLinks(unsortedNodes){
         getLinkFromSource[links[i].source+"-"+links[i].target] = links[i];//creating a unique identifier for every link
     }
 
-    head = unsortedNodes.head || Object.keys(unsortedNodes.nodes).length-1;
-    for(var h in unsortedNodes.nodes){//looping through the length of the nodes
+    head = unsortedNodes.head || Object.keys(nodes).length-1;
+    // for(var h in nodes){//looping through the length of the nodes
+    for(var i = 0; i < nodes.length; i++){
         var key = head + "-" + getTargetFromSource[head];//link from source to target
         var yek = getTargetFromSource[head] + "-" + head;//link from target to source
         if(getLinkFromSource[key]) nodes[head]['linkone'] = getLinkFromSource[key];//if there is a link, insert in the nodes
         if(getLinkFromSource[yek]) nodes[head]['linktwo'] = getLinkFromSource[yek];//if there is a link, insert in the nodes
-        sortedNodes.push(nodes[head]);
+        if(nodes[head])sortedNodes.push(nodes[head]);
         head = getTargetFromSource[head];//getting the next target
+        // if(!head)break;
     }
     // links = nodes = undefined; console.log(sortedNodes);
     return sortedNodes;
 }
 
 
-// send the defaultVisType chosen by the user
-function setDefaultVisType(defaultVistype,elem){
-    $(".visdefaultoption").removeClass("visdefaultoption-active");
-    $(elem).addClass("visdefaultoption-active");
-    $.ajax({
-        url: "/assignments/setdefaultvistype/"+assignmentNumber,
-        type: "post",
-        data: {"defaultvistype":defaultVistype}
-    }).done(function() {
-        console.log('positions saved');
-        location.reload();
-    });
-}
+// // send the defaultVisType chosen by the user
+// function setDefaultVisType(defaultVistype,elem){
+//     $(".visdefaultoption").removeClass("visdefaultoption-active");
+//     $(elem).addClass("visdefaultoption-active");
+//     $.ajax({
+//         url: "/assignments/setdefaultvistype/"+assignmentNumber,
+//         type: "post",
+//         data: {"defaultvistype":defaultVistype}
+//     }).done(function() {
+//         console.log('positions saved');
+//         location.reload();
+//     });
+// }
 
 //this method handles what visualization supports saveVisStatesAsCookies()
 //the default case is reached when an allow type is met
 function callSaveVisStatesAsCookies(){
     switch(vistype){
         case "nodelink":
-        case "tree":
-        case "Alist":
+        // case "tree":
+        // case "Alist":
           break;
         default:
           saveVisStatesAsCookies();
@@ -375,11 +418,14 @@ function saveVisStatesAsCookies(){
     }
 }
 
-if(owner == 'false'){
-    try{
-        $("svg").mouseup(callSaveVisStatesAsCookies);//for testing purposes
-        $("svg").on('wheel',callSaveVisStatesAsCookies);//for testing purposes
-    }catch(err){
-        console.log(err);
-    }
-}
+$("svg").mouseup(callSaveVisStatesAsCookies);//for testing purposes
+$("svg").on('wheel',callSaveVisStatesAsCookies);//for testing purposes
+
+// if(owner == 'false'){
+//     try{
+//         $("svg").mouseup(callSaveVisStatesAsCookies);//for testing purposes
+//         $("svg").on('wheel',callSaveVisStatesAsCookies);//for testing purposes
+//     }catch(err){
+//         console.log(err);
+//     }
+// }
