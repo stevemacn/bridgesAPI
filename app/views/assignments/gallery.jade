@@ -2,24 +2,40 @@ extends ../includes/boilerplate.jade
 block css
     link(rel='stylesheet',
          href='/css/header.css')
+    link(rel='stylesheet',
+         href='/css/assignment.css')
+    link(rel='stylesheet',
+             href='/components/css-toggle-switch/dist/toggle-switch.css')
+
 block content
     include ../includes/header.jade
-
-    div(style="margin: 5%")
-        - if (assignmentNumber < 0)
-                p Looks like there aren't any assignments here...    :(
-        - else
-                p Public Gallery for assignments with number '#{assignmentNumber}'
+    .container
+        .row
+            .col-lg-12
+                div(style="float:left; margin-left:50px;width:100%;")
+                    - if (assignmentNumber < 0)
+                            h1(style="text-align: left") Looks like there aren't any assignments here...    :(
+                    - else
+                            h1(style="text-align: left") Public Gallery for assignments with number '#{assignmentNumber}'
 
     div(style="margin:5%")
+        - for (var x = 0; x < assignments.length; x++)
+              //- - console.log(assignmentNumber)
+              div.gallery_assignment_container
+                  div.gallery_assignment_div_public
+                      a(href="/assignments/"+assignmentNumber+"/"+assignments[x].username)
+                          if(assignments[x].vistype == "nodelink")
+                              img.visimg(src='/img/graph.png' title=assignments[x].vistype)
+                          else if(assignments[x].vistype == "Alist")
+                              img.visimg(src='/img/array.png' title=assignments[x].vistype)
+                          else
+                              img.visimg(src='/img/'+assignments[x].vistype+'.png' title=assignments[x].vistype)
+                  h4(style="text-align: center") #{assignments[x].username}
+                  //- h6(style="text-align: center") #{assignments[x].vistype}
+                  h6(style="text-align: center") #{assignments[x].data[0].visual}
 
-        - for (var x = 0; x < usernames.length; x++)
-            - console.log(assignmentNumber)
-            a(href="/assignments/"+assignmentNumber+"/"+usernames[x], style="float:left;width:100px; margin-left:50px")
-              if(assignments[x].vistype == 'graph')
-                  img(src='/img/graph.png' title=assignments[x].vistype)
-              else if((assignments[x].vistype == 'tree'))
-                  img(src='/img/tree.png' title=assignments[x].vistype)
-              else
-                  img(src='/img/LList.png' title=assignments[x].vistype)
-              h4(style="text-align: center") #{usernames[x]}
+block footerjs
+    script.
+        $(".visimg").on("error",function(x){
+            $(this).attr("src","/img/graphllist.png");
+        });

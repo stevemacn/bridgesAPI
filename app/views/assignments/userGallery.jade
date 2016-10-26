@@ -24,23 +24,30 @@ block content
                 a(href='/assignments/'+assignments[x].assignmentNumber+'/'+usernames)
                   - if (assignments[x].shared == false)
                           div(class='gallery_assignment_div_private')
-                              if(assignments[x].data[0].visual && (assignments[x].data[0].visual.indexOf('graph') >= 0 || assignments[x].data[0].visual.indexOf('Graph') >= 0))
-                                  img(src='/img/graph.png' title=assignments[x].vistype)
-                              else if((assignments[x].vistype == 'tree'))
-                                  img(src='/img/tree.png' title=assignments[x].vistype)
+                              if(assignments[x].vistype == "nodelink")
+                                  img.visimg(src='/img/graph.png' title=assignments[x].vistype)
+                              else if(assignments[x].vistype == "Alist")
+                                  img.visimg(src='/img/array.png' title=assignments[x].vistype)
                               else
-                                  img(src='/img/LList.png' title=assignments[x].vistype)
+                                  img.visimg(src='/img/'+assignments[x].vistype+'.png' title=assignments[x].vistype)
+  
                    - else
                           div(class='gallery_assignment_div_public')
-                              if(assignments[x].data[0].visual.indexOf('graph') >= 0 || assignments[x].data[0].visual.indexOf('Graph') >= 0)
-                                  img(src='/img/graph.png' title=assignments[x].vistype)
-                              else if(assignments[x].vistype=='tree')
-                                  img(src='/img/tree.png' title=assignments[x].vistype)
+                              if(assignments[x].vistype == "nodelink")
+                                  img.visimg(src='/img/graph.png' title=assignments[x].vistype)
+                              else if(assignments[x].vistype == "Alist")
+                                  img.visimg(src='/img/array.png' title=assignments[x].vistype)
                               else
-                                  img(src='/img/LList.png' title=assignments[x].vistype)
+                                  img.visimg(src='/img/'+assignments[x].vistype+'.png' title=assignments[x].vistype)
+
 
                   a(style='text-decoration: none; ' href='/assignments/'+assignments[x].assignmentNumber+'/'+usernames)
                       div(class='gallery_links')
                         div.gallery_link_title #{assignments[x].title}
                         div.gallery_link_small Assignment #{assignments[x].assignmentNumber}
                         div.gallery_link_small #{assignments[x].data[0].visual}
+block footerjs
+    script.
+        $(".visimg").on("error",function(x){
+            $(this).attr("src","/img/graphllist.png");
+        });

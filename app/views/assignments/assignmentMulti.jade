@@ -6,16 +6,17 @@ block css
          href='/css/assignment.css')
     link(rel='stylesheet', href='/components/css-toggle-switch/dist/toggle-switch.css')
 
-block scripts
-    //script(type='application/ecmascript' async='' src='/js/html2canvas.js')
-    //script(type='application/ecmascript' async='' src='/js/FileSaver.js')
-    //script(type='application/ecmascript' async='' src='/js/Blob.js')
-    //script(type='application/ecmascript' async='' src='/js/dropzone.js')
-    //script(src='/js/snapshoot.js')
-
+    svg#svgdfs(height='0',display='block')
+        defs
+          marker#Triangle(viewbox='0 0 10 10', refx='0', refy='5', markerunits='strokeWidth', markerwidth='4', markerheight='3', orient='auto-start-reverse')
+            path(d='M 0 0 L 10 5 L 0 10 z')
+        defs
+          marker#Circle(markerwidth='10', markerheight='10', refx='5', refy='5')
+            circle.marker(cx='5', cy='5', r='1.5')
 
 block content
     include ../includes/header.jade
+    div#updateStatus
     div#assignmentCanvas(overflow='auto')
         if (owner)
             #optionContainer.optionContainer
@@ -39,6 +40,9 @@ block content
                           onclick='savePositions()')
                           label Save Positions
 
+                button#saveTransform.optionButton(
+                        onclick='saveTransform()')
+                        label Save Zoom and Translation
 
                 div#assignmentDescription #{assignmentDescription}
 
@@ -90,9 +94,10 @@ block footerjs
 
     script.
         var owner = '#{owner}'
-        if ( owner=="false" && '#{assignmentDescription}'.length <= 0 ) {
+        if ( owner=="false" && "#{assignmentDescription}".length <= 0 ) {
              $('.vis').css('width','99%') // adjust assignment width for public assignments
         }
+
         var shared = '#{shared}'
         $('#private').prop('checked',false)
         $('#public').prop('checked',false)
@@ -105,10 +110,10 @@ block footerjs
         var data = !{JSON.stringify(data)}
         var assignmentNumber = !{JSON.stringify(assignmentNumber)}
 
-        var vistype = "#{vistype}"
+        var vistype = "#{vistype}";
+        var defaultvistype = "#{defaultvistype}";
         var mapData =  !{JSON.stringify(mapData)};
         var createMap =  !{JSON.stringify(createMap)};
-
         var BridgesVisualizer = {};
 
     // Map demonstrating locations in the assignment
@@ -121,13 +126,29 @@ block footerjs
         //TODO
     - if (vistype == "nodelink")
         script(src = '/js/graph.js')
+
     - else if (vistype == 'tree')
         link(rel='stylesheet', href='/css/vis/tree.css')
         script(src = '/js/bst/lib/bst.js')
+
     - else if (vistype == 'queue')
         script(src = '/js/queue.js')
-     - else if (vistype == "Alist")
+
+    - else if (vistype == "Alist")
         script(src = '/js/array.js')
+
+    - else if (vistype == "llist")
+        script(src = '/js/llist.js')
+
+    - else if (vistype == "dllist")
+        script(src = '/js/dllist.js')
+
+    - else if (vistype == "cllist")
+        script(src = '/js/cllist.js')
+
+    - else if (vistype == "cdllist")
+        script(src = '/js/cdllist.js')
+
     - else
         script.
             var error = !{JSON.stringify(data)}

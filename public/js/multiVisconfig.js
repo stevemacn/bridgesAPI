@@ -39,11 +39,27 @@ for (var key in data) {
         tempAddChildNode(data[key]);
         bst.make(data[key]);
     }
+    else if(d3.dllist){
+        var sortedNodes = sortListByLinks(data[key]);
+        d3.dllist(d3, "#vis" + key, width, height, sortedNodes, data[key].transform);
+    }
+    else if(d3.cdllist){
+        var sortedNodes = sortListByLinks(data[key]);
+        d3.cdllist(d3, "#vis" + key, width, height, sortedNodes, data[key].transform);
+    }
+    else if(d3.sllist){
+        var sortedNodes = sortListByLinks(data[key]);
+        d3.sllist(d3, "#vis" + key, width, height, sortedNodes, data[key].transform);
+    }
+    else if(d3.csllist){
+        var sortedNodes = sortListByLinks(data[key]);
+        d3.csllist(d3, "#vis" + key, width, height, sortedNodes, data[key].transform);
+    }
     else if (d3.queue) {
         d3.queue(d3, "#vis" + key, width, height, data[key].nodes);
     }
     else if (d3.array) {
-        d3.array(d3, "#vis" + key, width, height, data[key].nodes);
+          d3.array(d3, "#vis" + key, width, height, data[key].nodes);
     }
     else if (d3.graph) {
         d3.graph(d3, "#vis" + key, width, height, data[key]);
@@ -94,6 +110,10 @@ function reset() {
 
         /* set default translate based on visualization type */
         if(d3.array) zoom.translate([20, 200]);
+        if(d3.dllist || d3.sllist || d3.cdllist || d3.csllist){
+            zoom.translate([50, -5]);
+            zoom.scale(0.36);
+        }
         else if(d3.bst) zoom.translate([(d3.select("#svg0").attr("width")/2), 0]);
         else zoom.translate([0, 0]);
 
@@ -198,7 +218,6 @@ function minimize() {
 function savePositions () {
   var updateTheseNodes = {};
 
-
   // store indices for all fixed nodes
   for (var key in data) {
     updateTheseNodes[key] = {
@@ -219,7 +238,133 @@ function savePositions () {
       url: "/assignments/updatePositions/"+assignmentNumber,
       type: "post",
       data: updateTheseNodes
-  }).done(function() {
-      console.log('positions saved');
+  }).done(function(status) {
+      if(status == 'OK'){
+          alertMessage("Node positions saved!", "success");
+      } else {
+          alertMessage("Unsuccessful. Try logging in!", "danger");
+      }
   });
+}
+
+//Asynchronously update the vis transform values
+//this method is just for testing, if approved, it still needs the ajax call and routing set up as well as the dabatase.
+//It also can be used with the tree visualization
+function saveTransform(){
+    var visTransforms = {};
+    for (var key in data) {
+        var my_transform = d3.transform(d3.select("#vis"+key).select("g").attr("transform"));
+        visTransforms[key] = {
+          "scale": parseFloat(my_transform.scale[0]),
+          "translatex": parseFloat(my_transform.translate[0]),
+          "translatey": parseFloat(my_transform.translate[1])
+        };
+    }
+
+    // send scale and translation data to the server to save
+    $.ajax({
+        url: "/assignments/updateTransforms/"+assignmentNumber,
+        type: "post",
+        data: visTransforms
+    }).done(function(status) {
+        if(status == 'OK'){
+            alertMessage("Scale and translation saved!", "success");
+        } else {
+            alertMessage("Unsuccessful. Try logging in!", "danger");
+        }
+    });
+}
+
+/*
+ Create a tooltip from the given message and status
+ status: success, danger, warning
+*/
+function alertMessage(message, status) {
+  var today = new Date().toLocaleTimeString()+" - "+new Date().toLocaleDateString();
+  $("#updateStatus").html(message+"<br>"+today);
+  $("#updateStatus").addClass("alert alert-" + status);
+  $("#updateStatus").show();
+  setTimeout(function(){
+     $("#updateStatus").hide();
+  },2500);
+}
+
+//this methods sorts any linkedlist by links
+function sortListByLinks(unsortedNodes){
+    var getTargetFromSource = {}, getLinkFromSource = {}, sortedNodes = [], head;
+    var links = unsortedNodes.links;
+    var nodes = unsortedNodes.nodes;
+
+    for(var i = 0; i < links.length; i++){
+        getTargetFromSource[links[i].source] = links[i].target;//assigning the link source as the key and the target as the value
+        getLinkFromSource[links[i].source+"-"+links[i].target] = links[i];//creating a unique identifier for every link
+    }
+
+    head = unsortedNodes.head || Object.keys(unsortedNodes.nodes).length-1;
+    for(var h in unsortedNodes.nodes){//looping through the length of the nodes
+        var key = head + "-" + getTargetFromSource[head];//link from source to target
+        var yek = getTargetFromSource[head] + "-" + head;//link from target to source
+        if(getLinkFromSource[key]) nodes[head]['linkone'] = getLinkFromSource[key];//if there is a link, insert in the nodes
+        if(getLinkFromSource[yek]) nodes[head]['linktwo'] = getLinkFromSource[yek];//if there is a link, insert in the nodes
+        sortedNodes.push(nodes[head]);
+        head = getTargetFromSource[head];//getting the next target
+    }
+    // links = nodes = undefined; console.log(sortedNodes);
+    return sortedNodes;
+}
+
+
+// send the defaultVisType chosen by the user
+function setDefaultVisType(defaultVistype,elem){
+    $(".visdefaultoption").removeClass("visdefaultoption-active");
+    $(elem).addClass("visdefaultoption-active");
+    $.ajax({
+        url: "/assignments/setdefaultvistype/"+assignmentNumber,
+        type: "post",
+        data: {"defaultvistype":defaultVistype}
+    }).done(function() {
+        console.log('positions saved');
+        location.reload();
+    });
+}
+
+// Saved the translate and scale of every visualization in an assignemts
+function saveVisStatesAsCookies(){
+    var exdays = 30;
+    try{
+      for (var key in data) {
+          var cookieName = "vis"+key+"-"+location.pathname;
+          var my_transform = d3.transform(d3.select("#vis"+key).select("g").attr("transform"));
+
+          var cookieValue = JSON.stringify({
+            "scale": parseFloat(my_transform.scale[0]),
+            "translatex": parseFloat(my_transform.translate[0]),
+            "translatey": parseFloat(my_transform.translate[1])
+          });
+          var d = new Date();
+          d.setTime(d.getTime() + (exdays*24*60*60*1000));
+          var expires = "expires=" + d.toGMTString();
+          document.cookie = cookieName+"="+cookieValue+"; "+expires;
+      }
+      var today = new Date().toLocaleTimeString()+" - "+new Date().toLocaleDateString();
+      //  alertMessage("Scale and translation saved!", "success");
+    } catch(err){
+      console.log(err);
+    }
+}
+
+// Save cookies when scale and translation are updated
+//  only updates zoom after scrolling has stopped
+try{
+    var wheeling = null;
+    $("svg").mouseup(saveVisStatesAsCookies);
+    $("svg").on('wheel', function (e) {
+      clearTimeout(wheeling);
+      wheeling = setTimeout(function() {
+        saveVisStatesAsCookies();
+        wheeling = undefined;
+      }, 250);
+    });
+}catch(err){
+    console.log(err);
 }

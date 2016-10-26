@@ -2,6 +2,7 @@ var mongoose = require('mongoose'),
     User = mongoose.model('User'),
     Account = mongoose.model('Account'),
     Assignment = mongoose.model('Assignment')
+    visTypes = require('./visTypes.js');
 
 exports.view = function(req, res) {
     var assignmentNumber
@@ -17,6 +18,23 @@ exports.view = function(req, res) {
                 if (err) return null;
                 if (user) usernames.push(user.username)
                 getUsername(users, usernames, cb)
+            })
+    }
+
+    var getAssignmentsEmailAndUsernameMap = function(users, usernamesmap, cb) {
+        if (users.length == 0) return cb(usernamesmap)
+        var user = users.pop()
+        User
+            .findOne({
+                "email": user
+            })
+            .exec(function(err, user) {
+                if (err) return null;
+                if (user){
+                  // usernames.push(user.username)
+                  usernamesmap[user.email] = user.username
+                }
+                getAssignmentsEmailAndUsernameMap(users, usernamesmap, cb)
             })
     }
 
@@ -44,7 +62,7 @@ exports.view = function(req, res) {
                   return res.render('assignments/gallery', {
                       "title": "Assignment gallery",
                       "user":req.user,
-                      "usernames": "",
+                      "assignments": "",
                       "assignmentNumber":-1
                   })
               }
@@ -57,12 +75,29 @@ exports.view = function(req, res) {
               for (i = 0; i < assignmentResult.length; i++)
                   users.push(assignmentResult[i].email)
 
-              getUsername(users, [], function(usernames) {
+              // getUsername(users, [], function(usernames) {
+              //
+              //     return res.render('assignments/gallery', {
+              //         "title": "Assignment gallery",
+              //         "user":req.user,
+              //         "usernames": usernames,
+              //         "assignmentNumber":req.params.assignmentNumber,
+              //         "assignments":assignmentResult
+              //     })
+              // })
+
+              var usernamesmap = {};
+              getAssignmentsEmailAndUsernameMap(users, usernamesmap, function(usernamesmap) {
+
+                  for(assignmentResultItem in assignmentResult){
+                      assignmentResult[assignmentResultItem]['username'] = usernamesmap[assignmentResult[assignmentResultItem]['email']];
+                      assignmentResult[assignmentResultItem]['vistype'] = visTypes.getVisType(assignmentResult[assignmentResultItem]['data'][0].visual);
+                      // assignmentResult[assignmentResultItem]['thumbnail'] = assignmentResult[assignmentResultItem]['vistype'];
+                  }
 
                   return res.render('assignments/gallery', {
                       "title": "Assignment gallery",
                       "user":req.user,
-                      "usernames": usernames,
                       "assignmentNumber":req.params.assignmentNumber,
                       "assignments":assignmentResult
                   })

@@ -7,7 +7,6 @@ module.exports = function(app, passport, streamable) {
      *  @next - passing controller to the next handler
      */
     var isPublic = function(req, res, next){
-        //return res.send("hello");
         var mongoose = require('mongoose'),
         Assignment = mongoose.model('Assignment'),
         User = mongoose.model('User');
@@ -178,6 +177,10 @@ module.exports = function(app, passport, streamable) {
     // update the assignment specified for the current user
     //  save the positions of any fixed nodes
     app.post('/assignments/updatePositions/:assignmentNumber', isLoggedIn, assignments.savePositions);
+
+    // update the assignment specified for the current user
+    //  save all the transformations for all subAssignments.
+    app.post('/assignments/updateTransforms/:assignmentNumber', isLoggedIn, assignments.updateTransforms);
 
     // delete the assignment specified for the current user
     app.delete('/assignments/:assignmentNumber', isLoggedIn, assignments.deleteAssignment);
