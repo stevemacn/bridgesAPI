@@ -127,7 +127,7 @@ d3.graph = function(d3, id, W, H, data) {
       .attr("x", 12)
       .attr("dy", ".35em")
       .style("color",'black')
-      .style("display", "none")
+      .style("opacity", 0.0)
       .text(function(d) {
           return d.name;
       });
@@ -169,9 +169,7 @@ d3.graph = function(d3, id, W, H, data) {
   });
 
   function mouseover() {
-      d3.select(this).select("text").transition()
-          .duration(750)
-          .style("display","block");
+      BridgesVisualizer.textMouseover(this);
       d3.select(this).select("path").transition()
           .duration(750)
           .attr('d', function (d) {
@@ -181,9 +179,7 @@ d3.graph = function(d3, id, W, H, data) {
   }
 
   function mouseout() {
-      d3.select(this).select("text").transition()
-          .duration(750)
-          .style("display","none");
+      BridgesVisualizer.textMouseout(this);
       d3.select(this).select("path").transition()
           .duration(750)
           .attr('d', function (d) {

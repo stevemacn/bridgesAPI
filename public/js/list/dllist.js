@@ -5,25 +5,10 @@ Doubly Linked List visualization for Bridges
 */
 d3.dllist = function(d3, canvasID, w, h, data) {
 
-    d3.selection.prototype.moveToFront = function() {
-        return this.each(function(){
-          this.parentNode.appendChild(this);
-        });
-    };
-
-    d3.selection.prototype.moveToBack = function() {
-        return this.each(function() {
-            var firstChild = this.parentNode.firstChild;
-            if (firstChild) {
-                this.parentNode.insertBefore(this, firstChild);
-            }
-        });
-    };
-
     var visID = canvasID.substr(4);
     var finalTranslate = [50, -5];
     var finalScale = 0.36;
-    
+
     var spacing = 115;  // spacing between elements
     var marginLeft = 20;
     var defaultSize = 100;  // default size of each element box

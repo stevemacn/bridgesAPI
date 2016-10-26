@@ -6,28 +6,12 @@ Linked List visualization for Bridges
 
 
 d3.sllist = function(d3, canvasID, w, h, data) {
-    // if(w > 1200){ finalScale = 0.28;}
-
-    d3.selection.prototype.moveToFront = function() {
-        return this.each(function(){
-          this.parentNode.appendChild(this);
-        });
-    };
-
-    d3.selection.prototype.moveToBack = function() {
-        return this.each(function() {
-            var firstChild = this.parentNode.firstChild;
-            if (firstChild) {
-                this.parentNode.insertBefore(this, firstChild);
-            }
-        });
-    };
 
     // var spacing = 5;        // spacing between elements
     var visID = canvasID.substr(4);
     var finalTranslate = [50, -5];
     var finalScale = 0.36;
-    
+
     var spacing = 115;
     var marginLeft = 20;
     var defaultSize = 100;  // default size of each element box
@@ -344,6 +328,7 @@ d3.sllist = function(d3, canvasID, w, h, data) {
                 }
                 return hoverSize(zoom.scale());
               });
+        // BridgesVisualizer.textMouseover(this);
     }
 
     function mouseout() {
@@ -356,6 +341,7 @@ d3.sllist = function(d3, canvasID, w, h, data) {
               return "none";
             })
             .style("font-size", 14);
+        // BridgesVisualizer.textMouseout(this);
     }
 
     //// zoom function

@@ -261,3 +261,12 @@ td.right {
   top: 100%;
   left: 0;
 }
+
+.bgRect {
+  opacity: 0.0;
+  fill: lightgrey;
+  x: 10px;
+  y: -12px;
+  rx: 3px;
+  ry: 3px;
+}

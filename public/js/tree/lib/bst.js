@@ -129,7 +129,7 @@ d3.bst = function (d3, canvasID, w, h) {
 
         // Normalize for fixed-depth.
         nodes.forEach(function(d) { d.y = 50 + d.depth * depthStep; });
-        // nodes.forEach(function(d) { d.x = -1 * d.x; }); // -1 here flips. Fix for new representation
+        // nodes.forEach(function(d) { d.x = -1 * d.x; }); // -1 here flips. Fixed for new representation
 
         // Update the nodes…
         var node = svgGroup.selectAll("g.node")
@@ -168,7 +168,7 @@ d3.bst = function (d3, canvasID, w, h) {
             .attr("x", "35px")
             .attr("y",  "-7px")
             .attr("text-anchor", "start")
-            .style("display", "none")
+            .style("opacity", 0.0)
             .text( function( d ) { return d.name; } );
 
        if(nodes[0].key !== null) {
@@ -292,18 +292,19 @@ function dragended() {
 }
 
 function mouseover() {
-    d3.select(this).select("text").transition()
-        .duration(750)
-        .style("display","block");
-
-    var el = d3.select(this);
-    el.moveToFront();
+    // d3.select(this).select("text").transition()
+    //     .duration(750)
+    //     .style("display","block");
+BridgesVisualizer.textMouseover(this);
+    // var el = d3.select(this);
+    // el.moveToFront();
 }
 
 function mouseout() {
-    d3.select(this).select("text").transition()
-        .duration(750)
-        .style("display","none");
+    // d3.select(this).select("text").transition()
+    //     .duration(750)
+    //     .style("display","none");
+    BridgesVisualizer.textMouseout(this);
 }
 
 };

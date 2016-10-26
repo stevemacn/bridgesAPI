@@ -311,9 +311,8 @@ exports.show = function (req, res, next) {
         var finalVistype;
         if(data.visual){
             finalVistype = visTypes.getVisType(data.visual);
-        }else{
-            console.log("no data.visual!!!");
-            finalVistype = assignments[0].vistype;
+        } else { // hierarchical tree representation does not have data.visual
+            finalVistype = visTypes.getVisType(assignments[0].vistype);
         }
 
         return res.render ('assignments/assignmentMulti', {

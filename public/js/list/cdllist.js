@@ -4,7 +4,6 @@ Circular Doubly Linked List visualization for Bridges
 
 */
 d3.cdllist = function(d3, canvasID, w, h, data) {
-
     var visID = canvasID.substr(4);
     var finalTranslate = [50, -5];
     var finalScale = 0.36;
@@ -15,21 +14,6 @@ d3.cdllist = function(d3, canvasID, w, h, data) {
       finalScale = transformObject.scale;
     }
 
-    d3.selection.prototype.moveToFront = function() {
-        return this.each(function(){
-          this.parentNode.appendChild(this);
-        });
-    };
-
-    d3.selection.prototype.moveToBack = function() {
-        return this.each(function() {
-            var firstChild = this.parentNode.firstChild;
-            if (firstChild) {
-                this.parentNode.insertBefore(this, firstChild);
-            }
-        });
-    };
-
     // var spacing = 5;        // spacing between elements
     var spacing = 115;
     var marginLeft = 20;
@@ -37,13 +21,8 @@ d3.cdllist = function(d3, canvasID, w, h, data) {
     var defaultSizeW = 160;  // default size of each element box
     var elementsPerRow = 4 * parseInt((w - (spacing + defaultSize)) / (spacing + defaultSize));
 
-
-    // var myScale = 0.36;
-    // if(w > 1200){ myScale = 0.28;}
-
     // error when zooming directly after pan on OSX
     // https://github.com/mbostock/d3/issues/2205
-
     var zoom = d3.behavior.zoom()
         .translate(finalTranslate)
         .scale(finalScale)

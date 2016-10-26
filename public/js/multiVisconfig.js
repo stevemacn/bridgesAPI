@@ -10,11 +10,29 @@ BridgesVisualizer.getColor = function(color) {
   return color;
 };
 
+BridgesVisualizer.textMouseover = function(el) {
+  var textElm = d3.select(el).select("text");
+  textElm.transition().delay(50).duration(750).style("opacity",1.0);
+
+  var bgRect = textElm.node().getBoundingClientRect();
+  rect = d3.select(el).insert("svg:rect", "text").classed("bgRect", true)
+    .attr("id", "bgRect")
+    .attr("width", bgRect.width + 4)
+    .attr("height", bgRect.height + 5);
+  rect.transition().duration(500).style("opacity", 1.0);
+};
+
+BridgesVisualizer.textMouseout = function(el) {
+  d3.select(el).selectAll("#bgRect").transition().duration(500).style("opacity", 0.0);
+  d3.select(el).select("text").transition().duration(500).style("opacity", 0.0);
+};
+
 // function to return the transformObject saved positions
 BridgesVisualizer.getTransformObjectFromCookie = function(visID) {
         var name = "vis"+visID+"-"+location.pathname + "=";
         // var name = cname + "=";
         var ca = document.cookie.split(';');
+        console.log(ca);
         for(var i=0; i<ca.length; i++) {
             var c = ca[i];
             while (c.charAt(0)==' ') {
@@ -46,6 +64,21 @@ BridgesVisualizer.getTransformObjectFromCookie = function(visID) {
         return "";
 };
 
+d3.selection.prototype.moveToFront = function() {
+    return this.each(function(){
+      this.parentNode.appendChild(this);
+    });
+};
+
+d3.selection.prototype.moveToBack = function() {
+    return this.each(function() {
+        var firstChild = this.parentNode.firstChild;
+        if (firstChild) {
+            this.parentNode.insertBefore(this, firstChild);
+        }
+    });
+};
+
 // bind event handlers for ui
 d3.selectAll(".minimize").on("click", minimize);
 d3.select("#reset").on("click", reset);
@@ -71,7 +104,7 @@ for (var key in data) {
 
     if (d3.bst) {
         bst = d3.bst(d3, "#vis" + key, width, height);
-        tempAddChildNode(data[key]);
+        // tempAddChildNode(data[key]);
         bst.make(data[key]);
     }
     else if(d3.dllist){
