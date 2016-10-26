@@ -159,6 +159,7 @@ function reset() {
 
         svgGroup.attr("transform", "translate(" + zoom.translate() + ")scale(" + zoom.scale() + ")");
     }
+    saveVisStatesAsCookies();
 }
 
 // Toggle resizing of visualization divs (swaps between two sizes)
