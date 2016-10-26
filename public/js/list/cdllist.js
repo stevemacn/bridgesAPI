@@ -3,54 +3,16 @@
 Circular Doubly Linked List visualization for Bridges
 
 */
-d3.cdllist = function(d3, canvasID, w, h, data, transformObject) {
-
-
-    function getTranslateScaleCookie(cname) {
-        var name = cname + "=";
-        var ca = document.cookie.split(';');
-        for(var i=0; i<ca.length; i++) {
-            var c = ca[i];
-            while (c.charAt(0)==' ') {
-                c = c.substring(1);
-            }
-            if (c.indexOf(name) == 0) {
-                return c.substring(name.length, c.length);
-            }
-        }
-        return "";
-    }
+d3.cdllist = function(d3, canvasID, w, h, data) {
 
     var visID = canvasID.substr(4);
-
     var finalTranslate = [50, -5];
     var finalScale = 0.36;
 
-    // if(transformObject.transform.translatex != undefined && transformObject.transform.translatey != undefined && transformObject.transform.scale != undefined){
-    // console.log(transformObject);
-    if(transformObject != undefined && transformObject.hasOwnProperty('translatex') && transformObject.hasOwnProperty('translatey') && transformObject.hasOwnProperty('scale')){
-        finalTranslate = [transformObject.translatex, transformObject.translatey];
-        finalScale = transformObject.scale;
-        console.log("fromDB");
-    }else{
-        console.log("fromCookie");
-        var cname = "vis"+visID+"-"+location.pathname;
-        var cookieStringValue = getTranslateScaleCookie(cname);
-        var cookieJSONValue;
-        try{
-            cookieJSONValue = JSON.parse(cookieStringValue);
-        }catch(err){
-            console.log(err);
-        }
-
-        if(cookieJSONValue){
-          if(cookieJSONValue.hasOwnProperty("translatex") &&
-             cookieJSONValue.hasOwnProperty("translatey") &&
-             cookieJSONValue.hasOwnProperty("scale")){
-               finalTranslate = [cookieJSONValue.translatex, cookieJSONValue.translatey];
-               finalScale = [cookieJSONValue.scale];
-          }
-        }
+    var transformObject = BridgesVisualizer.getTransformObjectFromCookie(visID);
+    if(transformObject){
+      finalTranslate = transformObject.translate;
+      finalScale = transformObject.scale;
     }
 
     d3.selection.prototype.moveToFront = function() {
@@ -73,7 +35,7 @@ d3.cdllist = function(d3, canvasID, w, h, data, transformObject) {
     var marginLeft = 20;
     var defaultSize = 100;  // default size of each element box
     var defaultSizeW = 160;  // default size of each element box
-
+    var elementsPerRow = 4 * parseInt((w - (spacing + defaultSize)) / (spacing + defaultSize));
 
 
     // var myScale = 0.36;
@@ -101,7 +63,8 @@ d3.cdllist = function(d3, canvasID, w, h, data, transformObject) {
     svgGroup.attr('transform', 'translate(' + zoom.translate() + ') scale(' + zoom.scale() + ')');
     allSVG.push(svgGroup);
 
-    var elementsPerRow = 4 * parseInt((w - (spacing + defaultSize)) / (spacing + defaultSize));
+    // var elementsPerRow = 4 * parseInt((w - (spacing + defaultSize)) / (spacing + defaultSize));
+    // var elementsPerRow = 2;
     // var elementsPerRow = data.rows || Object.keys(data).length;
 
     // Bind nodes to array elements
@@ -316,7 +279,7 @@ d3.cdllist = function(d3, canvasID, w, h, data, transformObject) {
             .append("line")
             .attr("class","last-horizontal-line")
             .attr("stroke",function(d,i){
-                return d.linktargetcolor || "black";
+                return d3.select(this.parentNode).select(".last-vertical-line").attr("stroke") || "black";
             })
             .attr("stroke-width",5)
             .attr("y1", function(d,i){
@@ -346,7 +309,7 @@ d3.cdllist = function(d3, canvasID, w, h, data, transformObject) {
             .append("line")
             .attr("class","last-horizontal-line-two")
             .attr("stroke",function(d,i){
-                return d.linktargetcolor || "black";
+                return d3.select(this.parentNode).select(".last-vertical-line-two").attr("stroke") || "black";
             })
             .attr("stroke-width",5)
             .attr("y1", function(d,i){
@@ -377,7 +340,7 @@ d3.cdllist = function(d3, canvasID, w, h, data, transformObject) {
       d3.select(d3.select("#svg"+visID+"pointer-arrow-"+qq)[0][0].parentNode)
           .append("line")
           .attr("stroke",function(d,i){
-              return d.linktargetcolor || "black";
+              return d3.select(this.parentNode).select(".last-vertical-line").attr("stroke") || "black";
           })
           .attr("stroke-width",5)
           .attr("y1", function(d,i){
@@ -401,7 +364,7 @@ d3.cdllist = function(d3, canvasID, w, h, data, transformObject) {
       d3.select(d3.select("#svg"+visID+"pointer-arrow-two"+qq)[0][0].parentNode)
           .append("line")
           .attr("stroke",function(d,i){
-              return d.linktargetcolor || "black";
+              return d3.select(this.parentNode).select(".last-vertical-line-two").attr("stroke") || "black";
           })
           .attr("stroke-width",5)
           .attr("y1", function(d,i){
@@ -436,7 +399,9 @@ d3.cdllist = function(d3, canvasID, w, h, data, transformObject) {
         //     return d.linktargetcolor || "black";
         // })
         .attr("marker-start","")
-        .attr("marker-end","url('#Circle')")
+        .attr("marker-end",function(){
+          return "url('#Circle')";
+        })
         .attr("x1",135)
         .attr("x2",135)
         .attr("y1",140)
@@ -483,7 +448,6 @@ d3.cdllist = function(d3, canvasID, w, h, data, transformObject) {
             return d3.select(this.parentNode).select(".last-vertical-line").attr("stroke");
             // return d.linktargetcolor || "black";
         })
-        // .attr("stroke","pink")
         .attr("stroke-width",5);
 
     last_g
@@ -506,7 +470,6 @@ d3.cdllist = function(d3, canvasID, w, h, data, transformObject) {
         .attr("y2", function(d,i){
               return parseFloat(d3.select(this.parentNode).select(".last-g-horizontal-line").attr("y1"));
         })
-        // .attr("stroke","blue")
         .attr("stroke",function(d,i){
             return d3.select(this.parentNode).select(".last-vertical-line").attr("stroke");
             // return d.linktargetcolor || "black";
@@ -528,7 +491,6 @@ d3.cdllist = function(d3, canvasID, w, h, data, transformObject) {
         .attr("y2", function(d,i){
               return parseInt(d3.select(this.parentNode).select(".last-g-vertical-line").attr("y1"));
         })
-        // .attr("stroke","yellow")
         .attr("stroke",function(d,i){
           return d3.select(this.parentNode).select(".last-vertical-line").attr("stroke");
             // return d.linktargetcolor || "black";
@@ -544,7 +506,7 @@ d3.cdllist = function(d3, canvasID, w, h, data, transformObject) {
                 return parseFloat(d3.select(this.parentNode).select(".last-vertical-line-two").attr("x1"));
         })
         .attr("x2", function(d,i){
-              number_of_rows_left = (-1*( parseInt(Object.keys(data).length) % elementsPerRow)) + elementsPerRow;
+              var number_of_rows_left = (-1*( parseInt(Object.keys(data).length) % elementsPerRow)) + elementsPerRow;
               if( number_of_rows_left ==  elementsPerRow-1){
                   return (-1* (defaultSize + spacing) ) + 134 - 30;
               }
@@ -565,7 +527,6 @@ d3.cdllist = function(d3, canvasID, w, h, data, transformObject) {
         })
         .attr("stroke",function(d,i){
           return d3.select(this.parentNode).select(".last-vertical-line-two").attr("stroke");
-            // return d.linktargetcolor || "black";
         })
         // .attr("stroke","red")
         .attr("stroke-width",5);
@@ -591,7 +552,6 @@ d3.cdllist = function(d3, canvasID, w, h, data, transformObject) {
               // number_of_rows_left = ( parseInt(Object.keys(data).length) / elementsPerRow) + elementsPerRow;
               return parseFloat(d3.select(this.parentNode).select(".last-g-horizontal-line-two").attr("y1"));
         })
-        // .attr("stroke","yellow")
         .attr("stroke",function(d,i){
           return d3.select(this.parentNode).select(".last-vertical-line-two").attr("stroke");
             // return d.linktargetcolor || "black";
@@ -613,10 +573,8 @@ d3.cdllist = function(d3, canvasID, w, h, data, transformObject) {
               return parseInt(d3.select(this.parentNode).select(".last-g-vertical-line-two").attr("y1"));
         })
         .attr("stroke",function(d,i){
-          return d3.select(this.parentNode).select(".last-vertical-line-two").attr("stroke");
-            // return d.linktargetcolor || "black";
+              return d3.select(this.parentNode).select(".last-vertical-line-two").attr("stroke");
         })
-        // .attr("stroke","yellow")
         .attr("stroke-width",5)
         .attr("marker-start","url('#Triangle')");
 

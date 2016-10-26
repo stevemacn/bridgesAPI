@@ -27,15 +27,46 @@ block content
                           if(assignments[x].vistype == "nodelink")
                               img.visimg(src='/img/graph.png' title=assignments[x].vistype)
                           else if(assignments[x].vistype == "Alist")
-                              img.visimg(src='/img/array.png' title=assignments[x].vistype)
+                              img.visimg(src='/img/arrayy.png' title=assignments[x].vistype)
                           else
                               img.visimg(src='/img/'+assignments[x].vistype+'.png' title=assignments[x].vistype)
+                          //- if(assignments[x].vistype == 'graph')
+                          //-     img(src='/img/graph.png' title=assignments[x].vistype)
+                          //- else if((assignments[x].vistype == 'tree'))
+                          //-     img(src='/img/tree.png' title=assignments[x].vistype)
+                          //- else if((assignments[x].vistype == 'llist'))
+                          //-     img(src='/img/sllist.png' title=assignments[x].vistype)
+                          //- else if((assignments[x].vistype == 'dllist'))
+                          //-     img(src='/img/dllist.png' title=assignments[x].vistype)
+                          //- else if((assignments[x].vistype == 'c-llist'))
+                          //-     img(src='/img/cllist.png' title=assignments[x].vistype)
+                          //- else if((assignments[x].vistype == 'c-dllist'))
+                          //-     img(src='/img/cdllist.png' title=assignments[x].vistype)
+                          //- else if((assignments[x].vistype == 'Alist'))
+                          //-     img(src='/img/array.png' title=assignments[x].vistype)
+                          //- else
+                          //-     img(src='/img/graphllist.png' title=assignments[x].vistype)
                   h4(style="text-align: center") #{assignments[x].username}
                   //- h6(style="text-align: center") #{assignments[x].vistype}
                   h6(style="text-align: center") #{assignments[x].data[0].visual}
-
+                        //- - console.log(assignments[x]);
+                //- - for (var x = 0; x < usernames.length; x++)
+                //-     - console.log(assignmentNumber)
+                //-     a(href="/assignments/"+assignmentNumber+"/"+usernames[x], style="float:left;width:100px; margin-left:50px")
+                //-       if(assignments[x].vistype == 'graph')
+                //-           img(src='/img/graph.png' title=assignments[x].vistype)
+                //-       else if((assignments[x].vistype == 'tree'))
+                //-           img(src='/img/tree.png' title=assignments[x].vistype)
+                //-       else
+                //-           img(src='/img/LList.png' title=assignments[x].vistype)
+                //-       h4(style="text-align: center") #{usernames[x]}
 block footerjs
     script.
+        var breakIfImageError = false;
         $(".visimg").on("error",function(x){
-            $(this).attr("src","/img/graphllist.png");
+            if(!breakIfImageError){
+              $(this).attr("src","/img/llist.png");
+              breakIfImageError = true;
+            }
         });
+    

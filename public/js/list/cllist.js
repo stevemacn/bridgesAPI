@@ -3,55 +3,7 @@
 Circular Linked List visualization for Bridges
 
 */
-d3.csllist = function(d3, canvasID, w, h, data, transformObject) {
-
-
-    function getTranslateScaleCookie(cname) {
-        var name = cname + "=";
-        var ca = document.cookie.split(';');
-        for(var i=0; i<ca.length; i++) {
-            var c = ca[i];
-            while (c.charAt(0)==' ') {
-                c = c.substring(1);
-            }
-            if (c.indexOf(name) == 0) {
-                return c.substring(name.length, c.length);
-            }
-        }
-        return "";
-    }
-
-    var visID = canvasID.substr(4);
-
-    var finalTranslate = [50, -5];
-    var finalScale = 0.36;
-
-    // if(transformObject.transform.translatex != undefined && transformObject.transform.translatey != undefined && transformObject.transform.scale != undefined){
-    // console.log(transformObject);
-    if(transformObject != undefined && transformObject.hasOwnProperty('translatex') && transformObject.hasOwnProperty('translatey') && transformObject.hasOwnProperty('scale')){
-        finalTranslate = [transformObject.translatex, transformObject.translatey];
-        finalScale = transformObject.scale;
-        console.log("fromDB");
-    }else{
-        console.log("fromCookie");
-        var cname = "vis"+visID+"-"+location.pathname;
-        var cookieStringValue = getTranslateScaleCookie(cname);
-        var cookieJSONValue;
-        try{
-            cookieJSONValue = JSON.parse(cookieStringValue);
-        }catch(err){
-            console.log(err);
-        }
-
-        if(cookieJSONValue){
-          if(cookieJSONValue.hasOwnProperty("translatex") &&
-             cookieJSONValue.hasOwnProperty("translatey") &&
-             cookieJSONValue.hasOwnProperty("scale")){
-               finalTranslate = [cookieJSONValue.translatex, cookieJSONValue.translatey];
-               finalScale = [cookieJSONValue.scale];
-          }
-        }
-    }
+d3.csllist = function(d3, canvasID, w, h, data) {
 
     d3.selection.prototype.moveToFront = function() {
         return this.each(function(){
@@ -68,11 +20,22 @@ d3.csllist = function(d3, canvasID, w, h, data, transformObject) {
         });
     };
 
+    var visID = canvasID.substr(4);
+    var finalTranslate = [50, -5];
+    var finalScale = 0.36;
+
     // var spacing = 5;        // spacing between elements
     var spacing = 115;
     var marginLeft = 20;
     var defaultSize = 100;  // default size of each element box
     var defaultSizeW = 160;  // default width of each element box
+    var elementsPerRow = 4 * parseInt((w - (spacing + defaultSize)) / (spacing + defaultSize));
+
+    var transformObject = BridgesVisualizer.getTransformObjectFromCookie(visID);
+    if(transformObject){
+        finalTranslate = transformObject.translate;
+        finalScale = transformObject.scale;
+    }
 
     // var myScale = 0.36;
     // if(w > 1200){ myScale = 0.28;}
@@ -99,7 +62,8 @@ d3.csllist = function(d3, canvasID, w, h, data, transformObject) {
     svgGroup.attr('transform', 'translate(' + zoom.translate() + ') scale(' + zoom.scale() + ')');
     allSVG.push(svgGroup);
 
-    var elementsPerRow = 4 * parseInt((w - (spacing + defaultSize)) / (spacing + defaultSize));
+    // var elementsPerRow = 4 * parseInt((w - (spacing + defaultSize)) / (spacing + defaultSize));
+    // var elementsPerRow = 2;
     // var elementsPerRow = data.dimension.rowsCount || Object.keys(data).length;
 
     // Bind nodes to array elements
@@ -236,7 +200,6 @@ d3.csllist = function(d3, canvasID, w, h, data, transformObject) {
           }else{
             return "url('#Triangle')";
           }
-
         })
         .attr("marker-start",function(d,i){
           if(i % elementsPerRow == (elementsPerRow-1) && (i != Object.keys(data).length-1) ){
@@ -244,61 +207,60 @@ d3.csllist = function(d3, canvasID, w, h, data, transformObject) {
           }else{
             return "url('#Circle')";
           }
-
         });
 
-    // var data_length = Object.keys(data).length;
-    // for(var qq = elementsPerRow-1; qq < data_length; qq=qq+ (1*elementsPerRow) ){
-    //     d3.select(d3.select("#svg"+visID+"pointer-arrow-"+qq)[0][0].parentNode)
-    //         .append("line")
-    //         .attr("class","last-horizontal-line")
-    //         .attr("stroke",function(d,i){
-    //             return d3.select(this.parentNode).select(".last-vertical-line").attr("stroke");
-    //          })
-    //         .attr("stroke-width",5)
-    //         .attr("y1", function(d,i){
-    //           return d3.select(this.parentNode).select(".last-vertical-line").attr("y1");
-    //         })
-    //         .attr("y2", function(d,i){
-    //           return d3.select(this.parentNode).select(".last-vertical-line").attr("y1");
-    //         })
-    //         .attr("x1", function(d,i){
-    //           return ( (elementsPerRow-1) * (-1*(spacing + defaultSize)) ) + 15;
-    //         })
-    //         .attr("x2", function(d,i){
-    //           return d3.select(this.parentNode).select(".last-vertical-line").attr("x1");
-    //         })
-    //         .attr("display",function(d,i){
-    //             if(Object.keys(data).length-1 == qq){
-    //                 return "none";
-    //             }
-    //         });
-    // }
-    //
-    // for(var qq = elementsPerRow-1; qq < data_length; qq=qq+ (1*elementsPerRow) ){
-    //   d3.select(d3.select("#svg"+visID+"pointer-arrow-"+qq)[0][0].parentNode)
-    //       .append("line")
-    //       .attr("stroke",function(){return d3.select(this.parentNode).select(".last-vertical-line").attr("stroke");})
-    //       .attr("stroke-width",5)
-    //       .attr("y1", function(d,i){
-    //           return parseInt(d3.select(this.parentNode).select(".last-horizontal-line").attr("y1")) - 3;
-    //       })
-    //       .attr("y2", function(d,i){
-    //           return parseInt( d3.select(this.parentNode).select(".last-horizontal-line").attr("y1") ) + 100;
-    //       })
-    //       .attr("x1", function(d,i){
-    //         return d3.select(this.parentNode).select(".last-horizontal-line").attr("x1");
-    //       })
-    //       .attr("x2", function(d,i){
-    //         return d3.select(this.parentNode).select(".last-horizontal-line").attr("x1");
-    //       })
-    //       .attr("marker-end","url('#Triangle')")
-    //       .attr("display",function(d,i){
-    //         if(Object.keys(data).length-1 == qq){
-    //             return "none";
-    //         }
-    //       });
-    // }
+    var data_length = Object.keys(data).length;
+    for(var qq = elementsPerRow-1; qq < data_length; qq=qq+ (1*elementsPerRow) ){
+        d3.select(d3.select("#svg"+visID+"pointer-arrow-"+qq)[0][0].parentNode)
+            .append("line")
+            .attr("class","last-horizontal-line")
+            .attr("stroke",function(d,i){
+                return d3.select(this.parentNode).select(".last-vertical-line").attr("stroke");
+             })
+            .attr("stroke-width",5)
+            .attr("y1", function(d,i){
+              return d3.select(this.parentNode).select(".last-vertical-line").attr("y1");
+            })
+            .attr("y2", function(d,i){
+              return d3.select(this.parentNode).select(".last-vertical-line").attr("y1");
+            })
+            .attr("x1", function(d,i){
+              return ( (elementsPerRow-1) * (-1*(spacing + defaultSize)) ) + 15;
+            })
+            .attr("x2", function(d,i){
+              return d3.select(this.parentNode).select(".last-vertical-line").attr("x1");
+            })
+            .attr("display",function(d,i){
+                if(Object.keys(data).length-1 == qq){
+                    return "none";
+                }
+            });
+    }
+
+    for(var qq = elementsPerRow-1; qq < data_length; qq=qq+ (1*elementsPerRow) ){
+      d3.select(d3.select("#svg"+visID+"pointer-arrow-"+qq)[0][0].parentNode)
+          .append("line")
+          .attr("stroke",function(){return d3.select(this.parentNode).select(".last-vertical-line").attr("stroke");})
+          .attr("stroke-width",5)
+          .attr("y1", function(d,i){
+              return parseInt(d3.select(this.parentNode).select(".last-horizontal-line").attr("y1")) - 3;
+          })
+          .attr("y2", function(d,i){
+              return parseInt( d3.select(this.parentNode).select(".last-horizontal-line").attr("y1") ) + 100;
+          })
+          .attr("x1", function(d,i){
+              return d3.select(this.parentNode).select(".last-horizontal-line").attr("x1");
+          })
+          .attr("x2", function(d,i){
+              return d3.select(this.parentNode).select(".last-horizontal-line").attr("x1");
+          })
+          .attr("marker-end","url('#Triangle')")
+          .attr("display",function(d,i){
+              if(Object.keys(data).length-1 == qq){
+                  return "none";
+              }
+          });
+    }
 
     for(var qq = 0; qq < Object.keys(data).length; qq++){
         d3.select("#svg"+visID+"g"+qq).moveToBack();
@@ -314,7 +276,6 @@ d3.csllist = function(d3, canvasID, w, h, data, transformObject) {
         .attr("x2",145)
         .attr("y1",160)
         .attr("y2",defaultSize / 2);
-
 
 
     last_g
@@ -334,7 +295,6 @@ d3.csllist = function(d3, canvasID, w, h, data, transformObject) {
               }
               number_of_rows_left = parseInt(Object.keys(data).length) % elementsPerRow;
               return ((number_of_rows_left) * (-1*(spacing + defaultSize))) + 130;
-
         })
         .attr("y1", function(d,i){
               return parseFloat(d3.select(this.parentNode).select(".last-vertical-line").attr("y1")) - 3;
@@ -343,9 +303,8 @@ d3.csllist = function(d3, canvasID, w, h, data, transformObject) {
               return parseFloat(d3.select(this.parentNode).select(".last-vertical-line").attr("y1")) - 3;
         })
         .attr("stroke",function(d,i){
-            return d3.select(this.parentNode).select(".last-vertical-line").attr("stroke") || "black";
+              return d3.select(this.parentNode).select(".last-vertical-line").attr("stroke") || "black";
          })
-
         .attr("stroke-width",5);
 
       last_g

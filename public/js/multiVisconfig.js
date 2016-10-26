@@ -1,4 +1,3 @@
-
 // Bridges visualizer object to remove vis methods from the global scope
 BridgesVisualizer.strokeWidthRange = d3.scale.linear()
                         .domain([1,10])
@@ -9,6 +8,42 @@ BridgesVisualizer.getColor = function(color) {
   if(Array.isArray(color))
     return "rgba(" + color[0] + "," + color[1] + "," + color[2] + "," + color[3] + ")";
   return color;
+};
+
+// function to return the transformObject saved positions
+BridgesVisualizer.getTransformObjectFromCookie = function(visID) {
+        var name = "vis"+visID+"-"+location.pathname + "=";
+        // var name = cname + "=";
+        var ca = document.cookie.split(';');
+        for(var i=0; i<ca.length; i++) {
+            var c = ca[i];
+            while (c.charAt(0)==' ') {
+                c = c.substring(1);
+            }
+            if (c.indexOf(name) == 0) {
+                // return c.substring(name.length, c.length);
+                var cookieStringValue = c.substring(name.length, c.length);
+                var cookieJSONValue;
+                try{
+                    cookieJSONValue = JSON.parse(cookieStringValue);
+                }catch(err){
+                    console.log(err, cookieStringValue);
+                }
+
+                if(cookieJSONValue){
+                  if(cookieJSONValue.hasOwnProperty("translatex") &&
+                     cookieJSONValue.hasOwnProperty("translatey") &&
+                     cookieJSONValue.hasOwnProperty("scale")){
+                       var finalTranslate = [parseFloat(cookieJSONValue.translatex), parseFloat(cookieJSONValue.translatey)];
+                       var finalScale = [parseFloat(cookieJSONValue.scale)];
+                       return {"translate":finalTranslate, "scale":finalScale};
+                  }
+                }else{
+                  return undefined;
+                }
+            }
+        }
+        return "";
 };
 
 // bind event handlers for ui
@@ -31,8 +66,8 @@ if( map )
 for (var key in data) {
   if (data.hasOwnProperty(key)) {
     var ele = document.getElementById("vis" + key),
-    width = ele.clientWidth - 15,
-    height = ele.clientHeight + 15;
+        width = ele.clientWidth - 15,
+        height = ele.clientHeight + 15;
 
     if (d3.bst) {
         bst = d3.bst(d3, "#vis" + key, width, height);
@@ -49,7 +84,7 @@ for (var key in data) {
     }
     else if(d3.sllist){
         var sortedNodes = sortListByLinks(data[key]);
-        d3.sllist(d3, "#vis" + key, width, height, sortedNodes, data[key].transform);
+        d3.sllist(d3, "#vis" + key, width, height, sortedNodes);
     }
     else if(d3.csllist){
         var sortedNodes = sortListByLinks(data[key]);
@@ -61,6 +96,12 @@ for (var key in data) {
     else if (d3.array) {
           d3.array(d3, "#vis" + key, width, height, data[key].nodes);
     }
+    else if (d3.array2d) {
+          d3.array2d(d3, "#vis" + key, width, height, data[key].nodes, data[key].dims);
+    }
+    else if (d3.array3d) {
+          d3.array3d(d3, "#vis" + key, width, height, data[key].nodes, data[key].dims);
+    }
     else if (d3.graph) {
         d3.graph(d3, "#vis" + key, width, height, data[key]);
     }
@@ -68,38 +109,37 @@ for (var key in data) {
         console.log("unknown data type");
         d3.graph(d3, "#vis" + key, width, height, data[key]);
     }
-
     visCount++;
     maximizedCount++;
   }
 }
 
-/*
-  Recursive function adds a null child to enforce binary search tree child positioning.
-  Optimizations: add the null child nodes (perhaps with more appropriate contents and checking)
-    at some point in the controller, either when uploading a tree assignment or rendering a tree visualization.
-    We will also need to enforce different rules for positioning in n-ary trees.
- */
-function tempAddChildNode( root ) {
-  if( root.role || !root.children ) return;
-
-  if( root.children.length == 2 ) {
-    tempAddChildNode( root.children[0] );
-    tempAddChildNode( root.children[1] );
-  }
-  else if( root.children.length == 1 ) {
-    if( parseFloat( root.children[0].key ) < parseFloat( root.key ) ) {
-      root.children[1] = root.children[0];
-      root.children[0] = {role: "nullChild"};
-      tempAddChildNode( root.children[0] );
-      tempAddChildNode( root.children[1] );
-    } else {
-      root.children[1] = {role: "nullChild"};
-      tempAddChildNode( root.children[0] );
-      tempAddChildNode( root.children[1] );
-    }
-  }
-}
+// /*
+//   Recursive function adds a null child to enforce binary search tree child positioning.
+//   Optimizations: add the null child nodes (perhaps with more appropriate contents and checking)
+//     at some point in the controller, either when uploading a tree assignment or rendering a tree visualization.
+//     We will also need to enforce different rules for positioning in n-ary trees.
+//  */
+// function tempAddChildNode( root ) {
+//   if( root.role || !root.children ) return;
+//
+//   if( root.children.length == 2 ) {
+//     tempAddChildNode( root.children[0] );
+//     tempAddChildNode( root.children[1] );
+//   }
+//   else if( root.children.length == 1 ) {
+//     if( parseFloat( root.children[0].key ) < parseFloat( root.key ) ) {
+//       root.children[1] = root.children[0];
+//       root.children[0] = {role: "nullChild"};
+//       tempAddChildNode( root.children[0] );
+//       tempAddChildNode( root.children[1] );
+//     } else {
+//       root.children[1] = {role: "nullChild"};
+//       tempAddChildNode( root.children[0] );
+//       tempAddChildNode( root.children[1] );
+//     }
+//   }
+// }
 
 // Reset positions and scales for all visualization divs
 function reset() {
@@ -300,32 +340,19 @@ function sortListByLinks(unsortedNodes){
         getLinkFromSource[links[i].source+"-"+links[i].target] = links[i];//creating a unique identifier for every link
     }
 
-    head = unsortedNodes.head || Object.keys(unsortedNodes.nodes).length-1;
-    for(var h in unsortedNodes.nodes){//looping through the length of the nodes
+    head = unsortedNodes.head || Object.keys(nodes).length-1;
+    // for(var h in nodes){//looping through the length of the nodes
+    for(var i = 0; i < nodes.length; i++){
         var key = head + "-" + getTargetFromSource[head];//link from source to target
         var yek = getTargetFromSource[head] + "-" + head;//link from target to source
         if(getLinkFromSource[key]) nodes[head]['linkone'] = getLinkFromSource[key];//if there is a link, insert in the nodes
         if(getLinkFromSource[yek]) nodes[head]['linktwo'] = getLinkFromSource[yek];//if there is a link, insert in the nodes
-        sortedNodes.push(nodes[head]);
+        if(nodes[head])sortedNodes.push(nodes[head]);
         head = getTargetFromSource[head];//getting the next target
+        // if(!head)break;
     }
     // links = nodes = undefined; console.log(sortedNodes);
     return sortedNodes;
-}
-
-
-// send the defaultVisType chosen by the user
-function setDefaultVisType(defaultVistype,elem){
-    $(".visdefaultoption").removeClass("visdefaultoption-active");
-    $(elem).addClass("visdefaultoption-active");
-    $.ajax({
-        url: "/assignments/setdefaultvistype/"+assignmentNumber,
-        type: "post",
-        data: {"defaultvistype":defaultVistype}
-    }).done(function() {
-        console.log('positions saved');
-        location.reload();
-    });
 }
 
 // Saved the translate and scale of every visualization in an assignemts

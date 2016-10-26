@@ -197,15 +197,12 @@ module.exports = function(app, passport, streamable) {
     app.get('/assignments/:assignmentNumber', gallery.view, handleError)
     app.get('/username/:userNameRes', isLoggedIn, userGallery.view, handleError)
 
-
     app.post('/users/session',
         passport.authenticate('local-log', {
             successRedirect: '/username/',
             failureRedirect: '/login',
             failureFlash: true
-        }))
-
-
+        }));
 
     // -------------------------------------------------------
     //

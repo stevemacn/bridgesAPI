@@ -5,53 +5,7 @@ Linked List visualization for Bridges
 */
 
 
-d3.sllist = function(d3, canvasID, w, h, data, transformObject) {
-
-    function getTranslateScaleCookie(cname) {
-        var name = cname + "=";
-        var ca = document.cookie.split(';');
-        for(var i=0; i<ca.length; i++) {
-            var c = ca[i];
-            while (c.charAt(0)==' ') {
-                c = c.substring(1);
-            }
-            if (c.indexOf(name) == 0) {
-                return c.substring(name.length, c.length);
-            }
-        }
-        return "";
-    }
-
-    var visID = canvasID.substr(4);
-
-    var finalTranslate = [50, -5];
-    var finalScale = 0.36;
-
-    if(transformObject != undefined && transformObject.hasOwnProperty('translatex') && transformObject.hasOwnProperty('translatey') && transformObject.hasOwnProperty('scale')){
-        finalTranslate = [transformObject.translatex, transformObject.translatey];
-        finalScale = transformObject.scale;
-        // console.log("fromDB");
-    }else{
-        // console.log("fromCookie");
-        var cname = "vis"+visID+"-"+location.pathname;
-        var cookieStringValue = getTranslateScaleCookie(cname);
-        var cookieJSONValue;
-        try{
-            cookieJSONValue = JSON.parse(cookieStringValue);
-        }catch(err){
-            console.log(err);
-        }
-
-        if(cookieJSONValue){
-          if(cookieJSONValue.hasOwnProperty("translatex") &&
-             cookieJSONValue.hasOwnProperty("translatey") &&
-             cookieJSONValue.hasOwnProperty("scale")){
-               finalTranslate = [cookieJSONValue.translatex, cookieJSONValue.translatey];
-               finalScale = [cookieJSONValue.scale];
-          }
-        }
-    }
-
+d3.sllist = function(d3, canvasID, w, h, data) {
     // if(w > 1200){ finalScale = 0.28;}
 
     d3.selection.prototype.moveToFront = function() {
@@ -70,10 +24,21 @@ d3.sllist = function(d3, canvasID, w, h, data, transformObject) {
     };
 
     // var spacing = 5;        // spacing between elements
+    var visID = canvasID.substr(4);
+    var finalTranslate = [50, -5];
+    var finalScale = 0.36;
+    
     var spacing = 115;
     var marginLeft = 20;
     var defaultSize = 100;  // default size of each element box
     var defaultSizeW = 160;  // default size of each element box
+    var elementsPerRow = 4 * parseInt((w - (spacing + defaultSize)) / (spacing + defaultSize));
+
+    var transformObject = BridgesVisualizer.getTransformObjectFromCookie(visID);
+    if(transformObject){
+        finalTranslate = transformObject.translate;
+        finalScale = transformObject.scale;
+    }
 
 
     // error when zooming directly after pan on OSX
@@ -98,7 +63,8 @@ d3.sllist = function(d3, canvasID, w, h, data, transformObject) {
     svgGroup.attr('transform', 'translate(' + zoom.translate() + ') scale(' + zoom.scale() + ')');
     allSVG.push(svgGroup);
 
-    var elementsPerRow = 4 * parseInt((w - (spacing + defaultSize)) / (spacing + defaultSize));
+    // var elementsPerRow = 4 * parseInt((w - (spacing + defaultSize)) / (spacing + defaultSize));
+    // var elementsPerRow = 2;
 
     // Bind nodes to array elements
     var nodes = svgGroup.selectAll("nodes")
@@ -131,7 +97,7 @@ d3.sllist = function(d3, canvasID, w, h, data, transformObject) {
             return defaultSizeW;
         })
         .style("fill", function(d) {
-            return BridgesVisualizer.getColor(d.color) || "steelblue";
+            if(d && d.color)return BridgesVisualizer.getColor(d.color);else return "steelblue";
         })
         .style("stroke", "gray")
         .style("stroke-width", 2);
@@ -169,7 +135,7 @@ d3.sllist = function(d3, canvasID, w, h, data, transformObject) {
         .append("text")
         .attr("class","value-textview")
         .text(function(d, i){
-          return d.name;
+          if(d && d.name) return d.name;
         })
         .attr("y", -10)
         .style("display","none");
@@ -251,7 +217,9 @@ d3.sllist = function(d3, canvasID, w, h, data, transformObject) {
             d3.select(d3.select("#svg"+visID+"pointer-arrow-"+qq)[0][0].parentNode)
                 .append("line")
                 .attr("class","last-horizontal-line")
-                .attr("stroke","black")
+                .attr("stroke",function(){
+                    return d3.select(this.parentNode).select(".last-vertical-line").attr("stroke") || "black";
+                })
                 .attr("stroke-width",5)
                 .attr("y1", function(d,i){
                   // console.log(  );
@@ -277,7 +245,9 @@ d3.sllist = function(d3, canvasID, w, h, data, transformObject) {
         for(var qq = elementsPerRow-1; qq < data_length; qq=qq+ (1*elementsPerRow) ){
           d3.select(d3.select("#svg"+visID+"pointer-arrow-"+qq)[0][0].parentNode)
               .append("line")
-              .attr("stroke","black")
+              .attr("stroke",function(){
+                  return d3.select(this.parentNode).select(".last-vertical-line").attr("stroke") || "black";
+              })
               .attr("stroke-width",5)
               .attr("y1", function(d,i){
                   return parseInt(d3.select(this.parentNode).select(".last-horizontal-line").attr("y1")) - 3;

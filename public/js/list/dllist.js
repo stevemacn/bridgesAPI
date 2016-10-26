@@ -3,57 +3,7 @@
 Doubly Linked List visualization for Bridges
 
 */
-d3.dllist = function(d3, canvasID, w, h, data, transformObject) {
-
-    function getTranslateScaleCookie(cname) {
-        var name = cname + "=";
-        var ca = document.cookie.split(';');
-        for(var i=0; i<ca.length; i++) {
-            var c = ca[i];
-            while (c.charAt(0)==' ') {
-                c = c.substring(1);
-            }
-            if (c.indexOf(name) == 0) {
-                return c.substring(name.length, c.length);
-            }
-        }
-        return "";
-    }
-
-    var visID = canvasID.substr(4);
-
-    var finalTranslate = [50, -5];
-    var finalScale = 0.36;
-
-    // if(transformObject.transform.translatex != undefined && transformObject.transform.translatey != undefined && transformObject.transform.scale != undefined){
-    // console.log(transformObject);
-    if(transformObject != undefined && transformObject.hasOwnProperty('translatex') && transformObject.hasOwnProperty('translatey') && transformObject.hasOwnProperty('scale')){
-        finalTranslate = [transformObject.translatex, transformObject.translatey];
-        finalScale = transformObject.scale;
-        console.log("fromDB");
-    }else{
-        console.log("fromCookie");
-        var cname = "vis"+visID+"-"+location.pathname;
-        var cookieStringValue = getTranslateScaleCookie(cname);
-        var cookieJSONValue;
-        try{
-            cookieJSONValue = JSON.parse(cookieStringValue);
-        }catch(err){
-            console.log(err);
-        }
-
-        if(cookieJSONValue){
-          if(cookieJSONValue.hasOwnProperty("translatex") &&
-             cookieJSONValue.hasOwnProperty("translatey") &&
-             cookieJSONValue.hasOwnProperty("scale")){
-               finalTranslate = [parseFloat(cookieJSONValue.translatex), parseFloat(cookieJSONValue.translatey)];
-               finalScale = [parseFloat(cookieJSONValue.scale)];
-          }
-        }
-
-        console.log(finalTranslate);
-        console.log(finalScale);
-    }
+d3.dllist = function(d3, canvasID, w, h, data) {
 
     d3.selection.prototype.moveToFront = function() {
         return this.each(function(){
@@ -70,20 +20,27 @@ d3.dllist = function(d3, canvasID, w, h, data, transformObject) {
         });
     };
 
-    // var spacing = 5;        // spacing between elements
-    var spacing = 115;
+    var visID = canvasID.substr(4);
+    var finalTranslate = [50, -5];
+    var finalScale = 0.36;
+    
+    var spacing = 115;  // spacing between elements
     var marginLeft = 20;
     var defaultSize = 100;  // default size of each element box
     var defaultSizeW = 160;  // default size of each element box
+    var elementsPerRow = 4 * parseInt((w - (spacing + defaultSize)) / (spacing + defaultSize));
 
-
+    var transformObject = BridgesVisualizer.getTransformObjectFromCookie(visID);
+    if(transformObject){
+        finalTranslate = transformObject.translate;
+        finalScale = transformObject.scale;
+    }
 
     // var myScale = 0.36;
     // if(w > 1200){ myScale = 0.28;}
 
     // error when zooming directly after pan on OSX
     // https://github.com/mbostock/d3/issues/2205
-
     var zoom = d3.behavior.zoom()
         .translate(finalTranslate)
         .scale(finalScale)
@@ -103,7 +60,8 @@ d3.dllist = function(d3, canvasID, w, h, data, transformObject) {
     svgGroup.attr('transform', 'translate(' + zoom.translate() + ') scale(' + zoom.scale() + ')');
     allSVG.push(svgGroup);
 
-    var elementsPerRow = 4 * parseInt((w - (spacing + defaultSize)) / (spacing + defaultSize));
+    // var elementsPerRow = 4 * parseInt((w - (spacing + defaultSize)) / (spacing + defaultSize));
+    // var elementsPerRow = 2;
     // var elementsPerRow = data.rows || Object.keys(data).length;
 
     // Bind nodes to array elements
@@ -129,15 +87,12 @@ d3.dllist = function(d3, canvasID, w, h, data, transformObject) {
           return "svg"+visID+"rect"+i;
         })
         .attr("height", function(d) {
-            //return parseFloat(d.size || defaultSize);
             return defaultSize;
         })
         .attr("width", function(d) {
-            //return parseFloat(d.size || defaultSize);
             return defaultSizeW;
         })
         .style("fill", function(d) {
-            // return BridgesVisualizer.getColor(d.color) || "steelblue";
             return BridgesVisualizer.getColor(d.color) || "steelblue";
         })
         .style("stroke", "gray")
@@ -162,7 +117,6 @@ d3.dllist = function(d3, canvasID, w, h, data, transformObject) {
         .attr("x2", 130)
         .attr("stroke", "black")
         .attr("stroke-width",2)
-        // .attr("marker-end","url('#Triangle')")
     nodes
         .append("line")
         .attr("y1", 0)
@@ -171,7 +125,6 @@ d3.dllist = function(d3, canvasID, w, h, data, transformObject) {
         .attr("x2", 30)
         .style("stroke", "black")
         .attr("stroke-width",2)
-        // .attr("marker-end","url('#Triangle')")
 
     // Show full array label above each element
     nodes
@@ -233,6 +186,11 @@ d3.dllist = function(d3, canvasID, w, h, data, transformObject) {
             if(d.linkone) return BridgesVisualizer.getColor(d.linkone.color);
             else return "black";
         })
+        // I think the stroke attributes for this new linkedlist are not
+        // .attr("stroke-width",function(d,i){
+        //    console.log(d);
+        //    if(d.linkone)return d.linkone.width || 5;
+        // })
         .attr("stroke-width",5)
         .attr("marker-end",function(d,i){
           if(i % elementsPerRow == (elementsPerRow-1) && (i != Object.keys(data).length-1) ){
