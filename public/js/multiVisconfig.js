@@ -218,7 +218,6 @@ function minimize() {
 function savePositions () {
   var updateTheseNodes = {};
 
-
   // store indices for all fixed nodes
   for (var key in data) {
     updateTheseNodes[key] = {
@@ -239,56 +238,55 @@ function savePositions () {
       url: "/assignments/updatePositions/"+assignmentNumber,
       type: "post",
       data: updateTheseNodes
-  }).done(function() {
-      console.log('positions saved');
+  }).done(function(status) {
+      if(status == 'OK'){
+          alertMessage("Node positions saved!", "success");
+      } else {
+          alertMessage("Unsuccessful. Try logging in!", "danger");
+      }
   });
 }
-
 
 //Asynchronously update the vis transform values
 //this method is just for testing, if approved, it still needs the ajax call and routing set up as well as the dabatase.
 //It also can be used with the tree visualization
-function saveListPositions(){
+function saveTransform(){
     var visTransforms = {};
     for (var key in data) {
         var my_transform = d3.transform(d3.select("#vis"+key).select("g").attr("transform"));
-        var my_translateX = my_transform.translate[0];
-        var my_translateY = my_transform.translate[1];
-        var my_scale = my_transform.scale[0];
-        var visTransform = {
-                                  // "id":key,
-                                "scale":my_scale,
-                           "translatex":my_translateX,
-                           "translatey":my_translateY
-                           };
-        visTransforms[key] = visTransform;
+        visTransforms[key] = {
+          "scale": parseFloat(my_transform.scale[0]),
+          "translatex": parseFloat(my_transform.translate[0]),
+          "translatey": parseFloat(my_transform.translate[1])
+        };
     }
 
-    console.log(visTransforms);
-    // send fixed node indices to the server to save
+    // send scale and translation data to the server to save
     $.ajax({
-        url: "/assignments/updateListPositions/"+assignmentNumber,
+        url: "/assignments/updateTransforms/"+assignmentNumber,
         type: "post",
         data: visTransforms
     }).done(function(status) {
         if(status == 'OK'){
-            var today = new Date().toLocaleTimeString()+" - "+new Date().toLocaleDateString();
-            $("#updateStatus").html("Saved!"+"<br>"+today);
-            $("#updateStatus").show();
-            setTimeout(function(){
-               $("#updateStatus").hide();
-            },3000);
-        }else{
-            $("#updateStatus").html("Try again!");
-            $("#updateStatus").css("color","red");
-            $("#updateStatus").show();
-            setTimeout(function(){
-               $("#updateStatus").hide();
-               $("#updateStatus").css("color","green");
-            },2500);
+            alertMessage("Scale and translation saved!", "success");
+        } else {
+            alertMessage("Unsuccessful. Try logging in!", "danger");
         }
     });
+}
 
+/*
+ Create a tooltip from the given message and status
+ status: success, danger, warning
+*/
+function alertMessage(message, status) {
+  var today = new Date().toLocaleTimeString()+" - "+new Date().toLocaleDateString();
+  $("#updateStatus").html(message+"<br>"+today);
+  $("#updateStatus").addClass("alert alert-" + status);
+  $("#updateStatus").show();
+  setTimeout(function(){
+     $("#updateStatus").hide();
+  },2500);
 }
 
 //this methods sorts any linkedlist by links
@@ -330,56 +328,43 @@ function setDefaultVisType(defaultVistype,elem){
     });
 }
 
-//this method handles what visualization supports saveVisStatesAsCookies()
-//the default case is reached when an allow type is met
-function callSaveVisStatesAsCookies(){
-    switch(vistype){
-        case "nodelink":
-        case "tree":
-        case "Alist":
-          break;
-        default:
-          saveVisStatesAsCookies();
-    }
- }
-
-//this method saved an transform object('translate and scale') of every visualization in an assignemts
+// Saved the translate and scale of every visualization in an assignemts
 function saveVisStatesAsCookies(){
     var exdays = 30;
     try{
-          for (var key in data) {
-              var cookieName = "vis"+key+"-"+location.pathname;
-              var my_transform = d3.transform(d3.select("#vis"+key).select("g").attr("transform"));
-              var my_translateX = parseFloat(my_transform.translate[0]);
-              var my_translateY = parseFloat(my_transform.translate[1]);
-              var my_scale = parseFloat(my_transform.scale[0]);
-              var cookieValue = JSON.stringify(
-                            {
-                                    "scale":my_scale,
-                               "translatex":my_translateX,
-                               "translatey":my_translateY
-                            });
-              var d = new Date();
-              d.setTime(d.getTime() + (exdays*24*60*60*1000));
-              var expires = "expires=" + d.toGMTString();
-              document.cookie = cookieName+"="+cookieValue+"; "+expires;
-          }
-       var today = new Date().toLocaleTimeString()+" - "+new Date().toLocaleDateString();
-       $("#updateStatus").html("Position saved locally!"+"<br>"+today);
-       $("#updateStatus").show();
-       setTimeout(function(){
-          $("#updateStatus").hide();
-       },2500);
-    }catch(err){
+      for (var key in data) {
+          var cookieName = "vis"+key+"-"+location.pathname;
+          var my_transform = d3.transform(d3.select("#vis"+key).select("g").attr("transform"));
+
+          var cookieValue = JSON.stringify({
+            "scale": parseFloat(my_transform.scale[0]),
+            "translatex": parseFloat(my_transform.translate[0]),
+            "translatey": parseFloat(my_transform.translate[1])
+          });
+          var d = new Date();
+          d.setTime(d.getTime() + (exdays*24*60*60*1000));
+          var expires = "expires=" + d.toGMTString();
+          document.cookie = cookieName+"="+cookieValue+"; "+expires;
+      }
+      var today = new Date().toLocaleTimeString()+" - "+new Date().toLocaleDateString();
+      //  alertMessage("Scale and translation saved!", "success");
+    } catch(err){
       console.log(err);
     }
 }
 
-if(owner == 'false'){
-    try{
-        $("svg").mouseup(callSaveVisStatesAsCookies);//for testing purposes
-        $("svg").on('wheel',callSaveVisStatesAsCookies);//for testing purposes
-    }catch(err){
-        console.log(err);
-    }
+// Save cookies when scale and translation are updated
+//  only updates zoom after scrolling has stopped
+try{
+    var wheeling = null;
+    $("svg").mouseup(saveVisStatesAsCookies);
+    $("svg").on('wheel', function (e) {
+      clearTimeout(wheeling);
+      wheeling = setTimeout(function() {
+        saveVisStatesAsCookies();
+        wheeling = undefined;
+      }, 250);
+    });
+}catch(err){
+    console.log(err);
 }

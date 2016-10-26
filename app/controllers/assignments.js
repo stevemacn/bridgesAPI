@@ -53,25 +53,20 @@ exports.saveSnapshot = function(req, res, next) {
 exports.upload = function (req, res, next) {
     // C++ version posts JSON as object, JAVA posts as plain string
     if(typeof req.body != "object") {
-        //console.log("STRING: PARSING");
-        try { rawBody = JSON.parse(req.body); }
+        try { rawBody = JSON.parse(req.body); } // try parsing to object
         catch (e) {
-
             if(typeof req.body != 'object') {
-                // console.log(e)
                 return next(e + " invalid syntax for raw body of request");
             } else {
                 rawBody = req.body;
             }
         }
-    } else {
-        //console.log("OBJECT ALREADY");
+    } else {  // object already
         rawBody = req.body;
     }
 
     // Handle assignment number
     var assignmentID = req.params.assignmentID;
-    console.log("->", assignmentID);
     var assignmentRaw = assignmentID.split(".");
     var assignmentNumber = assignmentRaw[0];
     var subAssignment = assignmentRaw[1];
@@ -79,6 +74,7 @@ exports.upload = function (req, res, next) {
 
     // validate attributes
     var visualizationType = visTypes.getVisType(rawBody.visual);
+    console.log('!!!!!', rawBody.visual, visualizationType);
     var title = rawBody.title || "";
     var description = rawBody.description || "";
 
@@ -315,22 +311,17 @@ exports.show = function (req, res, next) {
         }
 
         var finalVistype;
-        var defaultvistype;
-        if(assignments[0].toObject()['defaultvistype']){
-            defaultvistype = assignments[0].toObject()['defaultvistype'];
-        }
-
         if(data.visual){
             finalVistype = visTypes.getVisType(data.visual);
         }else{
+            console.log("no data.visual!!!");
             finalVistype = assignments[0].vistype;
         }
-
 
         return res.render ('assignments/assignmentMulti', {
             "title":"Assignment " + assignmentNumber,
             "assignmentTitle": assignments[0].title,
-            "assignmentDescription": assignments[0].description,
+            "assignmentDescription": assignments[0].description.replace("\"", ""),
             "user":sessionUser,
             "data":allAssigns,
             "extent":Object.keys(allAssigns).length,
@@ -338,7 +329,6 @@ exports.show = function (req, res, next) {
             "schoolID":assignments[0].schoolID,
             "classID":assignments[0].classID,
             "vistype":finalVistype,
-            "defaultvistype":defaultvistype,
             "shared":assignments[0].shared,
             "owner":owner,
             "createMap": (function() { return (mapData.length > 0) ? true : false; })(),
@@ -347,6 +337,7 @@ exports.show = function (req, res, next) {
       }
   };
 
+/* Copy and paste JSON data to test assignment upload */
 exports.testJSON = function (req, res, next) {
     console.log('test JSON data for assignment upload');
     // this.next = next;
@@ -376,7 +367,7 @@ exports.testJSON = function (req, res, next) {
 
   };
 
-/* Update the nodes of the given assignment */
+/* Update the node positions of the given assignment and its subassignments */
 exports.savePositions = function(req, res) {
     Assignment
         .find({
@@ -413,8 +404,8 @@ exports.savePositions = function(req, res) {
     res.send("OK");
 };
 
-/* Update the nodes of the given assignment */
-exports.saveListPositions = function(req, res) {
+/* Save the zoom and translation for the given assignment */
+exports.updateTransforms = function(req, res) {
     Assignment
         .find({
           "assignmentNumber": req.params.assignmentNumber,
@@ -423,10 +414,17 @@ exports.saveListPositions = function(req, res) {
         .exec(function(err, assign) {
             if (err) return next(err);
 
-            // handle each assignment
+            // // handle each assignment
             for(var i in assign) {
-              // update the transform object in assign[i].data[0]
-              assign[i].data[0]['transform'] = req.body[i];
+              // ignore if default scale and translation
+              if(req.body[i].scale === "1" &&
+                  req.body[i].translatex === "0" &&
+                  req.body[i].translatey === "0") {
+                    continue;
+              }
+
+              //update the transform attribute in the data attribute
+              assign[i].data[0].transform = req.body[i];
 
               // save the updated data
               assign[i].markModified('data'); //http://mongoosejs.com/docs/faq.html
@@ -436,30 +434,7 @@ exports.saveListPositions = function(req, res) {
     res.send("OK");
 };
 
-/* Update the defaultvistype of the given assignment */
-exports.setDefaultVisType = function(req, res) {
-    Assignment
-        .find({
-          "assignmentNumber": req.params.assignmentNumber,
-          "email": req.user.email
-        })
-        .exec(function(err, assign) {
-            if (err) return next(err);
-
-            // handle each assignment
-            for(var i in assign) {
-              // set the defaultvisualization type for the linkedlists.
-              // now the user can choose how s/he wants to see the linkedlists
-              assign[i]["defaultvistype"] = req.body["defaultvistype"];
-
-              // save the updated defaultvistype
-              assign[i].markModified('defaultvistype'); //http://mongoosejs.com/docs/faq.html
-              assign[i].save();
-            }
-        });
-    res.send("OK");
-};
-
+/* Delete the given assignment for the current user */
 exports.deleteAssignment = function (req, res) {
     Assignment
         .find({

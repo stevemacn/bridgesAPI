@@ -224,14 +224,13 @@ td.right {
     /*max-width: 95%;*/
 }
 
-#updateStatus{
+#updateStatus {
     text-align: -webkit-center;
     text-align: center;
     display: none;
-    color: green;
-    position: absolute;
-    width: 50%;
-    left: 25%;
+    position: fixed;
+    width: 20%;
+    left: 40%;
 }
 
 .visdefaultoption{

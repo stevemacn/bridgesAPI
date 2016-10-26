@@ -5,25 +5,18 @@ block css
     link(rel='stylesheet',
          href='/css/assignment.css')
     link(rel='stylesheet', href='/components/css-toggle-switch/dist/toggle-switch.css')
-    
+
     svg#svgdfs(height='0',display='block')
         defs
           marker#Triangle(viewbox='0 0 10 10', refx='0', refy='5', markerunits='strokeWidth', markerwidth='4', markerheight='3', orient='auto-start-reverse')
-            path(d='M 0 0 L 10 5 L 0 10 z')        
+            path(d='M 0 0 L 10 5 L 0 10 z')
         defs
           marker#Circle(markerwidth='10', markerheight='10', refx='5', refy='5')
             circle.marker(cx='5', cy='5', r='1.5')
 
-block scripts
-    //script(type='application/ecmascript' async='' src='/js/html2canvas.js')
-    //script(type='application/ecmascript' async='' src='/js/FileSaver.js')
-    //script(type='application/ecmascript' async='' src='/js/Blob.js')
-    //script(type='application/ecmascript' async='' src='/js/dropzone.js')
-    //script(src='/js/snapshoot.js')
-
-
 block content
     include ../includes/header.jade
+    div#updateStatus
     div#assignmentCanvas(overflow='auto')
         if (owner)
             #optionContainer.optionContainer
@@ -42,23 +35,15 @@ block content
                 button(class='optionButton', id='reset')
                         label Reset view
 
-                if (vistype == "nodelink" || defaultvistype == "nodelink")
+                if (vistype == "nodelink")
                   button#savePosition.optionButton(
                           onclick='savePositions()')
                           label Save Positions
-                          
-                if (vistype == "llist" || vistype == "dllist" || vistype == "cllist" || vistype == "cdllist")
-                  if(defaultvistype != 'nodelink')
-                      button#savePosition.optionButton(
-                              onclick='saveListPositions()')
-                              label Save Positions
-                      p#updateStatus Position saved locally!
-                      img.visdefaultoption.visdefaultoption-active(onclick='setDefaultVisType("#{vistype}",this)' src='/img/'+vistype+'.png')
-                      img.visdefaultoption(onclick='setDefaultVisType("nodelink",this)' src='/img/graphllist.png')
-                  else
-                      img.visdefaultoption(onclick='setDefaultVisType("#{vistype}",this)' src='/img/'+vistype+'.png')
-                      img.visdefaultoption.visdefaultoption-active(onclick='setDefaultVisType("nodelink"),this' src='/img/graphllist.png')
-                  
+
+                button#saveTransform.optionButton(
+                        onclick='saveTransform()')
+                        label Save Zoom and Translation
+
                 div#assignmentDescription #{assignmentDescription}
 
                 form(action="/assignments/"+assignmentNumber, method='post')
@@ -106,18 +91,13 @@ block footerjs
 
     script(src = '/components/d3/d3.min.js')
     script(src = '/components/jquery/dist/jquery.min.js')
-    
-    script.
-        $(".visdefaultoption").on("error",function(x){
-            $(this).attr("src","/img/llist.png");
-        });
 
     script.
         var owner = '#{owner}'
-        if ( owner=="false" && '#{assignmentDescription}'.length <= 0 ) {
+        if ( owner=="false" && "#{assignmentDescription}".length <= 0 ) {
              $('.vis').css('width','99%') // adjust assignment width for public assignments
         }
-        
+
         var shared = '#{shared}'
         $('#private').prop('checked',false)
         $('#public').prop('checked',false)
@@ -142,36 +122,33 @@ block footerjs
         link(rel='stylesheet', href='/css/map.css')
         script( src = '//d3js.org/topojson.v1.min.js' )
         script( src = '/js/map.js' )
-    
+
         //TODO
-    - if(defaultvistype == "nodelink")
-        script(src = '/js/graph.js')
-              
-    - else if (vistype == "nodelink")
+    - if (vistype == "nodelink")
         script(src = '/js/graph.js')
 
     - else if (vistype == 'tree')
         link(rel='stylesheet', href='/css/vis/tree.css')
         script(src = '/js/bst/lib/bst.js')
-        
+
     - else if (vistype == 'queue')
         script(src = '/js/queue.js')
-        
+
     - else if (vistype == "Alist")
         script(src = '/js/array.js')
-        
+
     - else if (vistype == "llist")
         script(src = '/js/llist.js')
-        
+
     - else if (vistype == "dllist")
         script(src = '/js/dllist.js')
-        
+
     - else if (vistype == "cllist")
         script(src = '/js/cllist.js')
-        
+
     - else if (vistype == "cdllist")
         script(src = '/js/cdllist.js')
-            
+
     - else
         script.
             var error = !{JSON.stringify(data)}
@@ -200,4 +177,3 @@ block footerjs
         function saveSnapshot() {
             console.log("save snapshot");
         }
-        
