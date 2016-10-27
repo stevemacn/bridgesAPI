@@ -1,4 +1,4 @@
-.node rect {
+.node.rect {
     cursor: pointer;
     fill: #fff;
     stroke: steelblue;

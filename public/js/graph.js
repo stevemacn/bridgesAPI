@@ -124,9 +124,10 @@ d3.graph = function(d3, id, W, H, data) {
   //inner nodes
   node
       .append("text")
-      .attr("x", 12)
-      .attr("dy", ".35em")
+      .attr("x", BridgesVisualizer.textOffsets.graph.x + 2)
+      .attr("y",  BridgesVisualizer.textOffsets.graph.y + 14)
       .style("color",'black')
+      .style("pointer-events", "none")
       .style("opacity", 0.0)
       .text(function(d) {
           return d.name;
@@ -141,7 +142,7 @@ d3.graph = function(d3, id, W, H, data) {
   	for (var i = 0; i < words.length; i++) {
   	    var tspan = el.append('tspan').text(words[i]);
   	    if (i > 0)
-  		tspan.attr('x',0).attr('dy','15');
+  		tspan.attr('dy','15');
   	}
   };
 
@@ -169,7 +170,7 @@ d3.graph = function(d3, id, W, H, data) {
   });
 
   function mouseover() {
-      BridgesVisualizer.textMouseover(this);
+      BridgesVisualizer.textMouseover(this, "graph");
       d3.select(this).select("path").transition()
           .duration(750)
           .attr('d', function (d) {

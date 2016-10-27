@@ -164,8 +164,9 @@ d3.bst = function (d3, canvasID, w, h) {
             });
 
         nodeEnter.append("svg:text")
+            .classed("nodeLabel", true)
             .attr("dy", ".35em")
-            .attr("x", "35px")
+            .attr("x", "20px")
             .attr("y",  "-7px")
             .attr("text-anchor", "start")
             .style("opacity", 0.0)
@@ -249,25 +250,24 @@ d3.bst = function (d3, canvasID, w, h) {
         });
 
         // Add line breaks to node labels
-        svgGroup.selectAll('text').each(insertLineBreaks);
+        svgGroup.selectAll('text.nodeLabel').each(insertLineBreaks);
     }
 
 // Function to add line breaks to node labels/names
 function insertLineBreaks (d){
-
 	var el = d3.select(this);
     var words = d3.select(this).text().split('\n');
 
-    if(words.length > 1) {
+    // if(words.length > 1) {
         el.text('');
 
         for (var i = 0; i < words.length; i++) {
             var tspan = el.append('tspan').text(words[i]);
             if (i > 0)
-            tspan.attr('x',"35").attr('dy','15');
+            tspan.attr('x',"20").attr('dy','15');
             //tspan.attr('x',"0").attr('dy','15');
         }
-    }
+    // }
 }
 
 //    // zoom function
@@ -295,7 +295,7 @@ function mouseover() {
     // d3.select(this).select("text").transition()
     //     .duration(750)
     //     .style("display","block");
-BridgesVisualizer.textMouseover(this);
+    BridgesVisualizer.textMouseover(this, "tree");
     // var el = d3.select(this);
     // el.moveToFront();
 }

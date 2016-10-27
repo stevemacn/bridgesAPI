@@ -1,8 +1,13 @@
 // Bridges visualizer object to remove vis methods from the global scope
-BridgesVisualizer.strokeWidthRange = d3.scale.linear()
-                        .domain([1,10])
-                        .range([1,15])
-                        .clamp(true);
+BridgesVisualizer.strokeWidthRange = d3.scale.linear().domain([1,10]).range([1,15]).clamp(true);
+
+// Offsets for text labels for visualization types
+BridgesVisualizer.textOffsets = {
+  "graph": { "x": 22, "y": -10 },
+  "tree": { "x": 200, "y": -15 },
+  "default": { "x": 0, "y": 0}
+};
+
 // function to return color depending on the style of representation
 BridgesVisualizer.getColor = function(color) {
   if(Array.isArray(color))
@@ -10,20 +15,23 @@ BridgesVisualizer.getColor = function(color) {
   return color;
 };
 
-BridgesVisualizer.textMouseover = function(el) {
+BridgesVisualizer.textMouseover = function(el, visType) {
   var textElm = d3.select(el).select("text");
   textElm.transition().delay(50).duration(750).style("opacity",1.0);
-
-  var bgRect = textElm.node().getBoundingClientRect();
-  rect = d3.select(el).insert("svg:rect", "text").classed("bgRect", true)
-    .attr("id", "bgRect")
-    .attr("width", bgRect.width + 4)
-    .attr("height", bgRect.height + 5);
-  rect.transition().duration(500).style("opacity", 1.0);
+  // var offset = (BridgesVisualizer.textOffsets[visType]) ? BridgesVisualizer.textOffsets[visType] : BridgesVisualizer.textOffsets["default"];
+  // rect = d3.select(el).insert("svg:rect", "text").classed("bgRect", true)
+  //   .attr("id", "bgRect")
+  //   .attr("x", offset.x)
+  //   .attr("y", offset.y)
+  //   .attr("width", 20 + textElm.node().textContent.length * 5)
+  //   .attr("height", 18 * textElm.node().childElementCount);
+  // console.log(rect);
+  // rect.transition().duration(500).style("opacity", 1.0);
 };
 
 BridgesVisualizer.textMouseout = function(el) {
   d3.select(el).selectAll("#bgRect").transition().duration(500).style("opacity", 0.0);
+  d3.select(el).selectAll("#bgRect").transition().delay(500).remove();
   d3.select(el).select("text").transition().duration(500).style("opacity", 0.0);
 };
 
@@ -146,33 +154,6 @@ for (var key in data) {
     maximizedCount++;
   }
 }
-
-// /*
-//   Recursive function adds a null child to enforce binary search tree child positioning.
-//   Optimizations: add the null child nodes (perhaps with more appropriate contents and checking)
-//     at some point in the controller, either when uploading a tree assignment or rendering a tree visualization.
-//     We will also need to enforce different rules for positioning in n-ary trees.
-//  */
-// function tempAddChildNode( root ) {
-//   if( root.role || !root.children ) return;
-//
-//   if( root.children.length == 2 ) {
-//     tempAddChildNode( root.children[0] );
-//     tempAddChildNode( root.children[1] );
-//   }
-//   else if( root.children.length == 1 ) {
-//     if( parseFloat( root.children[0].key ) < parseFloat( root.key ) ) {
-//       root.children[1] = root.children[0];
-//       root.children[0] = {role: "nullChild"};
-//       tempAddChildNode( root.children[0] );
-//       tempAddChildNode( root.children[1] );
-//     } else {
-//       root.children[1] = {role: "nullChild"};
-//       tempAddChildNode( root.children[0] );
-//       tempAddChildNode( root.children[1] );
-//     }
-//   }
-// }
 
 // Reset positions and scales for all visualization divs
 function reset() {
