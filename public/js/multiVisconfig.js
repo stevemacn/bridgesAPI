@@ -8,6 +8,7 @@ BridgesVisualizer.textOffsets = {
   "default": { "x": 0, "y": 0}
 };
 
+
 // function to return color depending on the style of representation
 BridgesVisualizer.getColor = function(color) {
   if(Array.isArray(color))
@@ -15,25 +16,25 @@ BridgesVisualizer.getColor = function(color) {
   return color;
 };
 
-BridgesVisualizer.textMouseover = function(el, visType) {
-  var textElm = d3.select(el).select("text");
-  textElm.transition().delay(50).duration(750).style("opacity",1.0);
-  // var offset = (BridgesVisualizer.textOffsets[visType]) ? BridgesVisualizer.textOffsets[visType] : BridgesVisualizer.textOffsets["default"];
-  // rect = d3.select(el).insert("svg:rect", "text").classed("bgRect", true)
-  //   .attr("id", "bgRect")
-  //   .attr("x", offset.x)
-  //   .attr("y", offset.y)
-  //   .attr("width", 20 + textElm.node().textContent.length * 5)
-  //   .attr("height", 18 * textElm.node().childElementCount);
-  // console.log(rect);
-  // rect.transition().duration(500).style("opacity", 1.0);
-};
-
-BridgesVisualizer.textMouseout = function(el) {
-  d3.select(el).selectAll("#bgRect").transition().duration(500).style("opacity", 0.0);
-  d3.select(el).selectAll("#bgRect").transition().delay(500).remove();
-  d3.select(el).select("text").transition().duration(500).style("opacity", 0.0);
-};
+// BridgesVisualizer.textMouseover = function(el, visType) {
+//   var textElm = d3.select(el).select("text");
+//   textElm.transition().delay(50).duration(750).style("opacity",1.0);
+//   // var offset = (BridgesVisualizer.textOffsets[visType]) ? BridgesVisualizer.textOffsets[visType] : BridgesVisualizer.textOffsets["default"];
+//   // rect = d3.select(el).insert("svg:rect", "text").classed("bgRect", true)
+//   //   .attr("id", "bgRect")
+//   //   .attr("x", offset.x)
+//   //   .attr("y", offset.y)
+//   //   .attr("width", 20 + textElm.node().textContent.length * 5)
+//   //   .attr("height", 18 * textElm.node().childElementCount);
+//   // console.log(rect);
+//   // rect.transition().duration(500).style("opacity", 1.0);
+// };
+//
+// BridgesVisualizer.textMouseout = function(el) {
+//   d3.select(el).selectAll("#bgRect").transition().duration(500).style("opacity", 0.0);
+//   d3.select(el).selectAll("#bgRect").transition().delay(500).remove();
+//   d3.select(el).select("text").transition().duration(500).style("opacity", 0.0);
+// };
 
 // function to return the transformObject saved positions
 BridgesVisualizer.getTransformObjectFromCookie = function(visID) {
@@ -86,6 +87,67 @@ d3.selection.prototype.moveToBack = function() {
         }
     });
 };
+
+//scale values between 1 and 100 to a reasonable range
+BridgesVisualizer.scaleSize = d3.scale.linear()
+                              .domain([1,100])
+                              .range([80,4000]);
+
+
+// Define the div for the tooltip
+var div = d3.select("body").append("div")
+    .attr("class", "tooltip")
+    .style("opacity", 0);
+
+BridgesVisualizer.textMouseover = function(d) {
+    //the design can be changed later, if not appropriate. Mainly for implementation
+    if(d3.select(this).select("rect"))
+        d3.select(this).select("rect").style("stroke", "yellow").style("stroke-width", 10);
+
+    if(d3.select(this).select("path")){
+            d3.select(this).select("path").transition()
+                .duration(750)
+                .attr('d', function (d) {
+                    return d3.svg.symbol().type(d.shape||"circle")
+                            .size(BridgesVisualizer.scaleSize(40))();
+                }).style("stroke", "yellow").style("stroke-width", 5);
+    }
+    div.transition()
+        .duration(200)
+        .style("opacity", .9);
+    div	.html(d.name)
+        .style("left", (d3.event.pageX) + "px")
+        .style("top", (d3.event.pageY) + "px");
+    };
+
+BridgesVisualizer.textMouseout = function(d) {
+    if(d3.select(this).select("rect"))
+        d3.select(this).select("rect").style("stroke", "gray").style("stroke-width", 2);
+
+    if(d3.select(this).select("path")){
+            d3.select(this).select("path").transition()
+                .duration(750)
+                .attr('d', function (d) {
+                    return d3.svg.symbol().type(d.shape||"circle")
+                            .size(BridgesVisualizer.scaleSize(d.size||1))();
+                }).style("stroke", "").style("stroke-width", 0);
+    }
+
+      div.transition()
+          .duration(500)
+          .style("opacity", 0);
+};
+
+// var tip = d3.tip()
+//   .attr('class', 'd3-tip')
+//   .offset([-10, 0])
+//   .html(function(d) {
+//     // return "<strong>Frequency:</strong> <span style='color:red'>" + d.name + "</span>";
+//     return "<span style='color:white'>" + d.name + "</span>";
+// });
+//
+// BridgesVisualizer.tip = tip;
+
 
 // bind event handlers for ui
 d3.selectAll(".minimize").on("click", minimize);
@@ -372,6 +434,7 @@ function sortListByLinks(unsortedNodes){
 
 // Saved the translate and scale of every visualization in an assignemts
 function saveVisStatesAsCookies(){
+    console.log(this);
     var exdays = 30;
     try{
       for (var key in data) {

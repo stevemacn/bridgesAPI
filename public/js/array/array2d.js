@@ -12,15 +12,27 @@ d3.array2d = function(d3, canvasID, w, h, data, dimensions) {
     var dataSize = Object.keys(data).length-1;
     var levelCount = -1;
 
+
+    var visID = canvasID.substr(4);
+    var finalTranslate = [50, -5];
+    var finalScale = 0.36;
+    if(w > 1200){ finalScale = 0.56;}
+
+    var transformObject = BridgesVisualizer.getTransformObjectFromCookie(visID);
+    if(transformObject){
+      finalTranslate = transformObject.translate;
+      finalScale = transformObject.scale;
+    }
+
     // error when zooming directly after pan on OSX
     // https://github.com/mbostock/d3/issues/2205
 
-    var myScale = 0.36;
-    if(w > 1200){ myScale = 0.56;}
+
+
 
     var zoom = d3.behavior.zoom()
-        .translate([50, -5])
-        .scale(myScale)
+        .translate(finalTranslate)
+        .scale(finalScale)
         .scaleExtent([0,5])
         .on("zoom", zoomHandler);
     allZoom.push(zoom);
@@ -42,14 +54,16 @@ d3.array2d = function(d3, canvasID, w, h, data, dimensions) {
     var nodes = svgGroup.selectAll("nodes")
         .data(data)
         .enter().append("g")
-        .on("mouseover", mouseover)
-        .on("mouseout", mouseout)
+        // .on("mouseover", mouseover)
+        // .on("mouseout", mouseout)
         .attr("transform", function(d, i) {
             //size = parseFloat(d.size || defaultSize);
             size = defaultSize;
             // return "translate(" + (marginLeft + i * (spacing + size)) + ")";
             return "translate(" + (marginLeft + ((i % elementsPerRow) * (spacing + size)))+ "," + ((h/4) + ((Math.floor(i / elementsPerRow)) * (spacing+size))) + ")";
-        });
+        })
+        .on("mouseover", BridgesVisualizer.textMouseover)
+        .on("mouseout", BridgesVisualizer.textMouseout);
 
     // Create squares for each array element
     nodes.append("rect")
@@ -118,23 +132,23 @@ d3.array2d = function(d3, canvasID, w, h, data, dimensions) {
     };
     svgGroup.selectAll('text').each(insertLinebreaks);
 
-    function mouseover() {
-        // scale text size based on zoom factor
-        var hoverSize = d3.scale.linear().domain([0,0.7]).range([300, 14]).clamp(true);
-        d3.select(this).selectAll(".value-textview").transition()
-              .duration(250)
-              .style("display","block")
-              .style("font-size", function(d) {
-                return hoverSize(zoom.scale());
-              });
-    }
-
-    function mouseout() {
-        d3.select(this).selectAll(".value-textview").transition()
-            .duration(750)
-            .style("display","none")
-            .style("font-size", 14);
-    }
+    // function mouseover() {
+    //     // scale text size based on zoom factor
+    //     var hoverSize = d3.scale.linear().domain([0,0.7]).range([300, 14]).clamp(true);
+    //     d3.select(this).selectAll(".value-textview").transition()
+    //           .duration(250)
+    //           .style("display","block")
+    //           .style("font-size", function(d) {
+    //             return hoverSize(zoom.scale());
+    //           });
+    // }
+    //
+    // function mouseout() {
+    //     d3.select(this).selectAll(".value-textview").transition()
+    //         .duration(750)
+    //         .style("display","none")
+    //         .style("font-size", 14);
+    // }
 
     //// zoom function
     function zoomHandler() {

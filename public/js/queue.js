@@ -20,13 +20,15 @@ d3.queue = function(d3, canvasID, w, h, data) {
     var nodes = chart.selectAll("g")
         .data(data)
         .enter().append("g")
-        .on("mouseover", mouseover)
-        .on("mouseout", mouseout)
+        // .on("mouseover", mouseover)
+        // .on("mouseout", mouseout)
         .attr("transform", function(d, i) {
             size = parseFloat(d.size || defaultSize);
             return "translate(" +
                 i * spacing + "," + (h / 2 - size / 2) + ")";
         })
+        .on("mouseover", BridgesVisualizer.textMouseover)
+        .on("mouseout", BridgesVisualizer.textMouseout);
 
     nodes.append("rect")
         .attr("height", function(d) {

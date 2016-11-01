@@ -35,7 +35,7 @@ block content
                 button(class='optionButton', id='reset')
                         label Reset view
 
-                if (vistype == "nodelink")
+                if (vistypeObject.vistype == "nodelink")
                   button#savePosition.optionButton(
                           onclick='savePositions()')
                           label Save Positions
@@ -109,8 +109,12 @@ block footerjs
     script.
         var data = !{JSON.stringify(data)};
         var assignmentNumber = !{JSON.stringify(assignmentNumber)};
-        var vistype = "#{vistype}";
-        var defaultvistype = "#{defaultvistype}";
+        //- var vistype = "#{vistype}";
+        //- var toIncludeScript = "#{toIncludeScript}";
+        //- var toIncludeScriptLink = "#{toIncludeScriptLink}";
+        //- var defaultvistype = "#{defaultvistype}";
+        //- var defaultvistype = "#{defaultvistype}";
+        var vistypeObject = "#{vistypeObject}";
         var mapData =  !{JSON.stringify(mapData)};
         var createMap =  !{JSON.stringify(createMap)};
         var BridgesVisualizer = {};
@@ -122,37 +126,13 @@ block footerjs
         script( src = '//d3js.org/topojson.v1.min.js' )
         script( src = '/js/map.js' )
 
-    - if (vistype == "nodelink")
-        script(src = '/js/graph.js')
+    - if (vistypeObject.link)
+        link(rel='stylesheet', href='#{vistypeObject.link}')
+        script(src = '#{vistypeObject.script}')
 
-    - else if (vistype == 'tree')
-        link(rel='stylesheet', href='/css/vis/tree.css')
-        script(src = '/js/tree/lib/bst.js')
+    - else if (vistypeObject.script)
+        script( src = '#{vistypeObject.script}' )
 
-    - else if (vistype == 'queue')
-        script(src = '/js/queue.js')
-
-    - else if (vistype == "Alist")
-        script(src = '/js/array/array.js')
-
-    - else if (vistype == "Array2D")
-        script(src = '/js/array/array2d.js')
-
-    - else if (vistype == "Array3D")
-        script(src = '/js/lib/d3tip.js')
-        script(src = '/js/array/array3d.js')
-
-    - else if (vistype == "llist")
-        script(src = '/js/list/llist.js')
-
-    - else if (vistype == "dllist")
-        script(src = '/js/list/dllist.js')
-
-    - else if (vistype == "cllist")
-        script(src = '/js/list/cllist.js')
-
-    - else if (vistype == "cdllist")
-        script(src = '/js/list/cdllist.js')
 
     - else
         script.
@@ -162,7 +142,10 @@ block footerjs
                 .css('color', '#eb6864')
                 .css('font-size', '24px')
                 .css('padding', '50px')
+    //- script(src = '/js/lib/d3tip.js')
     script(src = '/js/multiVisconfig.js')
+    //- script(scr = "http://d3js.org/d3.v3.min.js")
+
 
     script.
         // Asynchronously update the assignment visibility

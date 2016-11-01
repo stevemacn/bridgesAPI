@@ -34,6 +34,28 @@ exports.getVisType = function(toCheck) {
         return "nodelink";
 };
 
+exports.getVisTypeObject = function(toCheck) {
+  var validTypes = {
+      "nodelink":   {"vistype":"nodelink",   "script":"/js/graph.js",          "link":""                  	},
+          "tree":   {"vistype":"tree",       "script":"/js/tree/lib/bst.js",   "link":"/css/vis/tree.css" 	},
+         "queue":   {"vistype":"queue",      "script":"/js/queue.js",          "link":""                  	},
+         "Alist":   {"vistype":"Alist",      "script":"/js/array/array.js",    "link":""						        },
+       "Array2D":   {"vistype":"Array2D",    "script":"/js/array/array2d.js",  "link":""					         	},
+       "Array3D":   {"vistype":"Array3D",    "script":"/js/array/array3d.js",  "link":""					         	},
+         "llist":   {"vistype":"llist",      "script":"/js/list/llist.js",     "link":""				        		},
+        "dllist":   {"vistype":"dllist",     "script":"/js/list/dllist.js",    "link":""				        		},
+        "cllist":   {"vistype":"cllist",     "script":"/js/list/cllist.js",    "link":""				        		},
+       "cdllist":   {"vistype":"cdllist",    "script":"/js/list/cdllist.js",   "link":""				        		}
+    };
+    if( toCheck && validTypes[toCheck] )
+      return validTypes[toCheck];
+    else if( toCheck && validTypes[toCheck.toString().toUpperCase()] )
+      return validTypes[toCheck.toString().toUpperCase()];
+    else
+        return {"vistype":"nodelink",   "script":"/js/graph.js",          "link":""                  	};
+};
+
+
 exports.getArrayType = function(dims){
       if(dims){
           var dimOne = parseInt(dims[0]);

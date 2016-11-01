@@ -11,6 +11,8 @@ d3.array3d = function(d3, canvasID, w, h, data, dimensions) {
         spacing = 40,        // spacing between elements
         marginLeft = 20,
         defaultSize = 100,  // default size of each element box
+        spacingBetweenGrid = defaultSize + 400,
+        valueToCenterGridTitle = 195;
         levelCount = -1,
         visID = canvasID.substr(4),
         finalTranslate = [50, -5],
@@ -33,15 +35,6 @@ d3.array3d = function(d3, canvasID, w, h, data, dimensions) {
 
     // console.log(elementsPerColumn);
 
-    var tip = d3.tip()
-      .attr('class', 'd3-tip')
-      .offset([-10, 0])
-      .html(function(d) {
-        // return "<strong>Frequency:</strong> <span style='color:red'>" + d.name + "</span>";
-        return "<span style='color:white'>" + d.name + "</span>";
-      });
-
-
     var zoom = d3.behavior.zoom()
         .translate(finalTranslate)
         .scale(finalScale)
@@ -54,16 +47,13 @@ d3.array3d = function(d3, canvasID, w, h, data, dimensions) {
         .attr("height", h)
         .attr("id", "svg" + canvasID.substr(4))
         .classed("svg", true)
-        .call(zoom)
-        .call(tip);
+        .call(zoom);
 
     var svgGroup = chart.append("g").attr("id","myG");
     // initialize the scale and translation
     svgGroup.attr('transform', 'translate(' + zoom.translate() + ') scale(' + zoom.scale() + ')');
     allSVG.push(svgGroup);
 
-    var idk = 1;
-    var myI = 0;
     // Bind nodes to array elements
     var nodes = svgGroup.selectAll("nodes")
         .data(data)
@@ -71,16 +61,13 @@ d3.array3d = function(d3, canvasID, w, h, data, dimensions) {
         // .on("mouseover", mouseover)
         // .on("mouseout", mouseout)
         .attr("transform", function(d, i) {
-            //size = parseFloat(d.size || defaultSize);
-            size = defaultSize;
-            return "translate(" + (marginLeft + ((i % elementsPerRow) * (spacing + size)))+ "," + ((h/4) + ((Math.floor(i / elementsPerRow)) * (spacing+size))) + ")";
-            // return "translate(" + (marginLeft + ((myI % elementsPerRow) * (spacing + size)))+ "," + ((h/4) + ((Math.floor(myI / elementsPerRow)) * (spacing+size))) + ")";
+            return "translate(" + (marginLeft + ((i % elementsPerRow) * (spacing + defaultSize)))+ "," + ((h/4) + ((Math.floor(i / elementsPerRow)) * (spacing+defaultSize))) + ")";
         })
         .attr("id",function(d,i){
             return "g"+i;
         })
-        .on("mouseover", tip.show)
-        .on("mouseout", tip.hide);
+        .on("mouseover", BridgesVisualizer.textMouseover)
+        .on("mouseout", BridgesVisualizer.textMouseout);
 
 
     // Create squares for each array element
@@ -123,15 +110,6 @@ d3.array3d = function(d3, canvasID, w, h, data, dimensions) {
         .attr("y", 115)
         .attr("x", defaultSize / 4);
 
-    // Show full array label above each element
-    // nodes
-    //     .append("text")
-    //     .attr("class","value-textview")
-    //     .text(function(d, i){
-    //       return d.name + " " + d3.select(this.parentNode).select(".index-textview").text();
-    //     })
-    //     .attr("y", -10)
-    //     .style("display","none");
 
     // Show array labels inside each element
     nodes
@@ -140,7 +118,8 @@ d3.array3d = function(d3, canvasID, w, h, data, dimensions) {
         .style("display", "block")
         .style("font-size", 30)
         .text(function(d) {
-            return d.name.substr(0,3)+"...";
+          // return d.name.substr(0,3)+"...";
+          return d.name;
         })
         .attr("fill", "black")
         .attr("x", 10)
@@ -161,7 +140,7 @@ d3.array3d = function(d3, canvasID, w, h, data, dimensions) {
     };
     svgGroup.selectAll('text').each(insertLinebreaks);
 
-    var my_translateX = parseFloat(d3.transform(d3.select("#g"+(elementsPerRow-1)).attr("transform")).translate[0]) + defaultSize + 400;
+    var my_translateX = parseFloat(d3.transform(d3.select("#g"+(elementsPerRow-1)).attr("transform")).translate[0]) + spacingBetweenGrid;
     d3.select("#g0").attr("class","first-2d");
 
     var ii = 0;
@@ -182,17 +161,18 @@ d3.array3d = function(d3, canvasID, w, h, data, dimensions) {
         }
     });
 
-    var half2d = ( ( (spacing + defaultSize) * elementsPerRow) / 2 ) - 20;
-    var first2dSize = d3.selectAll(".first-2d")[0];
+    var half2d = ( ( (spacing + defaultSize) * elementsPerRow) / 2 ) - marginLeft;
 
-    d3.selectAll(".first-2d").each(function(d,i){
+    //first2Ditems is the collection of the first node of every grid
+    var first2Ditems = d3.selectAll(".first-2d");
+    first2Ditems.each(function(d,i){
         svgGroup
             .append("line")
             .attr("class",function(){
                 if(i == 0){
                     return "first-v";
                 }
-                else if(i == first2dSize.length-1){
+                else if(i == first2Ditems[0].length-1){
                     return "last-v";
                 }
             })
@@ -203,17 +183,19 @@ d3.array3d = function(d3, canvasID, w, h, data, dimensions) {
             .attr("stroke", "black")
             .attr("stroke-width",5);
 
-          svgGroup.append("text")
-              .text(function(){
-                  return "(Slice: "+ i +")";
-                  // return "(0,0,"+ i +")";
-              })
-              .attr("x", (parseFloat(d3.transform(d3.select(this).attr("transform")).translate[0])+half2d) - 195)
-              .style("font-size","100px")
-              .attr("y", parseInt(d3.select(".first-v").attr("y2")) + 80);
+        svgGroup
+            .append("text")
+            .text(function(){
+                return "(Slice: "+ i +")";
+                // return "(0,0,"+ i +")";
+            })
+            .attr("x", (parseFloat(d3.transform(d3.select(this).attr("transform")).translate[0])+half2d) - valueToCenterGridTitle)
+            .style("font-size","100px")
+            .attr("y", parseInt(d3.select(".first-v").attr("y2")) + 80);
 
     });
 
+    //connecting the 2D grid with one horizontal line
     svgGroup
         .append("line")
         .attr("y1", d3.select(".first-v").attr("y1"))
@@ -223,32 +205,32 @@ d3.array3d = function(d3, canvasID, w, h, data, dimensions) {
         .attr("stroke", "black")
         .attr("stroke-width",5);
 
-    function mouseover() {
-        // scale text size based on zoom factor
-        var hoverSize = d3.scale.linear().domain([0,0.7]).range([300, 14]).clamp(true);
-        d3.select(this).selectAll(".value-textview").transition()
-              .duration(250)
-              .style("display","block")
-              .style("font-size", function(d,i) {
-                if(i > elementsPerRow){
-                  d3.select(this.parentNode).moveToFront();
-                }
-                return hoverSize(zoom.scale());
-              });
-    }
-
-    function mouseout() {
-        d3.select(this).selectAll(".value-textview").transition()
-            .duration(750)
-            .style("display",function(d,i){
-              if(i > elementsPerRow){                d3.select(this).moveToFront();
-
-                d3.select(this.parentNode).moveToBack();
-              }
-              return "none";
-            })
-            .style("font-size", 14);
-    }
+    // function mouseover() {
+    //     // scale text size based on zoom factor
+    //     var hoverSize = d3.scale.linear().domain([0,0.7]).range([300, 14]).clamp(true);
+    //     d3.select(this).selectAll(".value-textview").transition()
+    //           .duration(250)
+    //           .style("display","block")
+    //           .style("font-size", function(d,i) {
+    //             if(i > elementsPerRow){
+    //               d3.select(this.parentNode).moveToFront();
+    //             }
+    //             return hoverSize(zoom.scale());
+    //           });
+    // }
+    //
+    // function mouseout() {
+    //     d3.select(this).selectAll(".value-textview").transition()
+    //         .duration(750)
+    //         .style("display",function(d,i){
+    //           if(i > elementsPerRow){                d3.select(this).moveToFront();
+    //
+    //             d3.select(this.parentNode).moveToBack();
+    //           }
+    //           return "none";
+    //         })
+    //         .style("font-size", 14);
+    // }
 
     //// zoom function
     function zoomHandler() {

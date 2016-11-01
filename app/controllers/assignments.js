@@ -320,7 +320,11 @@ exports.show = function (req, res, next) {
             finalVistype = visTypes.getArrayType(data.dims)
         }
 
-        console.log(finalVistype);
+        var vistypeObject = visTypes.getVisTypeObject(finalVistype);
+
+        // console.log(Array.isArray(toInclude));
+
+        // console.log(finalVistype);
 
         return res.render ('assignments/assignmentMulti', {
             "title":"Assignment " + assignmentNumber,
@@ -332,7 +336,7 @@ exports.show = function (req, res, next) {
             "assignmentNumber":assignmentNumber,
             "schoolID":assignments[0].schoolID,
             "classID":assignments[0].classID,
-            "vistype":finalVistype,
+            "vistypeObject":vistypeObject,
             "shared":assignments[0].shared,
             "owner":owner,
             "createMap": (function() { return (mapData.length > 0) ? true : false; })(),

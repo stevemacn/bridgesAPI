@@ -65,7 +65,9 @@ d3.csllist = function(d3, canvasID, w, h, data) {
             size = defaultSize;
             //return "translate(" + (marginLeft + i * (spacing + size)) + ")";
             return "translate(" + (marginLeft + ((i % elementsPerRow) * (spacing + size)))+ "," + ((h/4) + ((Math.floor(i / elementsPerRow)) * (spacing+size))) + ")";
-        });
+        })
+        .on("mouseover", BridgesVisualizer.textMouseover)
+        .on("mouseout", BridgesVisualizer.textMouseout);
 
     // Create squares for each array element
     nodes

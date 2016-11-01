@@ -9,12 +9,24 @@ d3.array = function(d3, canvasID, w, h, data) {
     var marginLeft = 20;
     var defaultSize = 100;  // default size of each element box
 
+    var visID = canvasID.substr(4);
+    var finalTranslate = [20, 200];
+    var finalScale = 1;
+
+
+    var transformObject = BridgesVisualizer.getTransformObjectFromCookie(visID);
+    if(transformObject){
+      finalTranslate = transformObject.translate;
+      finalScale = transformObject.scale;
+    }
+
     // error when zooming directly after pan on OSX
     // https://github.com/mbostock/d3/issues/2205
 
+
     var zoom = d3.behavior.zoom()
-        .translate([20, 200])
-        .scale(1)
+        .translate(finalTranslate)
+        .scale(finalScale)
         .scaleExtent([0,5])
         .on("zoom", zoomHandler);
     allZoom.push(zoom);
@@ -25,6 +37,7 @@ d3.array = function(d3, canvasID, w, h, data) {
         .attr("id", "svg" + canvasID.substr(4))
         .classed("svg", true)
         .call(zoom);
+        // .call(BridgesVisualizer.tip);
 
     var svgGroup = chart.append("g");
     // initialize the scale and translation
@@ -44,7 +57,11 @@ d3.array = function(d3, canvasID, w, h, data) {
             size = defaultSize;
             return "translate(" + (marginLeft + i * (spacing + size)) + ")";
             // return "translate(" + (marginLeft + ((i % elementsPerRow) * (spacing + size)))+ "," + ((h/4) + ((Math.floor(i / elementsPerRow)) * (spacing+size))) + ")";
-        });
+        })
+        // .on("mouseover", tip.show)
+        // .on("mouseout", tip.hide)
+        .on("mouseover", BridgesVisualizer.textMouseover)
+        .on("mouseout", BridgesVisualizer.textMouseout);
 
     // Create squares for each array element
     nodes.append("rect")

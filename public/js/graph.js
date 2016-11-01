@@ -92,17 +92,14 @@ d3.graph = function(d3, id, W, H, data) {
       })
       .style("fill", "none");
 
-  //scale values between 1 and 100 to a reasonable range
-  var scaleSize = d3.scale.linear()
-      .domain([1,100])
-      .range([80,4000]);
-
   //outer node
   var node = svgGroup.selectAll(".node")
       .data(nodes)
       .enter().append("g")
-      .on("mouseover", mouseover)
-      .on("mouseout", mouseout)
+      // .on("mouseover", mouseover)
+      // .on("mouseout", mouseout)
+      .on("mouseover", BridgesVisualizer.textMouseover)
+      .on("mouseout", BridgesVisualizer.textMouseout)
       .on("dblclick", dblclick)
       .call(force.drag);
 
@@ -112,7 +109,7 @@ d3.graph = function(d3, id, W, H, data) {
       .attr("class", "node")
       .attr("d", d3.svg.symbol()
           .type(function(d) { return d.shape || "circle"; })
-          .size(function(d) {return scaleSize(d.size || 1); })
+          .size(function(d) {return BridgesVisualizer.scaleSize(d.size || 1); })
       )
       .style("fill", function(d, i) {
           return BridgesVisualizer.getColor(d.color) || defaultColors(i);
@@ -169,25 +166,25 @@ d3.graph = function(d3, id, W, H, data) {
           });
   });
 
-  function mouseover() {
-      BridgesVisualizer.textMouseover(this, "graph");
-      d3.select(this).select("path").transition()
-          .duration(750)
-          .attr('d', function (d) {
-              return d3.svg.symbol().type(d.shape||"circle")
-                      .size(scaleSize(40))();
-          });
-  }
-
-  function mouseout() {
-      BridgesVisualizer.textMouseout(this);
-      d3.select(this).select("path").transition()
-          .duration(750)
-          .attr('d', function (d) {
-              return d3.svg.symbol().type(d.shape||"circle")
-                      .size(scaleSize(d.size||1))();
-          });
-  }
+  // function mouseover() {
+  //     BridgesVisualizer.textMouseover(this, "graph");
+  //     d3.select(this).select("path").transition()
+  //         .duration(750)
+  //         .attr('d', function (d) {
+  //             return d3.svg.symbol().type(d.shape||"circle")
+  //                     .size(BridgesVisualizer.scaleSize(40))();
+  //         });
+  // }
+  //
+  // function mouseout() {
+  //     BridgesVisualizer.textMouseout(this);
+  //     d3.select(this).select("path").transition()
+  //         .duration(750)
+  //         .attr('d', function (d) {
+  //             return d3.svg.symbol().type(d.shape||"circle")
+  //                     .size(BridgesVisualizer.scaleSize(d.size||1))();
+  //         });
+  // }
 
   // zoom function
   function zoomHandler() {
