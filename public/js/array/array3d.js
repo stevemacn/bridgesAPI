@@ -5,21 +5,6 @@ Array visualization for Bridges
 */
 d3.array3d = function(d3, canvasID, w, h, data, dimensions) {
 
-    d3.selection.prototype.moveToFront = function() {
-        return this.each(function(){
-          this.parentNode.appendChild(this);
-        });
-    };
-
-    d3.selection.prototype.moveToBack = function() {
-        return this.each(function() {
-            var firstChild = this.parentNode.firstChild;
-            if (firstChild) {
-                this.parentNode.insertBefore(this, firstChild);
-            }
-        });
-    };
-
     var dimOne = dimensions[0],
         dimTwo = dimensions[1],
         dimThree = dimensions[2],

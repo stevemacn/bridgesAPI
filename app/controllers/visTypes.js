@@ -26,7 +26,6 @@ exports.getVisType = function(toCheck) {
         "GraphAdjacencyList":   "nodelink",
         "GraphAdjacencyMatrix": "nodelink"
     };
-
     if( toCheck && validTypes[toCheck] )
       return validTypes[toCheck];
     else if( toCheck && validTypes[toCheck.toString().toUpperCase()] )
@@ -34,3 +33,22 @@ exports.getVisType = function(toCheck) {
     else
         return "nodelink";
 };
+
+exports.getArrayType = function(dims){
+      if(dims){
+          var dimOne = parseInt(dims[0]);
+          var dimTwo = parseInt(dims[1]);
+          var dimThree = parseInt(dims[2]);
+          var is2D = dimTwo > 1 && dimThree == 1;
+          var is3D = dimTwo > 1 && dimThree > 1;
+          var is1D = !is2D && !is3D;
+          if(is1D){
+              return "Alist";
+          }else if (is2D) {
+              return "Array2D";
+          }else{
+              return "Array3D";
+          }
+      }
+      return "Alist"
+}

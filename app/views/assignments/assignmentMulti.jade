@@ -115,16 +115,6 @@ block footerjs
         var createMap =  !{JSON.stringify(createMap)};
         var BridgesVisualizer = {};
 
-    -var is1D = vistype == "Alist";
-    -if(data[0].dims)
-        - var dimOne = parseInt(data[0].dims[0]);
-        - var dimTwo = parseInt(data[0].dims[1]);
-        - var dimThree = parseInt(data[0].dims[2]);
-        - var is2D = vistype == "Alist" && dimTwo > 1 && dimThree == 1;
-        - var is3D = vistype == "Alist" && dimTwo > 1 && dimThree > 1;
-        - var is1D = vistype == "Alist" && !is2D && !is3D;
-        - console.log(is1D);
-
     // Map demonstrating locations in the assignment
     - if ( createMap )
         #mapContainer.mapContainer
@@ -145,21 +135,12 @@ block footerjs
     - else if (vistype == "Alist")
         script(src = '/js/array/array.js')
 
-    - else if (is1D)
-        script(src = '/js/array.js')
-        script.
-            console.log("is1D");
+    - else if (vistype == "Array2D")
+        script(src = '/js/array/array2d.js')
 
-    - else if (is2D)
-        script(src = '/js/array2d.js')
-        script.
-            console.log("is2D");
-
-    - else if (is3D)
+    - else if (vistype == "Array3D")
         script(src = '/js/lib/d3tip.js')
-        script(src = '/js/array3d.js')
-        script.
-            console.log("is3D");
+        script(src = '/js/array/array3d.js')
 
     - else if (vistype == "llist")
         script(src = '/js/list/llist.js')
