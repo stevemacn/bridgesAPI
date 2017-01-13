@@ -1,5 +1,7 @@
 // Bridges visualizer object to remove vis methods from the global scope
-BridgesVisualizer.strokeWidthRange = d3.scale.linear().domain([1,10]).range([1,15]).clamp(true);
+BridgesVisualizer.strokeWidthRange = d3.scale.linear().domain([1,50]).range([1,15]).clamp(true);
+//scale values between 1 and 100 to a reasonable range
+BridgesVisualizer.scaleSize = d3.scale.linear().domain([1,50]).range([80,4000]);
 
 // Offsets for text labels for visualization types
 BridgesVisualizer.textOffsets = {
@@ -8,6 +10,22 @@ BridgesVisualizer.textOffsets = {
   "default": { "x": 0, "y": 0}
 };
 
+// Default scale and transform values for each data structure
+BridgesVisualizer.defaultTransforms = {
+  "array": { "scale": 0.4, "translate": [20, 100]},
+  "array2d": { "scale": 0.4, "translate": [20, 100]},
+  "array3d": { "scale": 0.4, "translate": [20, 100]},
+  "list": { "scale": 0.3, "translate": [50, -5]},
+  "graph": { "scale": 0.5, "translate": [200, 150]},
+  "tree": { "scale": 0.9, "translate": [document.getElementById("vis0").clientWidth/2, 50]}
+};
+BridgesVisualizer.getDefaultTransforms = function(visType) {
+  if(BridgesVisualizer.defaultTransforms[visType]) {
+    return BridgesVisualizer.defaultTransforms[visType];
+  } else {
+    return {"scale": 0.9, "translate": [50, 100]};
+  }
+};
 
 // function to return color depending on the style of representation
 BridgesVisualizer.getColor = function(color) {
@@ -16,32 +34,12 @@ BridgesVisualizer.getColor = function(color) {
   return color;
 };
 
-// BridgesVisualizer.textMouseover = function(el, visType) {
-//   var textElm = d3.select(el).select("text");
-//   textElm.transition().delay(50).duration(750).style("opacity",1.0);
-//   // var offset = (BridgesVisualizer.textOffsets[visType]) ? BridgesVisualizer.textOffsets[visType] : BridgesVisualizer.textOffsets["default"];
-//   // rect = d3.select(el).insert("svg:rect", "text").classed("bgRect", true)
-//   //   .attr("id", "bgRect")
-//   //   .attr("x", offset.x)
-//   //   .attr("y", offset.y)
-//   //   .attr("width", 20 + textElm.node().textContent.length * 5)
-//   //   .attr("height", 18 * textElm.node().childElementCount);
-//   // console.log(rect);
-//   // rect.transition().duration(500).style("opacity", 1.0);
-// };
-//
-// BridgesVisualizer.textMouseout = function(el) {
-//   d3.select(el).selectAll("#bgRect").transition().duration(500).style("opacity", 0.0);
-//   d3.select(el).selectAll("#bgRect").transition().delay(500).remove();
-//   d3.select(el).select("text").transition().duration(500).style("opacity", 0.0);
-// };
-
 // function to return the transformObject saved positions
 BridgesVisualizer.getTransformObjectFromCookie = function(visID) {
         var name = "vis"+visID+"-"+location.pathname + "=";
         // var name = cname + "=";
         var ca = document.cookie.split(';');
-        console.log(ca);
+        // console.log(ca);
         for(var i=0; i<ca.length; i++) {
             var c = ca[i];
             while (c.charAt(0)==' ') {
@@ -88,12 +86,6 @@ d3.selection.prototype.moveToBack = function() {
     });
 };
 
-//scale values between 1 and 100 to a reasonable range
-BridgesVisualizer.scaleSize = d3.scale.linear()
-                              .domain([1,100])
-                              .range([80,4000]);
-
-
 // Define the div for the tooltip
 var div = d3.select("body").append("div")
     .attr("class", "tooltip")
@@ -114,7 +106,7 @@ BridgesVisualizer.textMouseover = function(d) {
     }
     div.transition()
         .duration(200)
-        .style("opacity", .9);
+        .style("opacity", 0.9);
     div	.html(d.name)
         .style("left", (d3.event.pageX) + "px")
         .style("top", (d3.event.pageY) + "px");
@@ -133,21 +125,10 @@ BridgesVisualizer.textMouseout = function(d) {
                 }).style("stroke", "").style("stroke-width", 0);
     }
 
-      div.transition()
-          .duration(500)
-          .style("opacity", 0);
+    div.transition()
+        .duration(500)
+        .style("opacity", 0);
 };
-
-// var tip = d3.tip()
-//   .attr('class', 'd3-tip')
-//   .offset([-10, 0])
-//   .html(function(d) {
-//     // return "<strong>Frequency:</strong> <span style='color:red'>" + d.name + "</span>";
-//     return "<span style='color:white'>" + d.name + "</span>";
-// });
-//
-// BridgesVisualizer.tip = tip;
-
 
 // bind event handlers for ui
 d3.selectAll(".minimize").on("click", minimize);
@@ -225,14 +206,26 @@ function reset() {
         zoom.scale(1);
 
         /* set default translate based on visualization type */
-        if(d3.array) zoom.translate([20, 200]);
-        if(d3.dllist || d3.sllist || d3.cdllist || d3.csllist){
-            zoom.translate([50, -5]);
-            zoom.scale(0.36);
+        if(d3.array) {
+          zoom.translate(BridgesVisualizer.defaultTransforms.array.translate);
+          zoom.scale(BridgesVisualizer.defaultTransforms.array.scale);
+        } else if(d3.array2d) {
+          zoom.translate(BridgesVisualizer.defaultTransforms.array2d.translate);
+          zoom.scale(BridgesVisualizer.defaultTransforms.array2d.scale);
+        } else if(d3.array3d) {
+          zoom.translate(BridgesVisualizer.defaultTransforms.array3d.translate);
+          zoom.scale(BridgesVisualizer.defaultTransforms.array3d.scale);
         }
-        else if(d3.bst) zoom.translate([(d3.select("#svg0").attr("width")/2), 0]);
-        else zoom.translate([0, 0]);
-
+        else if(d3.dllist || d3.sllist || d3.cdllist || d3.csllist) {
+          zoom.translate(BridgesVisualizer.defaultTransforms.list.translate);
+          zoom.scale(BridgesVisualizer.defaultTransforms.list.scale);
+        } else if(d3.graph) {
+          zoom.translate(BridgesVisualizer.defaultTransforms.graph.translate);
+          zoom.scale(BridgesVisualizer.defaultTransforms.graph.scale);
+        } else if(d3.bst) {
+          zoom.translate(BridgesVisualizer.defaultTransforms.tree.translate);
+          zoom.scale(BridgesVisualizer.defaultTransforms.tree.scale);
+        }
         svgGroup.attr("transform", "translate(" + zoom.translate() + ")scale(" + zoom.scale() + ")");
     }
     saveVisStatesAsCookies();
@@ -377,7 +370,7 @@ function saveTransform(){
           "translatey": parseFloat(my_transform.translate[1])
         };
     }
-
+    console.log(visTransforms);
     // send scale and translation data to the server to save
     $.ajax({
         url: "/assignments/updateTransforms/"+assignmentNumber,
@@ -417,7 +410,7 @@ function sortListByLinks(unsortedNodes){
         getLinkFromSource[links[i].source+"-"+links[i].target] = links[i];//creating a unique identifier for every link
     }
 
-    head = unsortedNodes.head || Object.keys(nodes).length-1;
+    head = unsortedNodes.head || 0;//Object.keys(nodes).length-1;
     // for(var h in nodes){//looping through the length of the nodes
     for(var i = 0; i < nodes.length; i++){
         var key = head + "-" + getTargetFromSource[head];//link from source to target
@@ -429,12 +422,13 @@ function sortListByLinks(unsortedNodes){
         // if(!head)break;
     }
     // links = nodes = undefined; console.log(sortedNodes);
+    // console.log(sortedNodes);
     return sortedNodes;
 }
 
 // Saved the translate and scale of every visualization in an assignemts
 function saveVisStatesAsCookies(){
-    console.log(this);
+    // console.log(this);
     var exdays = 30;
     try{
       for (var key in data) {
