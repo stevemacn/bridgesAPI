@@ -72,5 +72,5 @@ exports.getArrayType = function(dims){
               return "Array3D";
           }
       }
-      return "Alist"
-}
+      return "Alist";
+};

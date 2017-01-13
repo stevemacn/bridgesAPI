@@ -17,8 +17,8 @@ var Assignment = new Schema ({
     assignmentNumber:   {type: String, default: ''},    //integer portion
     subAssignment:      {type: String, default: ''},    //fractional portion
     assignmentID:       {type: Number, default: ''},   // integer representation of an assignment
-    classID:            {type: String, default: ''},
-    schoolID:           {type: String, default: ''},
+    // classID:            {type: String, default: ''},
+    // schoolID:           {type: String, default: ''},
     title:              {type: String, default: ''},
     description:        {type: String, default: ''},
     dateCreated:        {type: Date, default: Date.now()},

@@ -74,7 +74,6 @@ exports.upload = function (req, res, next) {
 
     // validate attributes
     var visualizationType = visTypes.getVisType(rawBody.visual);
-    console.log('!!!!!', rawBody.visual, visualizationType);
     var title = rawBody.title || "";
     var description = rawBody.description || "";
 
@@ -112,11 +111,16 @@ exports.upload = function (req, res, next) {
                 assignment.assignmentID = assignmentID;
                 assignment.assignmentNumber = assignmentNumber;
                 assignment.subAssignment = subAssignment;
-                assignment.schoolID = req.params.schoolID || "";
-                assignment.classID = req.params.classID || "";
+                // assignment.schoolID = req.params.schoolID || "";
+                // assignment.classID = req.params.classID || "";
                 assignment.title = title;
                 assignment.description = description;
-                assignment.save();
+
+                // Utilizing the mongoose save callback function to log potential errors in saving the assignment
+                assignment.save(function(err, assignment, numAffected) {
+                  if(err) console.log(err);
+                  // console.log('assignment added; saveCallback', assignment, numAffected);
+                });
 
                 User.findOne({
                     email: user.email
@@ -125,7 +129,8 @@ exports.upload = function (req, res, next) {
                 });
 
                 //log new assignment
-                console.log( "assignment added: " + user.email + " " + assignment );
+                // console.log( "assignment added: " + user.email + " " + assignment, assignment.data[0].nodes.length );
+
             });
         } else {
           // have to put this code to create/save assignment in both cases
@@ -137,8 +142,8 @@ exports.upload = function (req, res, next) {
           assignment.assignmentID = assignmentID;
           assignment.assignmentNumber = assignmentNumber;
           assignment.subAssignment = subAssignment;
-          assignment.schoolID = req.params.schoolID || "";
-          assignment.classID = req.params.classID || "";
+          // assignment.schoolID = req.params.schoolID || "";
+          // assignment.classID = req.params.classID || "";
           assignment.save();
 
           User.findOne({
@@ -146,6 +151,8 @@ exports.upload = function (req, res, next) {
           }).exec(function (err, resp) {
               res.json( { "msg":assignmentID + "/" + resp.username } );
           });
+
+          console.log( "subassignment added" );
         }
     }
 };
