@@ -22,8 +22,6 @@ var markers = [
 
 d3.bst = function (d3, canvasID, w, h) {
 
-//    d3.select("#reset").on("click", reset);
-
     //defaults
     var bst = {},
         mw = 0, mh = 0,
@@ -34,23 +32,27 @@ d3.bst = function (d3, canvasID, w, h) {
         depthStep = 75,
         canvasID = canvasID, //canvasID must have hash like "#vis" or "#canvas"
         root;
+    var visID = canvasID.substr(4);
     var svgGroup, defs;
+    var finalTranslate = BridgesVisualizer.defaultTransforms.list.translate;
+    var finalScale =  BridgesVisualizer.defaultTransforms.list.scale;
+
+    var transformObject = BridgesVisualizer.getTransformObjectFromCookie(visID);
+    if(transformObject){
+        finalTranslate = transformObject.translate;
+        finalScale = transformObject.scale;
+    }
 
     var drag = d3.behavior.drag()
-        //.origin(function(d) {  });
         .on("dragstart", dragstarted)
         .on("drag", dragged)
         .on("dragend", dragended);
 
-    // error when zooming directly after pan on OSX
-    // https://github.com/mbostock/d3/issues/2205
     var zoom = d3.behavior.zoom()
+        .translate(finalTranslate)
+        .scale(finalScale)
         .scaleExtent([0.1,5])
-        //.on("dblclick.zoom",null)
         .on("zoom", zoomHandler);
-        //.on("mousedown.zoom",null);
-        zoom.scale(1);
-    zoom.translate([(w/2), 0]);
     allZoom.push(zoom);
 
     bst.init = function (_w, _h, _mw, _mh, ds) {
@@ -79,7 +81,7 @@ d3.bst = function (d3, canvasID, w, h) {
             .call(drag);
 
         svgGroup = vis.append("svg:g")
-            .attr("transform", "translate(" + (mh + (w/2)) + "," + mw + ")");
+                      .attr('transform', 'translate(' + zoom.translate() + ') scale(' + zoom.scale() + ')');
         allSVG.push(svgGroup);
 
         defs = vis.append('svg:defs');
@@ -133,23 +135,22 @@ d3.bst = function (d3, canvasID, w, h) {
 
         // Update the nodes…
         var node = svgGroup.selectAll("g.node")
-            .data(nodes, function(d) { return d.id || (d.id = ++i); })
-            .on("mouseover", mouseover)
-            .on("mouseout", mouseout);
+            .data(nodes, function(d) { return d.id || (d.id = ++i); });
+            // .on("mouseover", mouseover)
+            // .on("mouseout", mouseout);
 
         // Enter any new nodes at the parent's previous position.
         var nodeEnter = node.enter().append("svg:g")
             .attr("class", "node")
-            // .attr("d", d3.svg.symbol()
-            //     .type(function(d) { return d.shape || "rect"; })
-            //     .size( 1 )
-            // )
+            .classed("clickthrough", function(d) {
+                if(d.name == "NULL") return true;
+            })
             .attr("transform", function(d) {
                 return "translate(" + source.x0 + "," + source.y0 + ")";
             })
             .on("click", function(d) { toggle(d); update(d); })
-            .on("mouseover", mouseover)
-            .on("mouseout", mouseout);
+            .on("mouseover", BridgesVisualizer.textMouseover)
+            .on("mouseout", BridgesVisualizer.textMouseout);
 
         nodeEnter.append('path')
             .attr("d", d3.svg.symbol()
@@ -163,31 +164,19 @@ d3.bst = function (d3, canvasID, w, h) {
                 return d.role ? 0 : ( d.opacity || 1 );
             });
 
-        nodeEnter.append("svg:text")
-            .classed("nodeLabel", true)
-            .attr("dy", ".35em")
-            .attr("x", "20px")
-            .attr("y",  "-7px")
-            .attr("text-anchor", "start")
-            .style("opacity", 0.0)
-            .text( function( d ) { return d.name; } );
-
        if(nodes[0].key !== null) {
            nodeEnter.append("svg:text")
             .attr("dy", ".35em")
             .attr("x", "-8px")
             .attr("y",  "-15px")
             .attr("text-anchor", "start")
-            // .style("display", "none")
             .text(function(d) { return d.key || ""; } );
        }
-
 
         // Transition nodes to their new position.
         var nodeUpdate = node.transition()
             .duration(duration)
             .attr("transform", function(d) {
-                // var dx = d.x-15;
                 var dx = d.x;
                 return "translate(" + dx + "," + d.y + ")";
             });
@@ -295,7 +284,7 @@ function mouseover() {
     // d3.select(this).select("text").transition()
     //     .duration(750)
     //     .style("display","block");
-    BridgesVisualizer.textMouseover(this, "tree");
+    BridgesVisualizer.textMouseover(d3.select(this), "tree");
     // var el = d3.select(this);
     // el.moveToFront();
 }
