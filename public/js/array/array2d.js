@@ -14,22 +14,15 @@ d3.array2d = function(d3, canvasID, w, h, data, dimensions) {
 
 
     var visID = canvasID.substr(4);
-    var finalTranslate = [50, -5];
-    var finalScale = 0.36;
-    if(w > 1200){ finalScale = 0.56;}
+    var finalTranslate = [20, 100];
+    var finalScale = 0.4;
 
     var transformObject = BridgesVisualizer.getTransformObjectFromCookie(visID);
     if(transformObject){
       finalTranslate = transformObject.translate;
       finalScale = transformObject.scale;
     }
-
-    // error when zooming directly after pan on OSX
-    // https://github.com/mbostock/d3/issues/2205
-
-
-
-
+    
     var zoom = d3.behavior.zoom()
         .translate(finalTranslate)
         .scale(finalScale)

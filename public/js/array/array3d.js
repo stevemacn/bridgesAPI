@@ -15,8 +15,8 @@ d3.array3d = function(d3, canvasID, w, h, data, dimensions) {
         valueToCenterGridTitle = 195;
         levelCount = -1,
         visID = canvasID.substr(4),
-        finalTranslate = [50, -5],
-        finalScale = 0.36,
+        finalTranslate = BridgesVisualizer.defaultTransforms.array3d.translate,
+        finalScale =  BridgesVisualizer.defaultTransforms.array3d.scale,
         transformObject = BridgesVisualizer.getTransformObjectFromCookie(visID),
         elementsPerRow = dimOne,
         elementsPerColumn = (dimOne * dimTwo) / dimOne;
@@ -25,15 +25,6 @@ d3.array3d = function(d3, canvasID, w, h, data, dimensions) {
         finalTranslate = transformObject.translate;
         finalScale = transformObject.scale;
     }
-
-
-    // error when zooming directly after pan on OSX
-    // https://github.com/mbostock/d3/issues/2205
-
-    // var myScale = 0.36;
-    // if(w > 1200){ myScale = 0.56;}
-
-    // console.log(elementsPerColumn);
 
     var zoom = d3.behavior.zoom()
         .translate(finalTranslate)
@@ -58,8 +49,6 @@ d3.array3d = function(d3, canvasID, w, h, data, dimensions) {
     var nodes = svgGroup.selectAll("nodes")
         .data(data)
         .enter().append("g")
-        // .on("mouseover", mouseover)
-        // .on("mouseout", mouseout)
         .attr("transform", function(d, i) {
             return "translate(" + (marginLeft + ((i % elementsPerRow) * (spacing + defaultSize)))+ "," + ((h/4) + ((Math.floor(i / elementsPerRow)) * (spacing+defaultSize))) + ")";
         })
@@ -95,7 +84,6 @@ d3.array3d = function(d3, canvasID, w, h, data, dimensions) {
         .attr("class","index-textview")
         .text(function(d, i){
           var threeLevel = parseInt(i / (dimOne*dimTwo));
-          console.log(threeLevel);
 
           if((i % elementsPerRow == 0)){
               levelCount++;

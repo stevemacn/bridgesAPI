@@ -10,20 +10,15 @@ d3.array = function(d3, canvasID, w, h, data) {
     var defaultSize = 100;  // default size of each element box
 
     var visID = canvasID.substr(4);
-    var finalTranslate = [20, 200];
-    var finalScale = 1;
-
+    var finalTranslate = [20, 100];
+    var finalScale = 0.4;
 
     var transformObject = BridgesVisualizer.getTransformObjectFromCookie(visID);
     if(transformObject){
       finalTranslate = transformObject.translate;
       finalScale = transformObject.scale;
     }
-
-    // error when zooming directly after pan on OSX
-    // https://github.com/mbostock/d3/issues/2205
-
-
+    
     var zoom = d3.behavior.zoom()
         .translate(finalTranslate)
         .scale(finalScale)
