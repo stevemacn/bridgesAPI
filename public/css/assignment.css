@@ -252,3 +252,7 @@ div.tooltip {
   display: block;
   pointer-events: none;
 }
+
+.clickthrough {
+  pointer-events: none;
+}
