@@ -2,8 +2,6 @@
 //http://bl.ocks.org/d3noob/5141278
 d3.graph = function(d3, id, W, H, data) {
 
-    d3.select("#reset").on("click", reset);
-
      //defaults
     var graph = {},
         //mw = 20, mh = 50,
@@ -12,11 +10,20 @@ d3.graph = function(d3, id, W, H, data) {
         h = H || 800,
         i = 0,
         canvasID = id; //canvasID must have hash like "#vis" or "#canvas"
+    var visID = canvasID.substr(4);
     var vis, svgGroup, defs;
     var count = 0;
+    var finalTranslate = BridgesVisualizer.defaultTransforms.graph.translate;
+    var finalScale =  BridgesVisualizer.defaultTransforms.graph.scale;
 
-  var nodes = data.nodes;
-  var links = data.links;
+    var nodes = data.nodes;
+    var links = data.links;
+
+  var transformObject = BridgesVisualizer.getTransformObjectFromCookie(visID);
+  if(transformObject){
+      finalTranslate = transformObject.translate;
+      finalScale = transformObject.scale;
+  }
 
   for (i in links) {
      if (count<links[i].value) count = links[i].value;
@@ -33,12 +40,11 @@ d3.graph = function(d3, id, W, H, data) {
   var drag = force.drag();
   drag.on("dragstart",dragstart);
 
-  // error when zooming directly after pan on OSX
-  // https://github.com/mbostock/d3/issues/2205
-   var zoom = d3.behavior.zoom()
+  var zoom = d3.behavior.zoom()
+          .translate(finalTranslate)
+          .scale(finalScale)
           .scaleExtent([0.1,5])
           .on("zoom", zoomHandler);
-          zoom.scale(1);
       allZoom.push(zoom);
 
   var defaultColors = d3.scale.category20(); //10 or 20
@@ -51,6 +57,8 @@ d3.graph = function(d3, id, W, H, data) {
       .call(zoom);
 
   svgGroup = vis.append("g");
+      // initialize the scale and translation
+      svgGroup.attr('transform', 'translate(' + zoom.translate() + ') scale(' + zoom.scale() + ')');
       allSVG.push(svgGroup);
 
   vis.append("svg:defs").selectAll("marker")
@@ -166,26 +174,6 @@ d3.graph = function(d3, id, W, H, data) {
           });
   });
 
-  // function mouseover() {
-  //     BridgesVisualizer.textMouseover(this, "graph");
-  //     d3.select(this).select("path").transition()
-  //         .duration(750)
-  //         .attr('d', function (d) {
-  //             return d3.svg.symbol().type(d.shape||"circle")
-  //                     .size(BridgesVisualizer.scaleSize(40))();
-  //         });
-  // }
-  //
-  // function mouseout() {
-  //     BridgesVisualizer.textMouseout(this);
-  //     d3.select(this).select("path").transition()
-  //         .duration(750)
-  //         .attr('d', function (d) {
-  //             return d3.svg.symbol().type(d.shape||"circle")
-  //                     .size(BridgesVisualizer.scaleSize(d.size||1))();
-  //         });
-  // }
-
   // zoom function
   function zoomHandler() {
       svgGroup.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
@@ -199,7 +187,7 @@ d3.graph = function(d3, id, W, H, data) {
 
   // Handle dragstart on force.drag()
   function dragstart(d) {
-       d3.event.sourceEvent.stopPropagation();
+      d3.event.sourceEvent.stopPropagation();
       d3.select(this).classed("fixed", d.fixed = true);
       force.start();
   }
