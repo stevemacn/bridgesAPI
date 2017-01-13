@@ -9,8 +9,8 @@ d3.sllist = function(d3, canvasID, w, h, data) {
 
     // var spacing = 5;        // spacing between elements
     var visID = canvasID.substr(4);
-    var finalTranslate = [50, -5];
-    var finalScale = 0.36;
+    var finalTranslate = BridgesVisualizer.defaultTransforms.list.translate;
+    var finalScale =  BridgesVisualizer.defaultTransforms.list.scale;
 
     var spacing = 115;
     var marginLeft = 20;
@@ -23,10 +23,6 @@ d3.sllist = function(d3, canvasID, w, h, data) {
         finalTranslate = transformObject.translate;
         finalScale = transformObject.scale;
     }
-
-
-    // error when zooming directly after pan on OSX
-    // https://github.com/mbostock/d3/issues/2205
 
     var zoom = d3.behavior.zoom()
         .translate(finalTranslate)
@@ -57,11 +53,9 @@ d3.sllist = function(d3, canvasID, w, h, data) {
         .attr("id",function(d,i){
           return "svg"+visID+"g"+i;
         })
-        .on("mouseover", mouseover)
-        .on("mouseout", mouseout)
         .attr("transform", function(d, i) {
             //size = parseFloat(d.size || defaultSize);
-            size = defaultSize
+            size = defaultSize;
             // return "translate(" + (marginLeft + i * (spacing + size)) + ")";
             return "translate(" + (marginLeft + ((i % elementsPerRow) * (spacing + size)))+ "," + ((h/4) + ((Math.floor(i / elementsPerRow)) * (spacing+size))) + ")";
         })
@@ -317,34 +311,6 @@ d3.sllist = function(d3, canvasID, w, h, data) {
         }
     };
     svgGroup.selectAll('text').each(insertLinebreaks);
-
-    function mouseover() {
-        // scale text size based on zoom factor
-        var hoverSize = d3.scale.linear().domain([0,0.7]).range([300, 14]).clamp(true);
-        d3.select(this).selectAll(".value-textview").transition()
-              .duration(250)
-              .style("display","block")
-              .style("font-size", function(d,i) {
-                if(i > elementsPerRow){
-                  d3.select(this.parentNode).moveToFront();
-                }
-                return hoverSize(zoom.scale());
-              });
-        // BridgesVisualizer.textMouseover(this);
-    }
-
-    function mouseout() {
-        d3.select(this).selectAll(".value-textview").transition()
-            .duration(750)
-            .style("display",function(d,i){
-              if(i > elementsPerRow){
-                d3.select(this.parentNode).moveToBack();
-              }
-              return "none";
-            })
-            .style("font-size", 14);
-        // BridgesVisualizer.textMouseout(this);
-    }
 
     //// zoom function
     function zoomHandler() {

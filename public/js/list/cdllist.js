@@ -5,8 +5,8 @@ Circular Doubly Linked List visualization for Bridges
 */
 d3.cdllist = function(d3, canvasID, w, h, data) {
     var visID = canvasID.substr(4);
-    var finalTranslate = [50, -5];
-    var finalScale = 0.36;
+    var finalTranslate = BridgesVisualizer.defaultTransforms.list.translate;
+    var finalScale =  BridgesVisualizer.defaultTransforms.list.scale;
 
     var transformObject = BridgesVisualizer.getTransformObjectFromCookie(visID);
     if(transformObject){
@@ -21,8 +21,6 @@ d3.cdllist = function(d3, canvasID, w, h, data) {
     var defaultSizeW = 160;  // default size of each element box
     var elementsPerRow = 4 * parseInt((w - (spacing + defaultSize)) / (spacing + defaultSize));
 
-    // error when zooming directly after pan on OSX
-    // https://github.com/mbostock/d3/issues/2205
     var zoom = d3.behavior.zoom()
         .translate(finalTranslate)
         .scale(finalScale)
@@ -53,8 +51,6 @@ d3.cdllist = function(d3, canvasID, w, h, data) {
         .attr("id",function(d,i){
           return "svg"+visID+"g"+i;
         })
-        .on("mouseover", mouseover)
-        .on("mouseout", mouseout)
         .attr("transform", function(d, i) {
             //size = parseFloat(d.size || defaultSize);
             size = defaultSize;
@@ -576,32 +572,6 @@ d3.cdllist = function(d3, canvasID, w, h, data) {
         }
     };
     svgGroup.selectAll('text').each(insertLinebreaks);
-
-    function mouseover() {
-        // scale text size based on zoom factor
-        var hoverSize = d3.scale.linear().domain([0,0.7]).range([300, 14]).clamp(true);
-        d3.select(this).selectAll(".value-textview").transition()
-              .duration(250)
-              .style("display","block")
-              .style("font-size", function(d,i) {
-                if(i > elementsPerRow){
-                  d3.select(this.parentNode).moveToFront();
-                }
-                return hoverSize(zoom.scale());
-              });
-    }
-
-    function mouseout() {
-        d3.select(this).selectAll(".value-textview").transition()
-            .duration(750)
-            .style("display",function(d,i){
-              if(i > elementsPerRow){
-                d3.select(this.parentNode).moveToBack();
-              }
-              return "none";
-            })
-            .style("font-size", 14);
-    }
 
     //// zoom function
     function zoomHandler() {
