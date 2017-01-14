@@ -109,11 +109,6 @@ block footerjs
     script.
         var data = !{JSON.stringify(data)};
         var assignmentNumber = !{JSON.stringify(assignmentNumber)};
-        //- var vistype = "#{vistype}";
-        //- var toIncludeScript = "#{toIncludeScript}";
-        //- var toIncludeScriptLink = "#{toIncludeScriptLink}";
-        //- var defaultvistype = "#{defaultvistype}";
-        //- var defaultvistype = "#{defaultvistype}";
         var vistypeObject = "#{vistypeObject}";
         var mapData =  !{JSON.stringify(mapData)};
         var createMap =  !{JSON.stringify(createMap)};
@@ -142,9 +137,7 @@ block footerjs
                 .css('color', '#eb6864')
                 .css('font-size', '24px')
                 .css('padding', '50px')
-    //- script(src = '/js/lib/d3tip.js')
     script(src = '/js/multiVisconfig.js')
-    //- script(scr = "http://d3js.org/d3.v3.min.js")
 
 
     script.

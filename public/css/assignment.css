@@ -193,6 +193,12 @@
   font-size: 70%;
 }
 
+.dateCreated {
+  font-size: 80%;
+  font-weight: bold;
+  display: none;
+}
+
 table.full {
     width: 97%;
 }

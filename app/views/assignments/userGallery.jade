@@ -15,7 +15,6 @@ block content
             .col-lg-6
 
                 div(style="float:left; margin-left:50px")
-                    //a(href="/assignments/"+assignments[0].assignmentID+"/"+usernames)
                     h1(style="text-align: left") #{usernames}'s Gallery
 
     div(style='margin:5%')
@@ -30,7 +29,7 @@ block content
                                   img.visimg(src='/img/array.png' title=assignments[x].vistype)
                               else
                                   img.visimg(src='/img/'+assignments[x].vistype+'.png' title=assignments[x].vistype)
-  
+
                    - else
                           div(class='gallery_assignment_div_public')
                               if(assignments[x].vistype == "nodelink")
@@ -46,8 +45,6 @@ block content
                         div.gallery_link_title #{assignments[x].title}
                         div.gallery_link_small Assignment #{assignments[x].assignmentNumber}
                         div.gallery_link_small #{assignments[x].data[0].visual}
-block footerjs
-    script.
-        $(".visimg").on("error",function(x){
-            $(this).attr("src","/img/graphllist.png");
-        });
+                        div.dateCreated #{assignments[x].dateCreated}
+
+      script( src = '/js/gallery/userGallery.js' )

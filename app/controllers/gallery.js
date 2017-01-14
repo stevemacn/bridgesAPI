@@ -51,6 +51,15 @@ exports.view = function(req, res) {
               assignmentNumber: assignmentNumber,
               subAssignment: "00",
               shared: true
+          }, {
+              assignmentID: 1,
+              title: 1,
+              description: 1,
+              assignmentNumber: 1,
+              "data.visual": 1,
+              vistype: 1,
+              shared: 1,
+              dateCreated: 1
           })
           .exec(function(err, assignmentResult) {
 

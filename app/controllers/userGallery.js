@@ -14,7 +14,8 @@ exports.view = function(req, res, next) {
           assignmentNumber: 1,
           "data.visual": 1,
           vistype: 1,
-          shared: 1
+          shared: 1,
+          dateCreated: 1
       })
       //Do we want to load every single whole number assignment, or just some? Query might be time intensive.
       // .limit( 25 )
