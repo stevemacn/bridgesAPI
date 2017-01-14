@@ -18,14 +18,14 @@ module.exports = function(app, passport, streamable) {
                      })
             .exec(function(err, user_local) {
                     if (err)
-                        return next()
+                        return next();
                     if (!user_local)
-                        return next("there is no user with the username: " + req.params.username)
+                        return next("there is no user with the username: " + req.params.username);
                   //authenticated
                     if (req.isAuthenticated()) {
-                        a_user = true
+                        a_user = true;
                     }
-                  })
+                  });
 
 
 
@@ -36,32 +36,32 @@ module.exports = function(app, passport, streamable) {
             .exec(function(err, assig){
                   //return res.send(a_user)
                   if (!assig)
-                      return next("there is no assignment with this id")
+                      return next("there is no assignment with this id");
                   else if (assig & a_user)
-                    return next()
+                    return next();
                   else if (assig.shared)
-                      return next()
+                      return next();
                   else if (!assig.shared & !a_user)
-                        return next("the assignment is private")
+                        return next("the assignment is private");
                   else return next();
                 //res.send(assig.shared)
-                  })
-    }
+                  });
+    };
 
     //Allows users to by pass authentication to api requests
     //if they have a valid api key.
     var hasAccess = function(req, res, next) {
         //authenticated
         if (req.isAuthenticated()) {
-            return next()
+            return next();
         }
 
         var mongoose = require('mongoose'),
-            User = mongoose.model('User')
+            User = mongoose.model('User');
             var found = req.query.apikey;
             if (!found) return next(
                 "Not logged in: you must provide" +
-               " an apikey as a query variable")
+               " an apikey as a query variable");
 
             User
                 .findOne({
@@ -69,11 +69,11 @@ module.exports = function(app, passport, streamable) {
                 })
                 .exec(function(err, user) {
                     if (!user)
-                        return next("your api key is invalid")
-                    req.user = user
-                    return next()
-                })
-    }
+                        return next("your api key is invalid");
+                    req.user = user;
+                    return next();
+                });
+    };
 
     //authentication
     var isLoggedIn = function(req, res, next) {
@@ -81,60 +81,60 @@ module.exports = function(app, passport, streamable) {
         if (req.isAuthenticated()){
             //res.redirect("/username/"+req.user.username)
             //res.redirect("/home/")
-            return next()
+            return next();
         }
-        res.redirect("/login")
-    }
+        res.redirect("/login");
+    };
 
     var isLoggedInGallery = function(req, res, next) {
         if (req.isAuthenticated()){
-            return res.redirect("/username/"+req.user.username)
+            return res.redirect("/username/"+req.user.username);
             //res.redirect("/home/")
             //return next()
         }
-        res.redirect("/login")
-    }
+        res.redirect("/login");
+    };
 
     var handleError = function(err, req, res, next) {
         //if provided an object
-        if (err.err) return errObj(err)
+        if (err.err) return errObj(err);
 
         //else provided a string
         return res.json(503, {
             "error": err
-        })
+        });
 
         function errObj(err) {
-            var msg = {}
+            var msg = {};
 
-            if (err.tip) msg.tip = err.tip
-            if (err.err) msg.error = err.err
+            if (err.tip) msg.tip = err.tip;
+            if (err.err) msg.error = err.err;
 
-            return res.json(503, msg)
+            return res.json(503, msg);
         }
-    }
+    };
 
     // -------------------------------------------------------
     //
     //  User Routes
     //
     // -------------------------------------------------------
-    var users = require('../app/controllers/users')
+    var users = require('../app/controllers/users');
 
     app.get('/', users.index);
 
-    app.get('/signup', users.signup, handleError)
-    app.post('/users', users.create, handleError)
+    app.get('/signup', users.signup, handleError);
+    app.post('/users', users.create, handleError);
 
-    app.get('/login', users.login, handleError)
-    app.get('/home', isLoggedIn, users.display, handleError)
-    app.get('/profile', isLoggedIn, users.profile, handleError)
-    app.get('/username', isLoggedInGallery, users.display, handleError)   //Login
-    app.get('/home/:username', isLoggedIn, users.display, handleError)
+    app.get('/login', users.login, handleError);
+    app.get('/home', isLoggedIn, users.display, handleError);
+    app.get('/profile', isLoggedIn, users.profile, handleError);
+    app.get('/username', isLoggedInGallery, users.display, handleError);  //Login
+    app.get('/home/:username', isLoggedIn, users.display, handleError);
 
-    app.delete('/users/:id', isLoggedIn, users.deletePerson)
-    app.get('/users/apikey', users.getkey, handleError)
-    app.get('/logout', users.logout)
+    app.delete('/users/:id', isLoggedIn, users.deletePerson);
+    app.get('/users/apikey', users.getkey, handleError);
+    app.get('/logout', users.logout);
 
 
 
@@ -143,12 +143,12 @@ module.exports = function(app, passport, streamable) {
     //  Stream Routes
     //
     // -------------------------------------------------------
-    var streams = require('../app/controllers/streams.js')
+    var streams = require('../app/controllers/streams.js');
 
     app.get('/streams/:domain/*',
-        hasAccess, streamable, streams.getSource, handleError)
+        hasAccess, streamable, streams.getSource, handleError);
     app.get('/streams/:domain',
-        hasAccess, streamable, streams.getSource, handleError)
+        hasAccess, streamable, streams.getSource, handleError);
 
 
 
@@ -157,22 +157,22 @@ module.exports = function(app, passport, streamable) {
     //  Assignment Routes
     //
     // -------------------------------------------------------
-    var assignments = require('../app/controllers/assignments.js')
+    var assignments = require('../app/controllers/assignments.js');
 
     app.post('/assignments/:assignmentID',
-        hasAccess, assignments.upload, handleError)
+        hasAccess, assignments.upload, handleError);
     app.post('/assignments/:assignmentNumber/share/:value',
-        hasAccess, assignments.updateVisibility, handleError)
+        hasAccess, assignments.updateVisibility, handleError);
 
 
     //app.get('/assignments/:assignmentID/:username',
     //         isPublic, assignments.show, handleError)
 
     app.post('assignments/:assignmentNumber/saveSnapshot/', //allows user to save a snapshot of the positions of a graph.
-              hasAccess, assignments.saveSnapshot, handleError)
+              hasAccess, assignments.saveSnapshot, handleError);
 
     app.get('/assignments/:assignmentNumber/:username',
-              assignments.show, handleError)
+              assignments.show, handleError);
 
     // update the assignment specified for the current user
     //  save the positions of any fixed nodes
@@ -191,11 +191,11 @@ module.exports = function(app, passport, streamable) {
     //  Gallery Routes
     //
     // -------------------------------------------------------
-    var gallery = require('../app/controllers/gallery.js')      // Public gallery
-    var userGallery = require('../app/controllers/userGallery.js')  // Private user gallery
+    var gallery = require('../app/controllers/gallery.js');      // Public gallery
+    var userGallery = require('../app/controllers/userGallery.js');  // Private user gallery
 
-    app.get('/assignments/:assignmentNumber', gallery.view, handleError)
-    app.get('/username/:userNameRes', isLoggedIn, userGallery.view, handleError)
+    app.get('/assignments/:assignmentNumber', gallery.view, handleError);
+    app.get('/username/:userNameRes', isLoggedIn, userGallery.view, handleError);
 
     app.post('/users/session',
         passport.authenticate('local-log', {
@@ -233,23 +233,23 @@ module.exports = function(app, passport, streamable) {
         passport.authorize('twitter-authz', {
             failureRedirect: '/login'
         })
-    )
+    );
 
     app.get('/auth/twitter/callback',
         passport.authorize('twitter-authz', {
             failureRedirect: '/login'
         }),
         function(req, res) {
-            var user = req.user
-            var account = req.account
+            var user = req.user;
+            var account = req.account;
             // Associate the Twitter account with the logged-in user.
-            account.email = user.email
+            account.email = user.email;
             account.save(function(err) {
-                if (err) return (err)
-                res.redirect('/home')
+                if (err) return (err);
+                res.redirect('/home');
 
-            })
+            });
         }
-    )
+    );
 
-}
+};
