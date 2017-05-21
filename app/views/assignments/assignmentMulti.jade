@@ -1,0 +1,160 @@
+extends ../includes/boilerplate.jade
+block css
+    link(rel='stylesheet',
+         href='/css/header.css')
+    link(rel='stylesheet',
+         href='/css/assignment.css')
+    link(rel='stylesheet', href='/components/css-toggle-switch/dist/toggle-switch.css')
+
+    svg#svgdfs(height='0',display='block')
+        defs
+          marker#Triangle(viewbox='0 0 10 10', refx='0', refy='5', markerunits='strokeWidth', markerwidth='4', markerheight='3', orient='auto-start-reverse')
+            path(d='M 0 0 L 10 5 L 0 10 z')
+        defs
+          marker#Circle(markerwidth='10', markerheight='10', refx='5', refy='5')
+            circle.marker(cx='5', cy='5', r='1.5')
+
+block content
+    include ../includes/header.jade
+    div#updateStatus
+    div#assignmentCanvas(overflow='auto')
+        if (owner)
+            #optionContainer.optionContainer
+                div(style='margin:10px 10px 10px 10px;')
+                    label Share #{shared}
+                    div.switch-toggle.well
+                        input#public(type='radio', name='view',
+                            onclick='toggleShare(true)')
+                        label(for='public') Public
+                        input#private(type='radio', name='view',
+                            onclick='toggleShare(false)')
+                        label(for='private') Private
+                        a.btn.btn-primary
+
+
+                button(class='optionButton', id='reset')
+                        label Reset view
+
+                if (vistypeObject.vistype == "nodelink")
+                  button#savePosition.optionButton(
+                          onclick='savePositions()')
+                          label Save Positions
+
+                //button#saveTransform.optionButton(
+                //        onclick='saveTransform()')
+                //        label Save Zoom and Translation
+
+                div#assignmentDescription #{assignmentDescription}
+
+                form(action="/assignments/"+assignmentNumber, method='post')
+                    div(style="margin-top:20px;")
+                        input(type="hidden", name="_csrf", value=csrftoken)
+                        input.form-control(
+                                type="hidden",
+                                name="_method",
+                                value="DELETE")
+
+                        input#submit.btn.btn-danger.center-block(
+                                type='submit',
+                                value="Delete Assignment")
+
+        else if (assignmentDescription.length > 0)
+            #optionContainer.optionContainer
+                div#assignmentDescription #{assignmentDescription}
+
+
+        table.full
+                tr
+                td.left
+                    button(class='minimize' id='min')
+                        label -
+                td.right
+                      if (assignmentTitle.length > 0)
+                        div#assignmentTitle #{assignmentTitle}
+                      else
+                        div#assignmentTitle Assignment #{assignmentNumber}
+
+
+        -for (var i = 0; i < extent; i++) {
+             table.full
+                tr
+                td.left
+                    button(class='minimize' id='min' + i key=i)
+                        label -
+
+                td.right
+                    div(id="vis" + i, class="vis", display="block").assignmentContainer
+
+        -}
+
+block footerjs
+
+    script(src = '/components/d3/d3.min.js')
+    script(src = '/components/jquery/dist/jquery.min.js')
+
+    script.
+        var owner = '#{owner}'
+        if ( owner=="false" && "#{assignmentDescription}".length <= 0 ) {
+             $('.vis').css('width','99%') // adjust assignment width for public assignments
+        }
+
+        var shared = '#{shared}'
+        $('#private').prop('checked',false)
+        $('#public').prop('checked',false)
+        if (shared==='true')
+            $('#public').prop('checked',true)
+        else
+            $('#private').prop('checked',true)
+
+    script.
+        var data = !{JSON.stringify(data)};
+        var assignmentNumber = !{JSON.stringify(assignmentNumber)};
+        var vistypeObject = "#{vistypeObject}";
+        var mapData =  !{JSON.stringify(mapData)};
+        var createMap =  !{JSON.stringify(createMap)};
+        var BridgesVisualizer = {};
+
+    // Map demonstrating locations in the assignment
+    - if ( createMap )
+        #mapContainer.mapContainer
+        link(rel='stylesheet', href='/css/map.css')
+        script( src = '//d3js.org/topojson.v1.min.js' )
+        script( src = '/js/map.js' )
+
+    - if (vistypeObject.link)
+        link(rel='stylesheet', href='#{vistypeObject.link}')
+        script(src = '#{vistypeObject.script}')
+
+    - else if (vistypeObject.script)
+        script( src = '#{vistypeObject.script}' )
+
+
+    - else
+        script.
+            var error = !{JSON.stringify(data)};
+            $("#vis0")
+                .html(error.error)
+                .css('color', '#eb6864')
+                .css('font-size', '24px')
+                .css('padding', '50px')
+    script(src = '/js/multiVisconfig.js')
+
+
+    script.
+        // Asynchronously update the assignment visibility
+        function toggleShare (selected) {
+            var assignmentNumber = !{JSON.stringify(assignmentNumber)}
+            $.ajax({
+                url: "/assignments/"+assignmentNumber+"/share/"+selected,
+                type: "post"
+            }).done(function() {
+                console.log('visibility updated')
+            }).error(function(err){
+                console.log(err)
+            });
+        }
+
+        // TODO: Save snapshot of a particular assignment
+        function saveSnapshot() {
+            console.log("save snapshot");
+        }

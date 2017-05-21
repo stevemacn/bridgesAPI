@@ -1,0 +1,103 @@
+extends layout
+
+block css
+    link(rel="stylesheet", href="/css/webicons/webicons.css")
+    link(rel="stylesheet", href="/css/inactive.css")
+    link(rel='stylesheet', href='/css/header.css')
+
+ block js
+    script(src="components/modernizr/modernizr.js")
+
+    script(src="js/main.js")
+    script.
+        name="#{user.username}";
+        function checkUser(value) {
+            var btn = document.getElementById("submit")
+            if (value==name)
+                btn.classList.remove('disabled')
+            else {
+                if (!(btn.classList.contains("disabled")))
+                    btn.classList.add("disabled")
+            }
+        }
+
+ block info
+    h1 #{user.username}'s Profile
+
+
+ block datasources
+
+    if (false)
+        legend Add additional datasources
+        -if (!(acct.domainProvider=="twitter.com"))
+            a(href="/connect/twitter").webicon.twitter.large
+        div.webicon.facebook.large.inactive
+        div.webicon.foursquare.large.inactive
+        div.webicon.yelp.large.inactive
+        div.webicon.linkedin.large.inactive
+        div.webicon.flickr.large.inactive
+        div.webicon.google.large.inactive
+
+        -if (acct.domainProvider)
+            legend Remove authenticated datasources
+            -if (acct.domainProvider=="twitter.com")
+                a(href="/disconnect/twitter").webicon.twitter.large
+
+ block form
+  if (user)
+    .panel.panel-info
+        .panel-heading
+            h3.panel-title User information
+        .panel-body
+            div
+                strong.col-lg-4 User Name:
+                div#user #{user.username}
+            div
+                Strong.col-lg-4 Email:
+                div#email #{user.email}
+            div
+                Strong.col-lg-4 API Sha1 Key:
+                div#api #{user.apikey}
+            br
+            input#getKey.btn.btn-block.btn-info(
+                    value="Generate new API key")
+            hr
+            if (acct.domainProvider)
+                div
+                    Strong.col-lg-4 Authenticated: #{acct.domainProvider}
+            else
+                div
+                    Strong.col-lg-6 Not authenticated
+
+    .panel.panel-info
+        .panel-heading
+            h3.panel-title Profile Options
+        .panel-body
+
+            -var src = "/users/"+user.id
+            form(action=src, method='post')
+
+                strong(style="color:firebrick") WARNING: this will
+                   | PERMANENTLY delete your account
+
+                div(style="margin-top:20px;")
+                    input(type="hidden", name="_csrf", value=csrftoken)
+                    div.col-lg-8
+                        input#input.form-control(
+                            type="text",
+                            placeholder="type your username, then",
+                            onkeyup="checkUser(this.value)",
+                            style="float:left; margin-right:25px;" )
+
+                    input.form-control(
+                            type="hidden",
+                            name="_method",
+                            value="DELETE")
+
+                    input#submit.btn.btn-primary.disabled(
+                            type='submit',
+                            value="Delete Account")
+  else
+      .well
+        h1 You are not logged in!
+        a(href="/login").btn.btn-primary Log me in

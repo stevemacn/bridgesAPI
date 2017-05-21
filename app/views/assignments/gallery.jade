@@ -1,9 +1,38 @@
 extends ../includes/boilerplate.jade
+block css
+    link(rel='stylesheet',
+         href='/css/header.css')
+    link(rel='stylesheet',
+         href='/css/assignment.css')
+    link(rel='stylesheet',
+             href='/components/css-toggle-switch/dist/toggle-switch.css')
+
 block content
-    include ../includes/header.jade 
+    include ../includes/header.jade
+    .container
+        .row
+            .col-lg-12
+                div(style="float:left; margin-left:50px;width:100%;")
+                    - if (assignmentNumber < 0)
+                            h1(style="text-align: left") Looks like there aren't any assignments here...    :(
+                    - else
+                            h1(style="text-align: left") Public Gallery for assignments with number '#{assignmentNumber}'
+
     div(style="margin:5%")
-        - for (var x = 0; x < usernames.length; x++)
-            a(href="/assignments/"+assignmentID+"/"+usernames[x],
-                style="float:left;width:100px; margin-left:50px")
-                div(style="height:100px; background-color:steelblue; border-radius:100px;")
-                h4(style="text-align: center") #{usernames[x]}
+        - for (var x = 0; x < assignments.length; x++)
+              //- - console.log(assignmentNumber)
+              div.gallery_assignment_container
+                  div.gallery_assignment_div_public
+                      a(href="/assignments/"+assignmentNumber+"/"+assignments[x].username)
+                          if(assignments[x].vistype == "nodelink")
+                              img.visimg(src='/img/graph.png' title=assignments[x].vistype)
+                          else if(assignments[x].vistype == "Alist")
+                              img.visimg(src='/img/array.png' title=assignments[x].vistype)
+                          else
+                              img.visimg(src='/img/'+assignments[x].vistype+'.png' title=assignments[x].vistype)
+
+                  h4(style="text-align: center") #{assignments[x].username}
+                  h6(style="text-align: center") #{assignments[x].data[0].visual}
+                  span(style="text-align: center").dateCreated #{assignments[x].dateCreated}
+
+      script( src = '/js/gallery/gallery.js' )

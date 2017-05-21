@@ -1,8 +1,17 @@
-.node rect {
+.node.rect {
     cursor: pointer;
     fill: #fff;
     stroke: steelblue;
     stroke-width: 1.5px;
+}
+
+rect.bgRect {
+  opacity: 0.0;
+  fill: lightgrey;
+  x: 10px;
+  y: -12px;
+  rx: 3px;
+  ry: 3px;
 }
 
 .node text {

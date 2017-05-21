@@ -17,8 +17,11 @@ test/imgs/
 
 # Don't steal my keys!! #
 ###################
-keys.json
 config/keys.json
+
+# Don't steal our DB!! #
+###################
+/config/config.js
 
 # Logs and databases #
 ######################
@@ -36,3 +39,13 @@ config/keys.json
 ehthumbs.db
 Thumbs.db
 
+# excluding miscellaneous files #
+################################
+.gitignore
+.*
+config/config.js
+
+app/views/users/forgot.jade
+public/js/oldGraph.js
+public/js/rm
+app/views/assignments/rm
